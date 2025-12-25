@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 45 30% 98%;
+    --foreground: 150 15% 15%;
+
+    --card: 45 25% 96%;
+    --card-foreground: 150 15% 15%;
+
+    --popover: 45 30% 98%;
+    --popover-foreground: 150 15% 15%;
+
+    --primary: 142 35% 45%;
+    --primary-foreground: 45 30% 98%;
+
+    --secondary: 35 40% 92%;
+    --secondary-foreground: 150 15% 25%;
+
+    --muted: 45 20% 94%;
+    --muted-foreground: 150 10% 45%;
+
+    --accent: 25 45% 65%;
+    --accent-foreground: 45 30% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 142 20% 85%;
+    --input: 142 20% 85%;
+    --ring: 142 35% 45%;
+
+    --radius: 0.75rem;
+
+    /* Custom colors */
+    --sage: 142 35% 45%;
+    --sage-light: 142 30% 85%;
+    --sage-dark: 142 40% 30%;
+    --cream: 45 30% 96%;
+    --cream-dark: 45 25% 90%;
+    --terracotta: 25 45% 55%;
+    --terracotta-light: 25 40% 70%;
+    --forest: 150 40% 20%;
+    --warm-white: 45 30% 98%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(45 30% 96%) 0%, hsl(142 30% 92%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(45 30% 98%) 0%, hsl(45 25% 94%) 100%);
+    --gradient-cta: linear-gradient(135deg, hsl(142 35% 45%) 0%, hsl(142 40% 35%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(25 45% 55%) 0%, hsl(25 50% 45%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px -2px hsl(150 15% 15% / 0.08);
+    --shadow-md: 0 8px 24px -8px hsl(150 15% 15% / 0.12);
+    --shadow-lg: 0 16px 48px -12px hsl(150 15% 15% / 0.15);
+    --shadow-glow: 0 0 40px hsl(142 35% 45% / 0.15);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 150 20% 8%;
+    --foreground: 45 20% 95%;
+
+    --card: 150 18% 12%;
+    --card-foreground: 45 20% 95%;
+
+    --popover: 150 20% 8%;
+    --popover-foreground: 45 20% 95%;
+
+    --primary: 142 40% 50%;
+    --primary-foreground: 150 20% 8%;
+
+    --secondary: 150 15% 18%;
+    --secondary-foreground: 45 20% 90%;
+
+    --muted: 150 15% 18%;
+    --muted-foreground: 45 15% 60%;
+
+    --accent: 25 50% 50%;
+    --accent-foreground: 45 20% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 150 15% 20%;
+    --input: 150 15% 20%;
+    --ring: 142 40% 50%;
+
+    --sage: 142 40% 50%;
+    --sage-light: 142 25% 25%;
+    --sage-dark: 142 35% 60%;
+    --cream: 150 15% 15%;
+    --cream-dark: 150 15% 12%;
+    --terracotta: 25 50% 50%;
+    --forest: 150 30% 80%;
+    --warm-white: 150 20% 8%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(150 18% 10%) 0%, hsl(150 20% 15%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(150 18% 12%) 0%, hsl(150 15% 10%) 100%);
+    --gradient-cta: linear-gradient(135deg, hsl(142 40% 50%) 0%, hsl(142 45% 40%) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .link-underline {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-sage-dark text-primary-foreground px-6 py-3 rounded-full font-medium transition-all duration-300 hover:shadow-lg hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-6 py-3 rounded-full font-medium transition-all duration-300 hover:bg-cream-dark;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-full font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
+  }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out forwards;
+  }
+
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}

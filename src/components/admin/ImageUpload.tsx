@@ -1,0 +1,180 @@
+import { useState, useRef } from "react";
+import { Upload, X, Image as ImageIcon } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+interface ImageUploadProps {
+  value: string;
+  onChange: (url: string) => void;
+  bucket: 'gallery' | 'testimonials';
+  className?: string;
+}
+
+export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUploadProps) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [preview, setPreview] = useState<string>(value);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        variant: "destructive",
+        title: "Invalid file type",
+        description: "Please select an image file.",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        variant: "destructive",
+        title: "File too large",
+        description: "Please select an image smaller than 5MB.",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('bucket', bucket);
+
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+      const token = localStorage.getItem('authToken');
+
+      // Try backend upload first
+      try {
+        const response = await fetch(`${API_BASE_URL}/upload`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const imageUrl = `${API_BASE_URL.replace('/api', '')}/uploads/${data.filename}`;
+
+          setPreview(imageUrl);
+          onChange(imageUrl);
+
+          toast({
+            title: "Image uploaded",
+            description: "Your image has been uploaded successfully.",
+          });
+          setIsUploading(false);
+          return;
+        }
+      } catch (backendError) {
+        console.log('Backend upload failed, falling back to localStorage approach');
+      }
+
+      // Fallback: Use FileReader to create a data URL for localStorage mode
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        setPreview(dataUrl);
+        onChange(dataUrl);
+
+        toast({
+          title: "Image loaded locally",
+          description: "Image stored locally (backend not available).",
+        });
+        setIsUploading(false);
+      };
+
+      reader.onerror = () => {
+        toast({
+          variant: "destructive",
+          title: "Upload failed",
+          description: "Could not process the image file.",
+        });
+        setIsUploading(false);
+      };
+
+      reader.readAsDataURL(file);
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Upload failed",
+        description: error.message,
+      });
+      setIsUploading(false);
+    }
+  };
+
+  const handleRemove = () => {
+    setPreview("");
+    onChange("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <div className={`space-y-2 ${className}`}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileSelect}
+        className="hidden"
+      />
+
+      {preview ? (
+        <div className="relative">
+          <img
+            src={preview}
+            alt="Preview"
+            className="w-full h-48 object-cover rounded-xl border border-border"
+          />
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={isUploading}
+          className="w-full h-48 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-2 hover:border-primary/50 transition-colors disabled:opacity-50"
+        >
+          {isUploading ? (
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          ) : (
+            <>
+              <ImageIcon className="w-8 h-8 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Click to upload image</span>
+            </>
+          )}
+        </button>
+      )}
+
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={isUploading}
+        className="btn-outline text-sm w-full"
+      >
+        {isUploading ? "Uploading..." : "Choose Image"}
+      </button>
+    </div>
+  );
+};

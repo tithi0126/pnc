@@ -1,0 +1,131 @@
+const express = require('express');
+const Gallery = require('../models/Gallery');
+const { auth, isAdmin } = require('../middleware/auth');
+
+const router = express.Router();
+
+// Get active gallery images (public)
+router.get('/', async (req, res) => {
+  try {
+    const gallery = await Gallery.find({ isActive: true })
+      .sort({ sortOrder: 1 })
+      .select('-__v');
+
+    res.json(gallery);
+  } catch (error) {
+    console.error('Error fetching gallery:', error);
+    res.status(500).json({ error: 'Server error fetching gallery.' });
+  }
+});
+
+// Get all gallery images for admin
+router.get('/admin', auth, isAdmin, async (req, res) => {
+  try {
+    const { category } = req.query;
+    let query = {};
+
+    if (category && category !== 'all') {
+      query.category = category;
+    }
+
+    const gallery = await Gallery.find(query)
+      .sort({ sortOrder: 1 })
+      .select('-__v');
+
+    res.json(gallery);
+  } catch (error) {
+    console.error('Error fetching gallery for admin:', error);
+    res.status(500).json({ error: 'Server error fetching gallery.' });
+  }
+});
+
+// Get single gallery image
+router.get('/:id', async (req, res) => {
+  try {
+    const image = await Gallery.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ error: 'Gallery image not found.' });
+    }
+
+    // Only return active images for public access
+    if (!req.user && !image.isActive) {
+      return res.status(404).json({ error: 'Gallery image not found.' });
+    }
+
+    res.json(image);
+  } catch (error) {
+    console.error('Error fetching gallery image:', error);
+    res.status(500).json({ error: 'Server error fetching gallery image.' });
+  }
+});
+
+// Create new gallery image (admin only)
+router.post('/', auth, isAdmin, async (req, res) => {
+  try {
+    const image = new Gallery(req.body);
+    await image.save();
+
+    res.status(201).json(image);
+  } catch (error) {
+    console.error('Error creating gallery image:', error);
+    res.status(500).json({ error: 'Server error creating gallery image.' });
+  }
+});
+
+// Update gallery image (admin only)
+router.put('/:id', auth, isAdmin, async (req, res) => {
+  try {
+    const image = await Gallery.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!image) {
+      return res.status(404).json({ error: 'Gallery image not found.' });
+    }
+
+    res.json(image);
+  } catch (error) {
+    console.error('Error updating gallery image:', error);
+    res.status(500).json({ error: 'Server error updating gallery image.' });
+  }
+});
+
+// Delete gallery image (admin only)
+router.delete('/:id', auth, isAdmin, async (req, res) => {
+  try {
+    const image = await Gallery.findByIdAndDelete(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ error: 'Gallery image not found.' });
+    }
+
+    res.json({ message: 'Gallery image deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting gallery image:', error);
+    res.status(500).json({ error: 'Server error deleting gallery image.' });
+  }
+});
+
+// Toggle active status (admin only)
+router.patch('/:id/toggle', auth, isAdmin, async (req, res) => {
+  try {
+    const image = await Gallery.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ error: 'Gallery image not found.' });
+    }
+
+    image.isActive = !image.isActive;
+    await image.save();
+
+    res.json(image);
+  } catch (error) {
+    console.error('Error toggling gallery image status:', error);
+    res.status(500).json({ error: 'Server error updating gallery image status.' });
+  }
+});
+
+module.exports = router;

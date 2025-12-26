@@ -74,22 +74,15 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
           return;
         }
       } catch (backendError) {
-        console.log('Backend upload failed, falling back to localStorage approach');
-      }
-
-      // Fallback: Use FileReader to create a data URL for localStorage mode
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        setPreview(dataUrl);
-        onChange(dataUrl);
-
+        console.error('Backend upload failed:', backendError);
         toast({
-          title: "Image loaded locally",
-          description: "Image stored locally (backend not available).",
+          title: "Upload failed",
+          description: "Unable to upload image. Please try again or contact support.",
+          variant: "destructive",
         });
         setIsUploading(false);
-      };
+        return;
+      }
 
       reader.onerror = () => {
         toast({

@@ -5,7 +5,7 @@ import { Eye, EyeOff, Lock, Mail, User, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminAuth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(true); // Always start with login mode
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -42,7 +42,7 @@ const AdminAuth = () => {
             title: "Welcome back!",
             description: "You have been logged in successfully.",
           });
-          // Redirect to admin dashboard immediately after successful login
+          // Redirect to admin dashboard - the dashboard component will handle permission checks
           navigate("/admin");
         }
       } else {

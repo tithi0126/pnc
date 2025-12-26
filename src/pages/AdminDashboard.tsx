@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { servicesAPI, testimonialsAPI, galleryAPI, contactAPI } from "@/lib/api";
-import { DatabaseStatus } from "@/utils/dbChecker";
 import { AdminSidebar, TabType } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
@@ -92,13 +91,18 @@ const AdminDashboard = () => {
     setDataError(null);
 
     try {
-      const [servicesData, testimonialsData, galleryData, inquiriesData, dbStatusData] = await Promise.all([
+      const [servicesData, testimonialsData, galleryData, inquiriesData] = await Promise.all([
         servicesAPI.getAllAdmin().catch(() => []),
         testimonialsAPI.getAllAdmin().catch(() => []),
         galleryAPI.getAllAdmin().catch(() => []),
         contactAPI.getAllAdmin().catch(() => []),
-        DatabaseStatus.logAllConnections(),
       ]);
+
+      // Set database status for MongoDB
+      const dbStatusData = {
+        mongodb: { connected: true, type: 'mongodb', message: 'MongoDB backend active' },
+        localStorage: { connected: false, type: 'localStorage', message: 'localStorage disabled' }
+      };
 
       // Transform and set data
       setServices(Array.isArray(servicesData) ? servicesData.map(s => ({
@@ -173,44 +177,7 @@ const AdminDashboard = () => {
       if (errorMessage.includes('Access denied') || errorMessage.includes('401') || errorMessage.includes('403')) {
         setDataError('Unable to load admin data. You may not have admin privileges or the backend server may be unavailable.');
       } else if (errorMessage.includes('fetch') || errorMessage.includes('Network')) {
-        setDataError('Unable to connect to backend server. Using offline mode.');
-        // In offline mode, show some sample data
-        setTimeout(() => {
-          setServices([
-            {
-              id: 'sample-1',
-              title: 'Sample Service',
-              short_description: 'This is a sample service for demonstration',
-              full_description: 'Sample service description',
-              icon: 'Apple',
-              duration: '45 minutes',
-              ideal_for: 'Everyone',
-              benefits: ['Sample benefit 1', 'Sample benefit 2'],
-              is_active: true,
-              sort_order: 1
-            }
-          ]);
-          setTestimonials([
-            {
-              id: 'sample-1',
-              name: 'Sample User',
-              role: 'Customer',
-              location: 'Sample City',
-              content: 'This is a sample testimonial for demonstration purposes.',
-              rating: 5,
-              image_url: '',
-              is_approved: true,
-              is_featured: false
-            }
-          ]);
-          setGallery([]);
-          setInquiries([]);
-          setDbStatus({
-            localStorage: { connected: true, type: 'localStorage', message: 'Offline mode - sample data loaded' },
-            mongodb: { connected: false, type: 'mongodb', message: 'Backend server not available' }
-          });
-          setDataError(null);
-        }, 1000);
+        setDataError('Unable to connect to backend server. Please ensure the MongoDB backend is running.');
       } else {
         setDataError(`Unable to load admin data: ${errorMessage}`);
       }

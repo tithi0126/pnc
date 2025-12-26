@@ -112,8 +112,6 @@ export const AdminHeader = ({
   const handleSignOut = () => {
     // Clear auth data and redirect
     localStorage.removeItem('authToken');
-    localStorage.removeItem('backend_token');
-    localStorage.removeItem('user_data');
     navigate('/');
   };
 

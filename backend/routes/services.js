@@ -60,7 +60,6 @@ router.get('/:id', async (req, res) => {
 // Create new service (admin only)
 router.post('/', auth, isAdmin, async (req, res) => {
   try {
-    console.log('Creating service with data:', req.body);
 
     // Handle both isActive and is_active field names
     const isActive = req.body.isActive !== undefined
@@ -85,7 +84,6 @@ router.post('/', auth, isAdmin, async (req, res) => {
     });
 
     await service.save();
-    console.log('Service created:', service._id, 'isActive:', service.isActive);
     res.status(201).json(service);
   } catch (error) {
     console.error('Error creating service:', error);

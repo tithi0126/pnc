@@ -40,7 +40,6 @@ export const ServicesTab = ({ services, onRefresh }: ServicesTabProps) => {
 
   const handleSave = async (formData: Service) => {
     try {
-      console.log('Saving service:', formData);
       if (formData.id) {
         await servicesAPI.update(formData.id, formData);
         toast({ title: "Service updated" });
@@ -51,7 +50,6 @@ export const ServicesTab = ({ services, onRefresh }: ServicesTabProps) => {
       setEditingService(null);
       onRefresh();
     } catch (error: any) {
-      console.error('Service save error:', error);
       toast({ variant: "destructive", title: "Error", description: error.message });
     }
   };
@@ -64,10 +62,10 @@ export const ServicesTab = ({ services, onRefresh }: ServicesTabProps) => {
           <p className="text-sm text-muted-foreground">{services.length} total services</p>
         </div>
         <button
-          onClick={() => setEditingService({ 
-            id: "", title: "", short_description: "", full_description: "", 
-            icon: "Apple", duration: "", ideal_for: "", benefits: [], 
-            is_active: true, sort_order: 0 
+          onClick={() => setEditingService({
+            id: "", title: "", short_description: "", full_description: "",
+            icon: "Apple", duration: "", ideal_for: "", benefits: [],
+            is_active: true, sort_order: 0
           })}
           className="btn-primary text-sm inline-flex items-center gap-2 self-start"
         >

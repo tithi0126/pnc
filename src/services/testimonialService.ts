@@ -1,5 +1,3 @@
-import { localDB } from '../integrations/supabase/client';
-
 interface ITestimonial {
   _id: string;
   name: string;
@@ -10,77 +8,151 @@ interface ITestimonial {
   imageUrl?: string;
   isApproved: boolean;
   isFeatured: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export class TestimonialService {
-  private static readonly COLLECTION = 'testimonials';
+  private static readonly API_BASE_URL = 'http://localhost:5000/api';
 
-  static async getAllTestimonials(): Promise<ITestimonial[]> {
+  static async getAllTestimonials(token: string): Promise<ITestimonial[]> {
     try {
-      const testimonials = await localDB.find(this.COLLECTION);
+      const response = await fetch(`${this.API_BASE_URL}/testimonials`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const testimonials = await response.json();
       return testimonials.sort((a: ITestimonial, b: ITestimonial) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     } catch (error) {
+      console.error('Failed to fetch testimonials:', error);
       throw new Error('Failed to fetch testimonials');
     }
   }
 
   static async getApprovedTestimonials(): Promise<ITestimonial[]> {
     try {
-      const testimonials = await localDB.find(this.COLLECTION, { isApproved: true });
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/approved`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const testimonials = await response.json();
       return testimonials.sort((a: ITestimonial, b: ITestimonial) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     } catch (error) {
+      console.error('Failed to fetch approved testimonials:', error);
       throw new Error('Failed to fetch approved testimonials');
     }
   }
 
   static async createTestimonial(testimonialData: Partial<ITestimonial>): Promise<ITestimonial> {
     try {
-      return await localDB.insertOne(this.COLLECTION, testimonialData);
+      const response = await fetch(`${this.API_BASE_URL}/testimonials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testimonialData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to create testimonial:', error);
       throw new Error('Failed to create testimonial');
     }
   }
 
-  static async updateTestimonial(id: string, updates: Partial<ITestimonial>): Promise<ITestimonial | null> {
+  static async updateTestimonial(id: string, updates: Partial<ITestimonial>, token: string): Promise<ITestimonial> {
     try {
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, updates);
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to update testimonial:', error);
       throw new Error('Failed to update testimonial');
     }
   }
 
-  static async deleteTestimonial(id: string): Promise<boolean> {
+  static async deleteTestimonial(id: string, token: string): Promise<void> {
     try {
-      return await localDB.deleteOne(this.COLLECTION, { _id: id });
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
+      console.error('Failed to delete testimonial:', error);
       throw new Error('Failed to delete testimonial');
     }
   }
 
-  static async toggleApproval(id: string): Promise<ITestimonial | null> {
+  static async toggleApproval(id: string, token: string): Promise<ITestimonial> {
     try {
-      const testimonial = await localDB.findOne(this.COLLECTION, { _id: id });
-      if (!testimonial) return null;
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/toggle-approval`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, { isApproved: !testimonial.isApproved });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to toggle approval:', error);
       throw new Error('Failed to toggle approval');
     }
   }
 
-  static async toggleFeatured(id: string): Promise<ITestimonial | null> {
+  static async toggleFeatured(id: string, token: string): Promise<ITestimonial> {
     try {
-      const testimonial = await localDB.findOne(this.COLLECTION, { _id: id });
-      if (!testimonial) return null;
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/toggle-featured`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, { isFeatured: !testimonial.isFeatured });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to toggle featured status:', error);
       throw new Error('Failed to toggle featured status');
     }
   }

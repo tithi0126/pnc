@@ -1,49 +1,26 @@
 // Utility to check database connections and provide detailed status
-import { DatabaseStatus, localDB, authService } from '../integrations/supabase/client';
-
 export const checkDatabaseStatus = async () => {
   console.log('🔍 Checking database connections...');
 
-  const status = await DatabaseStatus.logAllConnections();
+  const mongoStatus = await testMongoDBConnection();
 
-  // Additional checks
-  const collections = ['services', 'testimonials', 'gallery', 'contact_inquiries', 'settings'];
-  const collectionStatus = await Promise.all(
-    collections.map(async (collection) => {
-      try {
-        const data = await localDB.find(collection);
-        return { collection, count: data.length, status: 'ok' };
-      } catch (error) {
-        return { collection, count: 0, status: 'error', error: error instanceof Error ? error.message : 'Unknown error' };
-      }
-    })
-  );
+  console.log('📊 Database Status:');
+  console.log(`  MongoDB: ${mongoStatus.connected ? '✅ Connected' : '❌ Disconnected'}`);
+  console.log(`  Message: ${mongoStatus.message}`);
 
-  console.log('📊 Collection Status:');
-  collectionStatus.forEach(({ collection, count, status, error }) => {
-    if (status === 'ok') {
-      console.log(`  ✅ ${collection}: ${count} records`);
-    } else {
-      console.log(`  ❌ ${collection}: ${error}`);
-    }
-  });
-
-  // Auth status
-  const users = authService.getUsers ? authService.getUsers() : [];
-  const currentUser = authService.getCurrentUser ? authService.getCurrentUser() : null;
+  // Auth status - check if user is logged in via localStorage token
+  const token = localStorage.getItem('authToken');
+  const isAuthenticated = !!token;
 
   console.log('👤 Authentication Status:');
-  console.log(`  Users registered: ${users.length}`);
-  console.log(`  Current user: ${currentUser ? `${currentUser.fullName} (${currentUser.email})` : 'None'}`);
-  console.log(`  Is Admin: ${currentUser?.isAdmin ? 'Yes' : 'No'}`);
+  console.log(`  Authenticated: ${isAuthenticated ? 'Yes' : 'No'}`);
+  console.log(`  Token present: ${token ? 'Yes' : 'No'}`);
 
   return {
-    connections: status,
-    collections: collectionStatus,
+    mongodb: mongoStatus,
     auth: {
-      userCount: users.length,
-      currentUser,
-      isAuthenticated: !!currentUser
+      isAuthenticated,
+      hasToken: !!token
     }
   };
 };
@@ -131,32 +108,15 @@ export const testMongoDBConnection = async () => {
   }
 };
 
-// Force localStorage mode (useful when backend auth is not working)
-export const forceLocalStorageMode = () => {
-  // Import the api module and set mode
-  import('../lib/api').then(apiModule => {
-    (apiModule as any).apiMode = 'localStorage';
-    console.log('🔄 Forced localStorage mode - reloading page...');
-    window.location.reload();
-  });
-};
 
 // Make it available globally for console access
 if (typeof window !== 'undefined') {
   (window as any).checkDB = checkDatabaseStatus;
-  (window as any).dbStatus = DatabaseStatus;
   (window as any).testMongoDB = testMongoDBConnection;
-  (window as any).forceLocalStorage = forceLocalStorageMode;
 
   console.log('💡 Database utilities available:');
-  console.log('  - checkDB() - Check all database connections and status');
-  console.log('  - dbStatus.logAllConnections() - Log connection status');
-  console.log('  - dbStatus.checkConnection() - Check localStorage status');
-  console.log('  - dbStatus.checkMongoDBConnection() - Check MongoDB config');
-  console.log('  - testMongoDB() - Test actual MongoDB connection via API');
-  console.log('  - forceLocalStorage() - Force localStorage mode (for testing)');
+  console.log('  - checkDB() - Check database connection status');
+  console.log('  - testMongoDB() - Test MongoDB connection via API');
 }
 
-// Export for use in components
-export { DatabaseStatus };
 export default checkDatabaseStatus;

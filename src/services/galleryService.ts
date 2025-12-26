@@ -1,5 +1,3 @@
-import { localDB } from '../integrations/supabase/client';
-
 interface IGallery {
   _id: string;
   title: string;
@@ -8,61 +6,126 @@ interface IGallery {
   category: string;
   isActive: boolean;
   sortOrder: number;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export class GalleryService {
-  private static readonly COLLECTION = 'gallery';
+  private static readonly API_BASE_URL = 'http://localhost:5000/api';
 
-  static async getAllImages(): Promise<IGallery[]> {
+  static async getAllImages(token: string): Promise<IGallery[]> {
     try {
-      const images = await localDB.find(this.COLLECTION);
+      const response = await fetch(`${this.API_BASE_URL}/gallery`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const images = await response.json();
       return images.sort((a: IGallery, b: IGallery) => (a.sortOrder || 0) - (b.sortOrder || 0));
     } catch (error) {
+      console.error('Failed to fetch gallery images:', error);
       throw new Error('Failed to fetch gallery images');
     }
   }
 
   static async getActiveImages(): Promise<IGallery[]> {
     try {
-      const images = await localDB.find(this.COLLECTION, { isActive: true });
+      const response = await fetch(`${this.API_BASE_URL}/gallery/active`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const images = await response.json();
       return images.sort((a: IGallery, b: IGallery) => (a.sortOrder || 0) - (b.sortOrder || 0));
     } catch (error) {
+      console.error('Failed to fetch active gallery images:', error);
       throw new Error('Failed to fetch active gallery images');
     }
   }
 
-  static async createImage(imageData: Partial<IGallery>): Promise<IGallery> {
+  static async createImage(imageData: Partial<IGallery>, token: string): Promise<IGallery> {
     try {
-      return await localDB.insertOne(this.COLLECTION, imageData);
+      const response = await fetch(`${this.API_BASE_URL}/gallery`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(imageData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to create gallery image:', error);
       throw new Error('Failed to create gallery image');
     }
   }
 
-  static async updateImage(id: string, updates: Partial<IGallery>): Promise<IGallery | null> {
+  static async updateImage(id: string, updates: Partial<IGallery>, token: string): Promise<IGallery> {
     try {
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, updates);
+      const response = await fetch(`${this.API_BASE_URL}/gallery/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to update gallery image:', error);
       throw new Error('Failed to update gallery image');
     }
   }
 
-  static async deleteImage(id: string): Promise<boolean> {
+  static async deleteImage(id: string, token: string): Promise<void> {
     try {
-      return await localDB.deleteOne(this.COLLECTION, { _id: id });
+      const response = await fetch(`${this.API_BASE_URL}/gallery/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
+      console.error('Failed to delete gallery image:', error);
       throw new Error('Failed to delete gallery image');
     }
   }
 
-  static async toggleActive(id: string): Promise<IGallery | null> {
+  static async toggleActive(id: string, token: string): Promise<IGallery> {
     try {
-      const image = await localDB.findOne(this.COLLECTION, { _id: id });
-      if (!image) return null;
+      const response = await fetch(`${this.API_BASE_URL}/gallery/${id}/toggle`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, { isActive: !image.isActive });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to toggle image active status:', error);
       throw new Error('Failed to toggle image active status');
     }
   }

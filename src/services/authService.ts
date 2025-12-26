@@ -1,120 +1,166 @@
-// Browser-compatible authentication service using localStorage
+// Authentication service using MongoDB backend API
 export interface AuthResponse {
   user: {
     id: string;
     email: string;
     fullName: string;
     roles: string[];
-    isAdmin: boolean;
+    avatarUrl?: string;
   };
   token: string;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  fullName: string;
+  roles: string[];
+  avatarUrl?: string;
+}
+
 export class AuthService {
-  private static readonly USERS_KEY = 'auth_users';
-
-  private static getUsers(): any[] {
-    const users = localStorage.getItem(this.USERS_KEY);
-    return users ? JSON.parse(users) : [];
-  }
-
-  private static saveUsers(users: any[]): void {
-    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-  }
-
-  private static hashPassword(password: string): string {
-    // Simple hash for demo purposes - in production, use proper server-side hashing
-    return btoa(password + 'salt');
-  }
-
-  private static verifyPassword(password: string, hash: string): boolean {
-    return btoa(password + 'salt') === hash;
-  }
-
-  private static generateToken(): string {
-    return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
-  }
+  private static readonly API_BASE_URL = 'http://localhost:5000/api';
 
   static async register(email: string, password: string, fullName: string): Promise<AuthResponse> {
-    const users = this.getUsers();
+    const response = await fetch(`${this.API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password, fullName }),
+    });
 
-    if (users.find(u => u.email === email)) {
-      throw new Error('User already exists');
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Registration failed');
     }
 
-    const newUser = {
-      _id: Date.now().toString(),
-      email,
-      password: this.hashPassword(password),
-      fullName,
-      roles: ['user'],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
-    users.push(newUser);
-    this.saveUsers(users);
-
-    const { password: _, ...userWithoutPassword } = newUser;
+    const data = await response.json();
     return {
       user: {
-        id: userWithoutPassword._id,
-        email: userWithoutPassword.email,
-        fullName: userWithoutPassword.fullName,
-        roles: userWithoutPassword.roles,
-        isAdmin: userWithoutPassword.roles.includes('admin')
+        id: data.user.id,
+        email: data.user.email,
+        fullName: data.user.fullName,
+        roles: data.user.roles,
+        avatarUrl: data.user.avatarUrl,
       },
-      token: this.generateToken()
+      token: data.token,
     };
   }
 
   static async login(email: string, password: string): Promise<AuthResponse> {
-    const users = this.getUsers();
-    const user = users.find(u => u.email === email);
+    const response = await fetch(`${this.API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-    if (!user || !this.verifyPassword(password, user.password)) {
-      throw new Error('Invalid credentials');
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Login failed');
     }
 
-    const { password: _, ...userWithoutPassword } = user;
+    const data = await response.json();
     return {
       user: {
-        id: userWithoutPassword._id,
-        email: userWithoutPassword.email,
-        fullName: userWithoutPassword.fullName,
-        roles: userWithoutPassword.roles,
-        isAdmin: userWithoutPassword.roles.includes('admin')
+        id: data.user.id,
+        email: data.user.email,
+        fullName: data.user.fullName,
+        roles: data.user.roles,
+        avatarUrl: data.user.avatarUrl,
       },
-      token: this.generateToken()
+      token: data.token,
     };
   }
 
-  static async getUserById(id: string): Promise<any | null> {
-    const users = this.getUsers();
-    return users.find(u => u._id === id) || null;
+  static async getProfile(token: string): Promise<User> {
+    const response = await fetch(`${this.API_BASE_URL}/auth/profile`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to get profile');
+    }
+
+    const data = await response.json();
+    return {
+      id: data.user.id,
+      email: data.user.email,
+      fullName: data.user.fullName,
+      roles: data.user.roles,
+      avatarUrl: data.user.avatarUrl,
+    };
   }
 
-  static async verifyToken(token: string): Promise<any> {
-    // Simple token verification for demo
-    return { valid: true };
+  static async updateProfile(token: string, updates: Partial<User>): Promise<User> {
+    const response = await fetch(`${this.API_BASE_URL}/auth/profile`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updates),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to update profile');
+    }
+
+    const data = await response.json();
+    return {
+      id: data.user.id,
+      email: data.user.email,
+      fullName: data.user.fullName,
+      roles: data.user.roles,
+      avatarUrl: data.user.avatarUrl,
+    };
   }
 
-  static async promoteToAdmin(userId: string): Promise<void> {
-    const users = this.getUsers();
-    const user = users.find(u => u._id === userId);
-    if (user && !user.roles.includes('admin')) {
-      user.roles.push('admin');
-      this.saveUsers(users);
+  static async verifyToken(token: string): Promise<boolean> {
+    try {
+      // Try to get profile - if it works, token is valid
+      await this.getProfile(token);
+      return true;
+    } catch (error) {
+      return false;
     }
   }
 
-  static async demoteFromAdmin(userId: string): Promise<void> {
-    const users = this.getUsers();
-    const user = users.find(u => u._id === userId);
-    if (user) {
-      user.roles = user.roles.filter((role: string) => role !== 'admin');
-      if (user.roles.length === 0) user.roles = ['user'];
-      this.saveUsers(users);
+  static async promoteToAdmin(token: string, userId: string): Promise<void> {
+    const response = await fetch(`${this.API_BASE_URL}/users/${userId}/promote`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to promote user');
+    }
+  }
+
+  static async demoteFromAdmin(token: string, userId: string): Promise<void> {
+    const response = await fetch(`${this.API_BASE_URL}/users/${userId}/demote`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to demote user');
     }
   }
 }

@@ -35,25 +35,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       // Verify token with AuthService
-      const decoded = await AuthService.verifyToken(token);
-      if (decoded) {
-        const userData = localStorage.getItem('user_data');
-        if (userData) {
-          const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
-          setIsAdmin(parsedUser.isAdmin);
-        }
+      const isValid = await AuthService.verifyToken(token);
+      if (isValid) {
+        const userData = await AuthService.getProfile(token);
+        setUser(userData);
+        setIsAdmin(userData.roles.includes('admin'));
       } else {
         // Token is invalid, remove it
         localStorage.removeItem('authToken');
-        localStorage.removeItem('user_data');
         setUser(null);
         setIsAdmin(false);
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
       localStorage.removeItem('authToken');
-      localStorage.removeItem('user_data');
       setUser(null);
       setIsAdmin(false);
     } finally {
@@ -72,12 +67,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       console.log('Login result:', result);
 
-      // Store auth data (backend token is already stored by AuthService)
-      localStorage.setItem('authToken', result.token); // Keep for compatibility
-      localStorage.setItem('user_data', JSON.stringify(result.user));
+      // Store auth data
+      localStorage.setItem('authToken', result.token);
 
       setUser(result.user);
-      setIsAdmin(result.user.isAdmin);
+      setIsAdmin(result.user.roles.includes('admin'));
 
       return { error: null };
     } catch (error: any) {
@@ -102,14 +96,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('user_data');
     setUser(null);
     setIsAdmin(false);
   };
 
   const updateProfile = async (updates: Partial<User>) => {
-    // For now, just return success - profile updates can be implemented later
-    return { error: null };
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        return { error: new Error('Not authenticated') };
+      }
+
+      const updatedUser = await AuthService.updateProfile(token, updates);
+      setUser(updatedUser);
+      setIsAdmin(updatedUser.roles.includes('admin'));
+
+      return { error: null };
+    } catch (error: any) {
+      console.error('Profile update error:', error);
+      return { error: new Error(error.message || 'Profile update failed') };
+    }
   };
 
   return (

@@ -1,5 +1,3 @@
-import { localDB } from '../integrations/supabase/client';
-
 interface IService {
   _id: string;
   title: string;
@@ -11,66 +9,106 @@ interface IService {
   benefits: string[];
   isActive?: boolean;
   sortOrder?: number;
-  createdAt: Date;
-  updatedAt: Date;
-  // Support for snake_case field names (for backward compatibility)
-  short_description?: string;
-  full_description?: string;
-  ideal_for?: string;
-  is_active?: boolean;
-  sort_order?: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export class ServiceService {
-  private static readonly COLLECTION = 'services';
+  private static readonly API_BASE_URL = 'http://localhost:5000/api';
 
   static async getAllServices(): Promise<IService[]> {
     try {
-      const services = await localDB.find(this.COLLECTION);
+      const response = await fetch(`${this.API_BASE_URL}/services`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const services = await response.json();
       return services.sort((a: IService, b: IService) =>
-        (a.sortOrder || a.sort_order || 0) - (b.sortOrder || b.sort_order || 0)
+        (a.sortOrder || 0) - (b.sortOrder || 0)
       );
     } catch (error) {
+      console.error('Failed to fetch services:', error);
       throw new Error('Failed to fetch services');
     }
   }
 
   static async getActiveServices(): Promise<IService[]> {
     try {
-      const services = await localDB.find(this.COLLECTION);
-      // Filter services that are active (check both field formats)
-      const activeServices = services.filter((s: IService) =>
-        (s.isActive === true || s.is_active === true)
-      );
-      // Sort by sort order (check both field formats)
-      return activeServices.sort((a: IService, b: IService) =>
-        (a.sortOrder || a.sort_order || 0) - (b.sortOrder || b.sort_order || 0)
+      const response = await fetch(`${this.API_BASE_URL}/services/active`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const services = await response.json();
+      return services.sort((a: IService, b: IService) =>
+        (a.sortOrder || 0) - (b.sortOrder || 0)
       );
     } catch (error) {
+      console.error('Failed to fetch active services:', error);
       throw new Error('Failed to fetch active services');
     }
   }
 
-  static async createService(serviceData: Partial<IService>): Promise<IService> {
+  static async createService(serviceData: Partial<IService>, token: string): Promise<IService> {
     try {
-      return await localDB.insertOne(this.COLLECTION, serviceData);
+      const response = await fetch(`${this.API_BASE_URL}/services`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(serviceData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to create service:', error);
       throw new Error('Failed to create service');
     }
   }
 
-  static async updateService(id: string, updates: Partial<IService>): Promise<IService | null> {
+  static async updateService(id: string, updates: Partial<IService>, token: string): Promise<IService> {
     try {
-      return await localDB.findOneAndUpdate(this.COLLECTION, { _id: id }, updates);
+      const response = await fetch(`${this.API_BASE_URL}/services/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
     } catch (error) {
+      console.error('Failed to update service:', error);
       throw new Error('Failed to update service');
     }
   }
 
-  static async deleteService(id: string): Promise<boolean> {
+  static async deleteService(id: string, token: string): Promise<void> {
     try {
-      return await localDB.deleteOne(this.COLLECTION, { _id: id });
+      const response = await fetch(`${this.API_BASE_URL}/services/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
     } catch (error) {
+      console.error('Failed to delete service:', error);
       throw new Error('Failed to delete service');
     }
   }

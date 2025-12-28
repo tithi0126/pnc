@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowRight, Apple, Dumbbell, Heart, Briefcase, Sparkles, Baby, Scale, Building } from "lucide-react";
-import { servicesAPI } from "@/lib/api";
+import { servicesAPI, settingsAPI } from "@/lib/api";
 
 const iconMap: Record<string, React.ElementType> = {
   Apple,
@@ -23,13 +23,17 @@ interface Service {
 
 const ServicesPreview = () => {
   const [services, setServices] = useState<Service[]>([]);
+  const [settings, setSettings] = useState({
+    services_title: 'Comprehensive Nutrition Services',
+    services_subtitle: 'Tailored solutions for your unique health and wellness goals',
+  });
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const data = await servicesAPI.getAll();
-        // Transform MongoDB data and show first 3 services for homepage
-        const transformed = (data || [])
+        // Fetch services
+        const servicesData = await servicesAPI.getAll();
+        const transformed = (servicesData || [])
           .filter((s: any) => s.isActive)
           .slice(0, 3)
           .map((s: any) => ({
@@ -39,12 +43,20 @@ const ServicesPreview = () => {
             icon: s.icon || '',
           }));
         setServices(transformed);
+
+        // Fetch settings
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        setSettings({
+          services_title: settingsMap.services_title || settings.services_title,
+          services_subtitle: settingsMap.services_subtitle || settings.services_subtitle,
+        });
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
 
   return (
@@ -54,11 +66,10 @@ const ServicesPreview = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-up">
           <span className="text-primary font-medium text-sm uppercase tracking-wider">Our Services</span>
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
-            Comprehensive Nutrition Solutions
+            {settings.services_title}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            From personalized diet plans to corporate wellness programs, we offer a wide range of
-            services designed to help you achieve optimal health and well-being.
+            {settings.services_subtitle}
           </p>
         </div>
 

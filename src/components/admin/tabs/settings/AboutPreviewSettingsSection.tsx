@@ -1,4 +1,4 @@
-interface AboutSettingsSectionProps {
+interface AboutPreviewSettingsSectionProps {
   settings: {
     about_title: string;
     about_description_1: string;
@@ -8,10 +8,10 @@ interface AboutSettingsSectionProps {
   onChange: (key: string, value: string) => void;
 }
 
-export const AboutSettingsSection = ({ settings, onChange }: AboutSettingsSectionProps) => {
+export const AboutPreviewSettingsSection = ({ settings, onChange }: AboutPreviewSettingsSectionProps) => {
   return (
     <div className="bg-card rounded-2xl p-6 border border-border">
-      <h3 className="font-medium text-foreground mb-4">About Section</h3>
+      <h3 className="font-medium text-foreground mb-4">About Preview Section</h3>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">Title</label>
@@ -49,7 +49,7 @@ export const AboutSettingsSection = ({ settings, onChange }: AboutSettingsSectio
               onChange('about_credentials', JSON.stringify(credentials));
             }}
             rows={4}
-            placeholder="Ph.D. in Nutrition Science&#10;Certified Dietitian&#10;Sports Nutrition Expert&#10;Published Author"
+            placeholder="Ph.D. in Nutrition Science&#10;Certified Dietitian"
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
           />
         </div>
@@ -57,4 +57,3 @@ export const AboutSettingsSection = ({ settings, onChange }: AboutSettingsSectio
     </div>
   );
 };
-

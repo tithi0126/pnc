@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { testimonialsAPI } from "@/lib/api";
+import { testimonialsAPI, settingsAPI } from "@/lib/api";
 
 interface Testimonial {
   id: string;
@@ -19,6 +19,10 @@ const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pageSettings, setPageSettings] = useState({
+    testimonials_page_title: 'Client Success Stories',
+    testimonials_page_subtitle: 'Real transformations, real results',
+  });
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -56,6 +60,14 @@ const Testimonials = () => {
 
         console.log('Transformed testimonials:', transformed);
         setTestimonials(transformed);
+
+        // Fetch settings
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        setPageSettings({
+          testimonials_page_title: settingsMap.testimonials_page_title || pageSettings.testimonials_page_title,
+          testimonials_page_subtitle: settingsMap.testimonials_page_subtitle || pageSettings.testimonials_page_subtitle,
+        });
 
         // Reset active index if it's out of bounds
         if (transformed.length > 0 && activeIndex >= transformed.length) {
@@ -161,11 +173,10 @@ const Testimonials = () => {
           <div className="text-center max-w-3xl mx-auto animate-fade-up">
             <span className="text-primary font-medium text-sm uppercase tracking-wider">Testimonials</span>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
-              Success Stories That Inspire
+              {pageSettings.testimonials_page_title}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Real experiences from real clients who have transformed their health and lives through 
-              personalized nutrition guidance.
+              {pageSettings.testimonials_page_subtitle}
             </p>
           </div>
         </div>

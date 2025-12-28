@@ -6,9 +6,32 @@ import { settingsAPI } from "@/lib/api";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [contactSettings, setContactSettings] = useState({
-    contact_email: 'info@drbiditashah.com',
-    phone_number: '+1 234 567 890',
-    address: '123 Wellness Center, Health Street, Mumbai 400001',
+    contact_email: 'drbiditashah@gmail.com',
+    phone_number: '+91 9876543210',
+    address: 'Mumbai, Maharashtra, India',
+  });
+
+  const [footerSettings, setFooterSettings] = useState({
+    footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Mumbai.',
+    footer_services: JSON.stringify([
+      'Nutrition Consultation',
+      'Diet Plans',
+      'Weight Management',
+      'Sports Nutrition',
+      'Diabetes Care',
+      'Thyroid Management'
+    ]),
+    footer_copyright: '© {year} Dr. Bidita Shah. All rights reserved.',
+    footer_links: JSON.stringify([
+      { name: 'Privacy Policy', path: '/privacy' },
+      { name: 'Terms of Service', path: '/terms' },
+      { name: 'Admin', path: '/admin/auth' }
+    ]),
+    social_links: JSON.stringify([
+      { platform: 'Facebook', url: 'https://facebook.com/drbiditashah', icon: 'Facebook' },
+      { platform: 'Instagram', url: 'https://instagram.com/drbiditashah', icon: 'Instagram' },
+      { platform: 'LinkedIn', url: 'https://linkedin.com/in/drbiditashah', icon: 'Linkedin' }
+    ]),
   });
 
   useEffect(() => {
@@ -16,11 +39,19 @@ const Footer = () => {
       try {
         const allSettings = await settingsAPI.getPublic();
         const settingsMap: any = allSettings || {};
-        
+
         setContactSettings({
           contact_email: settingsMap.contact_email || contactSettings.contact_email,
           phone_number: settingsMap.phone_number || contactSettings.phone_number,
           address: settingsMap.address || contactSettings.address,
+        });
+
+        setFooterSettings({
+          footer_description: settingsMap.footer_description || footerSettings.footer_description,
+          footer_services: settingsMap.footer_services || footerSettings.footer_services,
+          footer_copyright: settingsMap.footer_copyright || footerSettings.footer_copyright,
+          footer_links: settingsMap.footer_links || footerSettings.footer_links,
+          social_links: settingsMap.social_links || footerSettings.social_links,
         });
       } catch (error) {
         console.error('Error loading footer settings:', error);
@@ -31,6 +62,11 @@ const Footer = () => {
 
   const phoneLink = `tel:${contactSettings.phone_number.replace(/\s/g, '')}`;
   const emailLink = `mailto:${contactSettings.contact_email}`;
+
+  const services = JSON.parse(footerSettings.footer_services || '[]');
+  const footerLinks = JSON.parse(footerSettings.footer_links || '[]');
+  const socialLinks = JSON.parse(footerSettings.social_links || '[]');
+  const copyrightText = footerSettings.footer_copyright.replace('{year}', currentYear.toString());
 
   return (
     <footer className="bg-forest text-cream">
@@ -45,37 +81,25 @@ const Footer = () => {
               <span className="font-heading text-xl font-semibold">Dr. Bidita Shah</span>
             </div>
             <p className="text-cream/70 text-sm leading-relaxed">
-              Transforming lives through personalized nutrition guidance and holistic wellness approaches.
+              {footerSettings.footer_description}
             </p>
             <div className="flex gap-3">
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
+              {socialLinks.map((social: any) => {
+                const IconComponent = social.icon === 'Facebook' ? Facebook :
+                                    social.icon === 'Instagram' ? Instagram :
+                                    social.icon === 'Twitter' ? Twitter :
+                                    social.icon === 'Linkedin' ? Linkedin : Facebook;
+                return (
+                  <a
+                    key={social.platform}
+                    href={social.url}
+                    className="w-9 h-9 rounded-full bg-cream/10 flex items-center justify-center hover:bg-primary transition-colors"
+                    aria-label={social.platform}
+                  >
+                    <IconComponent className="w-4 h-4" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -100,20 +124,13 @@ const Footer = () => {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-3">
-              {[
-                "Nutrition Consultation",
-                "Diet Plans",
-                "Weight Management",
-                "Sports Nutrition",
-                "Corporate Wellness",
-                "Food Entrepreneurship",
-              ].map((item) => (
-                <li key={item}>
+              {services.map((service: string) => (
+                <li key={service}>
                   <Link
                     to="/services"
                     className="text-cream/70 hover:text-primary transition-colors text-sm"
                   >
-                    {item}
+                    {service}
                   </Link>
                 </li>
               ))}
@@ -156,18 +173,18 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-cream/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-cream/60 text-sm">
-              © {currentYear} Dr. Bidita Shah. All rights reserved.
+              {copyrightText}
             </p>
             <div className="flex gap-6">
-              <Link to="/privacy" className="text-cream/60 hover:text-cream text-sm transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="text-cream/60 hover:text-cream text-sm transition-colors">
-                Terms of Service
-              </Link>
-              <Link to="/admin/auth" className="text-cream/60 hover:text-cream text-sm transition-colors">
-                Admin
-              </Link>
+              {footerLinks.map((link: any) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className="text-cream/60 hover:text-cream text-sm transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

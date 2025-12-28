@@ -17,16 +17,24 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const [phoneNumber, setPhoneNumber] = useState('+1 234 567 890');
+  const [phoneNumber, setPhoneNumber] = useState('+91 9876543210');
+  const [navbarBrandName, setNavbarBrandName] = useState('Dr. Bidita Shah');
+  const [navbarBrandTagline, setNavbarBrandTagline] = useState('Nutrition Consultant');
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
         const allSettings = await settingsAPI.getPublic();
         const settingsMap: any = allSettings || {};
-        
+
         if (settingsMap.phone_number) {
           setPhoneNumber(settingsMap.phone_number);
+        }
+        if (settingsMap.navbar_brand_name) {
+          setNavbarBrandName(settingsMap.navbar_brand_name);
+        }
+        if (settingsMap.navbar_brand_tagline) {
+          setNavbarBrandTagline(settingsMap.navbar_brand_tagline);
         }
       } catch (error) {
         console.error('Error loading navbar settings:', error);
@@ -65,9 +73,9 @@ const Navbar = () => {
             </div>
             <div className="hidden sm:block">
               <span className="font-heading text-xl font-semibold text-foreground">
-                Dr. Bidita Shah
+                {navbarBrandName}
               </span>
-              <p className="text-xs text-muted-foreground -mt-1">Nutrition Consultant</p>
+              <p className="text-xs text-muted-foreground -mt-1">{navbarBrandTagline}</p>
             </div>
           </Link>
 

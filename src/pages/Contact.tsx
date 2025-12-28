@@ -20,6 +20,9 @@ const Contact = () => {
     address: '123 Wellness Center, Health Street, Mumbai 400001',
     working_hours: 'Mon - Sat: 9:00 AM - 6:00 PM',
     whatsapp_number: '+91 98765 43210',
+    contact_page_title: 'Get In Touch',
+    contact_page_subtitle: 'Ready to start your nutrition journey?',
+    contact_page_description: 'Contact us today for personalized nutrition consultation.',
   });
 
   useEffect(() => {
@@ -34,6 +37,9 @@ const Contact = () => {
           address: settingsMap.address || '123 Wellness Center, Health Street, Mumbai 400001',
           working_hours: settingsMap.working_hours || 'Mon - Sat: 9:00 AM - 6:00 PM',
           whatsapp_number: settingsMap.whatsapp_number || '+91 98765 43210',
+          contact_page_title: settingsMap.contact_page_title || 'Get In Touch',
+          contact_page_subtitle: settingsMap.contact_page_subtitle || 'Ready to start your nutrition journey?',
+          contact_page_description: settingsMap.contact_page_description || 'Contact us today for personalized nutrition consultation.',
         });
       } catch (error) {
         console.error('Error loading contact settings:', error);
@@ -121,10 +127,10 @@ const Contact = () => {
           <div className="text-center max-w-3xl mx-auto animate-fade-up">
             <span className="text-primary font-medium text-sm uppercase tracking-wider">Contact Us</span>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
-              Let's Start Your Health Journey
+              {contactSettings.contact_page_title}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Have questions or ready to book a consultation? Reach out to us and we'll be happy to help.
+              {contactSettings.contact_page_subtitle}
             </p>
           </div>
         </div>

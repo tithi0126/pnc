@@ -73,4 +73,3 @@ export const BasicSettingsSection = ({ settings, onChange }: BasicSettingsSectio
     </div>
   );
 };
-

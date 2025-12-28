@@ -305,7 +305,7 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { Star, Quote, Clock, Users, Check, ArrowRight, Target, Award, Heart, Scale, Building, Brain, Utensils } from "lucide-react";
-import { servicesAPI } from "@/lib/api";
+import { servicesAPI, settingsAPI } from "@/lib/api";
 
 interface Service {
   id: string;
@@ -324,24 +324,27 @@ const Services = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pageSettings, setPageSettings] = useState({
+    services_page_title: 'Our Nutrition Services',
+    services_page_subtitle: 'Comprehensive nutrition solutions for optimal health',
+    services_page_intro: 'We offer a wide range of personalized nutrition services...',
+  });
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        
-        console.log('Fetching services from API...');
-        const data = await servicesAPI.getAll();
-        console.log('API response:', data);
-        
-        if (!data || !Array.isArray(data)) {
+
+        // Fetch services
+        const servicesData = await servicesAPI.getAll();
+        if (!servicesData || !Array.isArray(servicesData)) {
           throw new Error('Invalid data format received from server');
         }
-        
-        // Filter and transform the data
-        const transformed = data
-          .filter((s: any) => s.isActive !== false && s.is_active !== false) // Include services that are not explicitly inactive
+
+        // Filter and transform the services data
+        const transformed = servicesData
+          .filter((s: any) => s.isActive !== false && s.is_active !== false)
           .sort((a: any, b: any) => (a.sortOrder || a.sort_order || 0) - (b.sortOrder || b.sort_order || 0))
           .map((s: any) => ({
             id: s._id?.toString() || s.id || `service-${Date.now()}-${Math.random()}`,
@@ -355,21 +358,28 @@ const Services = () => {
             is_active: s.isActive ?? s.is_active ?? true,
             sort_order: s.sortOrder || s.sort_order || 0,
           }));
-        
-        console.log('Transformed services:', transformed);
+
         setServices(transformed);
-        
+
+        // Fetch settings
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        setPageSettings({
+          services_page_title: settingsMap.services_page_title || pageSettings.services_page_title,
+          services_page_subtitle: settingsMap.services_page_subtitle || pageSettings.services_page_subtitle,
+          services_page_intro: settingsMap.services_page_intro || pageSettings.services_page_intro,
+        });
+
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error('Error fetching data:', error);
         setError(error instanceof Error ? error.message : 'Failed to load services');
-        // Fallback to empty array
         setServices([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchServices();
+    fetchData();
   }, []);
 
   // Function to get gradient class based on index
@@ -487,11 +497,10 @@ const Services = () => {
               Our Services
             </span>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
-              Expert Nutrition Services
+              {pageSettings.services_page_title}
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Professional nutrition guidance tailored to your unique health journey. 
-              Discover how our comprehensive services can transform your well-being.
+              {pageSettings.services_page_subtitle}
             </p>
           </div>
         </div>

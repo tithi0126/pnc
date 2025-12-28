@@ -46,4 +46,3 @@ export const ValuePropositionSettingsSection = ({ settings, onChange }: ValuePro
     </div>
   );
 };
-

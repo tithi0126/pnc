@@ -1,0 +1,14 @@
+export { BasicSettingsSection } from './BasicSettingsSection';
+export { HeroSettingsSection } from './HeroSettingsSection';
+export { AboutPreviewSettingsSection } from './AboutPreviewSettingsSection';
+export { ServicesPreviewSettingsSection } from './ServicesPreviewSettingsSection';
+export { TestimonialsPreviewSettingsSection } from './TestimonialsPreviewSettingsSection';
+export { ValuePropositionSettingsSection } from './ValuePropositionSettingsSection';
+export { CTASettingsSection } from './CTASettingsSection';
+export { NavbarSettingsSection } from './NavbarSettingsSection';
+export { FooterSettingsSection } from './FooterSettingsSection';
+export { AboutPageSettingsSection } from './AboutPageSettingsSection';
+export { ServicesPageSettingsSection } from './ServicesPageSettingsSection';
+export { ContactPageSettingsSection } from './ContactPageSettingsSection';
+export { TestimonialsPageSettingsSection } from './TestimonialsPageSettingsSection';
+export { GalleryPageSettingsSection } from './GalleryPageSettingsSection';

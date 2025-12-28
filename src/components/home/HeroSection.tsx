@@ -18,9 +18,16 @@ const HeroSection = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const allSettings = await settingsAPI.getPublic();
-        const settingsMap: any = allSettings || {};
-        
+        const allSettings = await settingsAPI.getAll();
+        const settingsMap: any = {};
+        if (Array.isArray(allSettings)) {
+          allSettings.forEach((s: any) => {
+            settingsMap[s.key] = s.value;
+          });
+        } else if (typeof allSettings === 'object') {
+          Object.assign(settingsMap, allSettings);
+        }
+
         setSettings({
           hero_badge: settingsMap.hero_badge || settings.hero_badge,
           hero_title: settingsMap.hero_title || settings.hero_title,

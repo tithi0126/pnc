@@ -19,25 +19,27 @@ interface AboutPageSettingsSectionProps {
 export const AboutPageSettingsSection = ({ settings, onChange }: AboutPageSettingsSectionProps) => {
   return (
     <div className="bg-card rounded-2xl p-6 border border-border">
-      <h3 className="font-medium text-foreground mb-4">About Page</h3>
+      <h3 className="font-medium text-foreground mb-4">About Page Settings</h3>
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Page Title</label>
-          <input
-            type="text"
-            value={settings.about_page_title}
-            onChange={(e) => onChange('about_page_title', e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Page Subtitle</label>
-          <textarea
-            value={settings.about_page_subtitle}
-            onChange={(e) => onChange('about_page_subtitle', e.target.value)}
-            rows={2}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Page Title</label>
+            <input
+              type="text"
+              value={settings.about_page_title}
+              onChange={(e) => onChange('about_page_title', e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Page Subtitle</label>
+            <textarea
+              value={settings.about_page_subtitle}
+              onChange={(e) => onChange('about_page_subtitle', e.target.value)}
+              rows={2}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Story Title</label>
@@ -75,23 +77,25 @@ export const AboutPageSettingsSection = ({ settings, onChange }: AboutPageSettin
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Mission Statement</label>
-          <textarea
-            value={settings.about_mission}
-            onChange={(e) => onChange('about_mission', e.target.value)}
-            rows={2}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Vision Statement</label>
-          <textarea
-            value={settings.about_vision}
-            onChange={(e) => onChange('about_vision', e.target.value)}
-            rows={2}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Mission Statement</label>
+            <textarea
+              value={settings.about_mission}
+              onChange={(e) => onChange('about_mission', e.target.value)}
+              rows={2}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Vision Statement</label>
+            <textarea
+              value={settings.about_vision}
+              onChange={(e) => onChange('about_vision', e.target.value)}
+              rows={2}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            />
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Qualifications (one per line)</label>
@@ -117,30 +121,30 @@ export const AboutPageSettingsSection = ({ settings, onChange }: AboutPageSettin
               onChange('about_page_achievements', JSON.stringify(achievements));
             }}
             rows={4}
-            placeholder="5000+|Clients Helped&#10;15+|Years Experience"
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Core Values Title</label>
-          <input
-            type="text"
-            value={settings.about_core_values_title}
-            onChange={(e) => onChange('about_core_values_title', e.target.value)}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Core Values Subtitle</label>
-          <textarea
-            value={settings.about_core_values_subtitle}
-            onChange={(e) => onChange('about_core_values_subtitle', e.target.value)}
-            rows={2}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Core Values Title</label>
+            <input
+              type="text"
+              value={settings.about_core_values_title}
+              onChange={(e) => onChange('about_core_values_title', e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Core Values Subtitle</label>
+            <textarea
+              value={settings.about_core_values_subtitle}
+              onChange={(e) => onChange('about_core_values_subtitle', e.target.value)}
+              rows={2}
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 };
-

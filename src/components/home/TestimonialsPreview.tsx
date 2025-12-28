@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowRight, Quote, Star } from "lucide-react";
-import { testimonialsAPI } from "@/lib/api";
+import { testimonialsAPI, settingsAPI } from "@/lib/api";
 
 interface Testimonial {
   id: string;
@@ -14,15 +14,16 @@ interface Testimonial {
 
 const TestimonialsPreview = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [settings, setSettings] = useState({
+    testimonials_title: 'What Our Clients Say',
+    testimonials_subtitle: 'Real experiences from real people who transformed their health',
+  });
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
+    const fetchData = async () => {
       try {
-        console.log('TestimonialsPreview: Fetching testimonials...');
+        // Fetch testimonials
         const data = await testimonialsAPI.getAll();
-        console.log('TestimonialsPreview: Raw data received:', data?.length || 0, 'testimonials');
-
-        // Transform MongoDB data, filter for featured, and limit to 3
         const transformed = (data || [])
           .filter((t: any) => t.isFeatured ?? t.is_featured ?? false)
           .slice(0, 3)
@@ -34,15 +35,21 @@ const TestimonialsPreview = () => {
             rating: t.rating || 5,
             image_url: t.imageUrl || t.image_url || '',
           }));
-
-        console.log('TestimonialsPreview: Featured testimonials for homepage:', transformed.length);
         setTestimonials(transformed);
+
+        // Fetch settings
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        setSettings({
+          testimonials_title: settingsMap.testimonials_title || settings.testimonials_title,
+          testimonials_subtitle: settingsMap.testimonials_subtitle || settings.testimonials_subtitle,
+        });
       } catch (error) {
-        console.error('TestimonialsPreview: Error fetching testimonials:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
-    fetchTestimonials();
+    fetchData();
   }, []);
 
   return (
@@ -52,11 +59,10 @@ const TestimonialsPreview = () => {
         <div className="text-center max-w-3xl mx-auto mb-16 animate-fade-up">
           <span className="text-primary font-medium text-sm uppercase tracking-wider">Testimonials</span>
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
-            What Our Clients Say
+            {settings.testimonials_title}
           </h2>
           <p className="text-muted-foreground leading-relaxed">
-            Real stories from real people who have transformed their lives through our personalized 
-            nutrition programs.
+            {settings.testimonials_subtitle}
           </p>
         </div>
 

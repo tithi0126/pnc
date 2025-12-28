@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { X, Settings } from "lucide-react";
-import { galleryAPI } from "@/lib/api";
+import { galleryAPI, settingsAPI } from "@/lib/api";
 
 interface GalleryImage {
   id: string;
@@ -19,6 +19,10 @@ const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageSettings, setPageSettings] = useState({
+    gallery_page_title: 'Our Gallery',
+    gallery_page_subtitle: 'Explore our nutrition and wellness journey',
+  });
 
   useEffect(() => {
     const fetchGallery = async () => {
@@ -40,6 +44,14 @@ const Gallery = () => {
         // Extract unique categories
         const uniqueCategories = ["All", ...new Set(transformed.map(img => img.category).filter(Boolean) as string[])];
         setCategories(uniqueCategories);
+
+        // Fetch settings
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        setPageSettings({
+          gallery_page_title: settingsMap.gallery_page_title || pageSettings.gallery_page_title,
+          gallery_page_subtitle: settingsMap.gallery_page_subtitle || pageSettings.gallery_page_subtitle,
+        });
       } catch (error) {
         console.error('Error fetching gallery:', error);
       } finally {
@@ -65,10 +77,10 @@ const Gallery = () => {
           <div className="text-center max-w-3xl mx-auto animate-fade-up">
             <span className="text-primary font-medium text-sm uppercase tracking-wider">Gallery</span>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
-              Glimpses of Our Journey
+              {pageSettings.gallery_page_title}
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Explore moments from our clinic, workshops, healthy recipes, and client transformations.
+              {pageSettings.gallery_page_subtitle}
             </p>
           </div>
         </div>

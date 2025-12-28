@@ -35,7 +35,7 @@ export const HeroSettingsSection = ({ settings, onChange }: HeroSettingsSectionP
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Title Highlight Text (will be styled differently)</label>
+          <label className="block text-sm font-medium mb-2">Title Highlight Text</label>
           <input
             type="text"
             value={settings.hero_title_highlight}
@@ -85,4 +85,3 @@ export const HeroSettingsSection = ({ settings, onChange }: HeroSettingsSectionP
     </div>
   );
 };
-

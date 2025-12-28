@@ -63,7 +63,25 @@ router.get('/:id', async (req, res) => {
 // Create new gallery image (admin only)
 router.post('/', auth, isAdmin, async (req, res) => {
   try {
-    const image = new Gallery(req.body);
+    // Handle both camelCase and snake_case field names
+    const imageUrl = req.body.imageUrl || req.body.image_url || '';
+    const altText = req.body.altText || req.body.alt_text || '';
+    const isActive = req.body.isActive !== undefined 
+      ? req.body.isActive 
+      : (req.body.is_active !== undefined ? req.body.is_active : true);
+    const sortOrder = req.body.sortOrder !== undefined 
+      ? req.body.sortOrder 
+      : (req.body.sort_order !== undefined ? req.body.sort_order : 0);
+    
+    const image = new Gallery({
+      title: req.body.title,
+      altText: altText,
+      imageUrl: imageUrl,
+      category: req.body.category || 'General',
+      isActive: isActive,
+      sortOrder: sortOrder
+    });
+
     await image.save();
 
     res.status(201).json(image);
@@ -76,9 +94,32 @@ router.post('/', auth, isAdmin, async (req, res) => {
 // Update gallery image (admin only)
 router.put('/:id', auth, isAdmin, async (req, res) => {
   try {
+    // Handle both camelCase and snake_case field names
+    const updateData = { ...req.body };
+    
+    if (req.body.image_url !== undefined && !req.body.imageUrl) {
+      updateData.imageUrl = req.body.image_url;
+      delete updateData.image_url;
+    }
+    
+    if (req.body.alt_text !== undefined && !req.body.altText) {
+      updateData.altText = req.body.alt_text;
+      delete updateData.alt_text;
+    }
+    
+    if (req.body.is_active !== undefined && req.body.isActive === undefined) {
+      updateData.isActive = req.body.is_active;
+      delete updateData.is_active;
+    }
+    
+    if (req.body.sort_order !== undefined && req.body.sortOrder === undefined) {
+      updateData.sortOrder = req.body.sort_order;
+      delete updateData.sort_order;
+    }
+
     const image = await Gallery.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 

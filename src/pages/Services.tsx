@@ -341,17 +341,17 @@ const Services = () => {
         
         // Filter and transform the data
         const transformed = data
-          .filter((s: any) => s.isActive || s.is_active)
+          .filter((s: any) => s.isActive !== false && s.is_active !== false) // Include services that are not explicitly inactive
           .sort((a: any, b: any) => (a.sortOrder || a.sort_order || 0) - (b.sortOrder || b.sort_order || 0))
           .map((s: any) => ({
-            id: s._id?.toString() || s.id || '',
+            id: s._id?.toString() || s.id || `service-${Date.now()}-${Math.random()}`,
             title: s.title || 'Untitled Service',
-            short_description: s.shortDescription || s.short_description || '',
+            short_description: s.shortDescription || s.short_description || 'No description available',
             full_description: s.fullDescription || s.full_description || '',
             icon: s.icon || 'Star',
-            duration: s.duration || 'Not specified',
-            ideal_for: s.idealFor || s.ideal_for || 'All individuals',
-            benefits: Array.isArray(s.benefits) ? s.benefits : [],
+            duration: s.duration || 'Duration not specified',
+            ideal_for: s.idealFor || s.ideal_for || 'Suitable for all individuals',
+            benefits: Array.isArray(s.benefits) ? s.benefits.filter(b => b && typeof b === 'string' && b.trim()) : [],
             is_active: s.isActive ?? s.is_active ?? true,
             sort_order: s.sortOrder || s.sort_order || 0,
           }));
@@ -394,7 +394,12 @@ const Services = () => {
       Brain: Brain,
       Utensils: Utensils,
       Target: Target,
+      Users: Users,
+      Award: Award,
+      Clock: Clock,
+      Check: Check,
       Star: Star,
+      Apple: Star, // Default fallback
     };
     return iconMap[iconName] || Star;
   };
@@ -545,20 +550,28 @@ const Services = () => {
                       <div>
                         <Quote className="w-12 h-12 text-primary/30 mb-6" />
                         <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                          {service.short_description}
+                          {service.short_description || service.full_description || 'Detailed information about this service will be provided upon consultation.'}
                         </p>
-                        
-                        {service.benefits && service.benefits.length > 0 && (
+
+                        {service.benefits && service.benefits.length > 0 ? (
                           <div className="space-y-3">
                             <h4 className="font-semibold text-foreground text-lg">Key Benefits:</h4>
                             <ul className="space-y-2">
-                              {service.benefits.slice(0, 3).map((benefit, i) => (
-                                <li key={i} className="flex items-center gap-3 text-muted-foreground">
-                                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
-                                  <span>{benefit}</span>
+                              {service.benefits.map((benefit, i) => (
+                                <li key={i} className="flex items-start gap-3 text-muted-foreground">
+                                  <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                                  <span className="leading-relaxed">{benefit}</span>
                                 </li>
                               ))}
                             </ul>
+                          </div>
+                        ) : (
+                          <div className="space-y-3">
+                            <h4 className="font-semibold text-foreground text-lg">Service Overview:</h4>
+                            <p className="text-muted-foreground leading-relaxed">
+                              This comprehensive service is designed to meet your specific nutritional needs and health goals.
+                              Contact us for personalized consultation and detailed benefits.
+                            </p>
                           </div>
                         )}
                       </div>

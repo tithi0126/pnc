@@ -101,7 +101,9 @@ export const TestimonialsTab = ({ testimonials, onRefresh }: TestimonialsTabProp
           >
             <Plus className="w-4 h-4" /> Add Testimonial
           </button>
-          {(["all", "approved", "pending"] as const).map((f) => (
+          {/* {(["all", "approved", "pending"] as const).map((f) => ( */}
+          {/* {(["all"] as const).map((f) => (
+
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -113,7 +115,7 @@ export const TestimonialsTab = ({ testimonials, onRefresh }: TestimonialsTabProp
             >
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
-          ))}
+          ))} */}
         </div>
       </div>
 
@@ -184,7 +186,7 @@ export const TestimonialsTab = ({ testimonials, onRefresh }: TestimonialsTabProp
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleToggleFeatured(testimonial.id, testimonial.is_featured ?? false)}
                     className={`p-2 rounded-xl transition-colors ${
                       testimonial.is_featured
@@ -194,7 +196,7 @@ export const TestimonialsTab = ({ testimonials, onRefresh }: TestimonialsTabProp
                     title={testimonial.is_featured ? "Remove from featured" : "Add to featured"}
                   >
                     <Star className={`w-4 h-4 ${testimonial.is_featured ? "fill-current" : ""}`} />
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => handleToggleApproval(testimonial.id, testimonial.is_approved ?? false)}
                     className={`p-2 rounded-xl transition-colors ${

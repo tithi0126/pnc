@@ -18,30 +18,54 @@ const Testimonials = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        console.log('Testimonials page: Fetching testimonials...');
+        setIsLoading(true);
+        setError(null);
+
+        console.log('Fetching testimonials from API...');
         const data = await testimonialsAPI.getAll();
-        console.log('Testimonials page: Raw data received:', data?.length || 0, 'testimonials');
+        console.log('API response:', data);
 
-        // Transform MongoDB data to match interface
-        const transformed = (data || []).map((t: any) => ({
-          id: t._id?.toString() || t.id || '',
-          name: t.name || '',
-          role: t.role || '',
-          location: t.location || '',
-          content: t.content || '',
-          rating: t.rating || 5,
-          image_url: t.imageUrl || t.image_url || '',
-          is_featured: t.isFeatured ?? t.is_featured ?? false,
-        }));
+        if (!data || !Array.isArray(data)) {
+          throw new Error('Invalid data format received from server');
+        }
 
-        console.log('Testimonials page: Transformed testimonials:', transformed.length);
+        // Transform and validate MongoDB data
+        const transformed = data
+          .filter((t: any) => t.isApproved !== false && t.is_approved !== false) // Include testimonials that are not explicitly unapproved
+          .sort((a: any, b: any) => {
+            // Sort featured testimonials first, then by creation date
+            if (a.isFeatured && !b.isFeatured) return -1;
+            if (!a.isFeatured && b.isFeatured) return 1;
+            return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+          })
+          .map((t: any) => ({
+            id: t._id?.toString() || t.id || `testimonial-${Date.now()}-${Math.random()}`,
+            name: t.name || 'Anonymous',
+            role: t.role || null,
+            location: t.location || null,
+            content: t.content || 'No testimonial content available',
+            rating: Math.max(1, Math.min(5, t.rating || 5)), // Ensure rating is between 1-5
+            image_url: t.imageUrl || t.image_url || null,
+            is_featured: t.isFeatured ?? t.is_featured ?? false,
+          }));
+
+        console.log('Transformed testimonials:', transformed);
         setTestimonials(transformed);
+
+        // Reset active index if it's out of bounds
+        if (transformed.length > 0 && activeIndex >= transformed.length) {
+          setActiveIndex(0);
+        }
+
       } catch (error) {
-        console.error('Testimonials page: Error fetching testimonials:', error);
+        console.error('Error fetching testimonials:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load testimonials');
+        setTestimonials([]);
       } finally {
         setIsLoading(false);
       }
@@ -62,8 +86,69 @@ const Testimonials = () => {
     return (
       <Layout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading testimonials...</p>
+          </div>
         </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-destructive mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Error Loading Testimonials</h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (testimonials.length === 0) {
+    return (
+      <Layout>
+        <section className="pt-32 pb-16 bg-gradient-hero">
+          <div className="container-custom">
+            <div className="text-center max-w-3xl mx-auto">
+              <span className="text-primary font-medium text-sm uppercase tracking-wider">Testimonials</span>
+              <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
+                Client Success Stories
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                Hear what our clients have to say about their transformation journey.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="section-padding">
+          <div className="container-custom text-center py-20">
+            <div className="max-w-md mx-auto">
+              <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+                <Quote className="w-12 h-12 text-muted-foreground" />
+              </div>
+              <h2 className="text-2xl font-semibold mb-4">No Testimonials Yet</h2>
+              <p className="text-muted-foreground mb-6">
+                Testimonials will be added soon. Check back later to read success stories from our clients.
+              </p>
+            </div>
+          </div>
+        </section>
       </Layout>
     );
   }
@@ -100,22 +185,36 @@ const Testimonials = () => {
 
                 <div className="flex items-center justify-between flex-wrap gap-6">
                   <div className="flex items-center gap-4">
-                    {testimonials[activeIndex].image_url && (
-                      <img
-                        src={testimonials[activeIndex].image_url}
-                        alt={testimonials[activeIndex].name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    )}
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                      {testimonials[activeIndex].image_url ? (
+                        <img
+                          src={testimonials[activeIndex].image_url}
+                          alt={testimonials[activeIndex].name}
+                          className="w-full h-full rounded-full object-cover"
+                          onError={(e) => {
+                            // Fallback to initials if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `<div class="w-full h-full rounded-full bg-primary/10 flex items-center justify-center"><span class="text-primary font-semibold text-lg">${testimonials[activeIndex].name.charAt(0).toUpperCase()}</span></div>`;
+                            }
+                          }}
+                        />
+                      ) : (
+                        <span className="text-primary font-semibold text-lg">
+                          {testimonials[activeIndex].name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
                     <div>
                       <h3 className="font-heading font-semibold text-lg text-foreground">
                         {testimonials[activeIndex].name}
                       </h3>
                       <p className="text-muted-foreground">
-                        {testimonials[activeIndex].role} • {testimonials[activeIndex].location}
+                        {[testimonials[activeIndex].role, testimonials[activeIndex].location].filter(Boolean).join(' • ') || 'Client'}
                       </p>
                       <div className="flex gap-1 mt-1">
-                        {[...Array(testimonials[activeIndex].rating || 5)].map((_, i) => (
+                        {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
                           <Star key={i} className="w-4 h-4 fill-accent text-accent" />
                         ))}
                       </div>
@@ -188,16 +287,29 @@ const Testimonials = () => {
                 </p>
 
                 <div className="flex items-center gap-3">
-                  {testimonial.image_url && (
-                    <img
-                      src={testimonial.image_url}
-                      alt={testimonial.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  )}
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                    {testimonial.image_url ? (
+                      <img
+                        src={testimonial.image_url}
+                        alt={testimonial.name}
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `<span class="text-primary font-semibold">${testimonial.name.charAt(0).toUpperCase()}</span>`;
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span className="text-primary font-semibold">
+                        {testimonial.name.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
                   <div>
                     <h4 className="font-medium text-foreground">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role || 'Client'}</p>
                   </div>
                 </div>
               </div>

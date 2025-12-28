@@ -17,7 +17,7 @@ export class TestimonialService {
 
   static async getAllTestimonials(token: string): Promise<ITestimonial[]> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/testimonials`, {
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/admin`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -117,8 +117,8 @@ export class TestimonialService {
 
   static async toggleApproval(id: string, token: string): Promise<ITestimonial> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/toggle-approval`, {
-        method: 'PUT',
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/approval`, {
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -138,8 +138,8 @@ export class TestimonialService {
 
   static async toggleFeatured(id: string, token: string): Promise<ITestimonial> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/toggle-featured`, {
-        method: 'PUT',
+      const response = await fetch(`${this.API_BASE_URL}/testimonials/${id}/featured`, {
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
         },

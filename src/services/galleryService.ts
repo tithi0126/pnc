@@ -14,7 +14,7 @@ export class GalleryService {
 
   static async getAllImages(token: string): Promise<IGallery[]> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/gallery`, {
+      const response = await fetch(`${this.API_BASE_URL}/gallery/admin`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -32,7 +32,7 @@ export class GalleryService {
 
   static async getActiveImages(): Promise<IGallery[]> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/gallery/active`);
+      const response = await fetch(`${this.API_BASE_URL}/gallery`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -112,7 +112,7 @@ export class GalleryService {
   static async toggleActive(id: string, token: string): Promise<IGallery> {
     try {
       const response = await fetch(`${this.API_BASE_URL}/gallery/${id}/toggle`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
         },

@@ -19,6 +19,21 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get active services (alias for compatibility)
+router.get('/active', async (req, res) => {
+  try {
+    const services = await Service.find({ isActive: true })
+      .sort({ sortOrder: 1 })
+      .select('-__v');
+
+    console.log('Found', services.length, 'active services');
+    res.json(services);
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    res.status(500).json({ error: 'Server error fetching services.' });
+  }
+});
+
 // Get all services for admin (including inactive)
 router.get('/admin', auth, isAdmin, async (req, res) => {
   try {

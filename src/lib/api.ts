@@ -173,7 +173,7 @@ export const testimonialsAPI = {
 
 export const galleryAPI = {
   async getAll() {
-    return await httpClient.get('/gallery/active');
+    return await httpClient.get('/gallery');
   },
 
   async getAllAdmin() {

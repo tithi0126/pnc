@@ -288,7 +288,7 @@ const TestimonialFormModal = ({
               type="text"
               value={formData.location || ""}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              placeholder="e.g., Mumbai, India"
+              placeholder="e.g., Surat, Gujarat"
               className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             />
           </div>

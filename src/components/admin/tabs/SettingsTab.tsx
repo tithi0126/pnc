@@ -32,7 +32,7 @@ export const SettingsTab = () => {
     contact_email: 'contact@drbiditashah.com',
     whatsapp_number: '+91 98765 43210',
     phone_number: '+1 234 567 890',
-    address: '123 Wellness Center, Health Street, Mumbai 400001',
+    address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
     working_hours: 'Mon - Sat: 9:00 AM - 6:00 PM',
 
     // Hero Section
@@ -107,7 +107,7 @@ export const SettingsTab = () => {
 
     // About Page
     about_page_title: 'About Dr. Bidita Shah',
-    about_page_subtitle: 'Leading Clinical Nutritionist & Dietitian in Mumbai',
+    about_page_subtitle: 'Leading Clinical Nutritionist & Dietitian in Surat',
     about_story_title: 'My Journey in Nutrition',
     about_story_paragraph_1: 'My passion for nutrition began during my academic journey...',
     about_story_paragraph_2: 'Over the past 15 years, I have had the privilege of working with over 5,000 clients...',
@@ -178,7 +178,7 @@ export const SettingsTab = () => {
         contact_email: getSetting('contact_email', 'drbiditashah@gmail.com'),
         whatsapp_number: getSetting('whatsapp_number', '+91 9876543210'),
         phone_number: getSetting('phone_number', '+91 9876543210'),
-        address: getSetting('address', 'Mumbai, Maharashtra, India'),
+        address: getSetting('address', 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat'),
         working_hours: getSetting('working_hours', 'Mon - Sat: 10:00 AM - 7:00 PM'),
         hero_badge: getSetting('hero_badge', 'Leading Nutrition Consultant'),
         hero_title: getSetting('hero_title', 'Transform Your Health Journey with Dr. Bidita Shah'),
@@ -221,7 +221,7 @@ export const SettingsTab = () => {
         cta_description: getSetting('cta_description', 'Take the first step towards a healthier, more vibrant you. Book a consultation today and discover how personalized nutrition can change your life.'),
         navbar_brand_name: getSetting('navbar_brand_name', 'Dr. Bidita Shah'),
         navbar_brand_tagline: getSetting('navbar_brand_tagline', 'Nutrition Consultant'),
-        footer_description: getSetting('footer_description', 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Mumbai.'),
+        footer_description: getSetting('footer_description', 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Surat.'),
         footer_services: getSetting('footer_services', JSON.stringify([
           'Nutrition Consultation',
           'Diet Plans',
@@ -242,7 +242,7 @@ export const SettingsTab = () => {
           { platform: 'LinkedIn', url: 'https://linkedin.com/in/drbiditashah', icon: 'Linkedin' }
         ])),
         about_page_title: getSetting('about_page_title', 'About Dr. Bidita Shah'),
-        about_page_subtitle: getSetting('about_page_subtitle', 'Leading Clinical Nutritionist & Dietitian in Mumbai, dedicated to transforming lives through evidence-based nutrition.'),
+        about_page_subtitle: getSetting('about_page_subtitle', 'Leading Clinical Nutritionist & Dietitian in Surat, dedicated to transforming lives through evidence-based nutrition.'),
         about_story_title: getSetting('about_story_title', 'My Journey in Nutrition'),
         about_story_paragraph_1: getSetting('about_story_paragraph_1', 'My passion for nutrition began during my academic journey, where I pursued advanced degrees in Clinical Nutrition and Dietetics. Witnessing the transformative power of proper nutrition firsthand inspired me to dedicate my career to helping others achieve optimal health.'),
         about_story_paragraph_2: getSetting('about_story_paragraph_2', 'Over the past 15 years, I have had the privilege of working with over 5,000 clients, from professional athletes seeking peak performance to individuals managing chronic conditions like diabetes, thyroid disorders, and metabolic syndrome. Each success story reinforces my commitment to personalized, evidence-based nutrition counseling.'),
@@ -250,7 +250,7 @@ export const SettingsTab = () => {
         about_mission: getSetting('about_mission', 'To empower individuals with the knowledge, tools, and personalized nutrition strategies they need to achieve lasting health transformation and optimal well-being.'),
         about_vision: getSetting('about_vision', 'A world where everyone has access to expert, personalized nutrition guidance that enables them to live healthier, more vibrant lives free from diet-related health challenges.'),
         about_page_credentials: getSetting('about_page_credentials', JSON.stringify([
-          'Ph.D. in Clinical Nutrition - University of Mumbai',
+          'Ph.D. in Clinical Nutrition - University of Surat',
           'M.Sc. in Dietetics & Food Service Management - SNDT University',
           'Certified Diabetes Educator (CDE) - Indian Association of Diabetes Educators',
           'Sports Nutrition Specialist - International Society of Sports Nutrition',

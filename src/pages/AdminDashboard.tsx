@@ -9,7 +9,6 @@ import { ServicesTab } from "@/components/admin/tabs/ServicesTab";
 import { TestimonialsTab } from "@/components/admin/tabs/TestimonialsTab";
 import { GalleryTab } from "@/components/admin/tabs/GalleryTab";
 import { InquiriesTab } from "@/components/admin/tabs/InquiriesTab";
-// import { UsersTab } from "@/components/admin/tabs/UsersTab"; // Commented out user management
 import { SettingsTab } from "@/components/admin/tabs/SettingsTab";
 
 interface Service {

@@ -16,7 +16,7 @@ const About = () => {
     about_mission: 'To empower individuals with the knowledge and tools they need to achieve lasting health through personalized nutrition strategies that work for their unique lives.',
     about_vision: 'A world where everyone has access to expert nutrition guidance and where healthy eating is both accessible and enjoyable for all.',
     about_page_credentials: JSON.stringify([
-      'Ph.D. in Clinical Nutrition - University of Mumbai',
+      'Ph.D. in Clinical Nutrition - University of Surat',
       'Certified Dietitian (RD) - Indian Dietetic Association',
       'Sports Nutrition Specialist - International Society of Sports Nutrition',
       'Certified Diabetes Educator',

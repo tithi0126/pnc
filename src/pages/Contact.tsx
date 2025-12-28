@@ -17,7 +17,7 @@ const Contact = () => {
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'info@drbiditashah.com',
     phone_number: '+1 234 567 890',
-    address: '123 Wellness Center, Health Street, Mumbai 400001',
+    address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
     working_hours: 'Mon - Sat: 9:00 AM - 6:00 PM',
     whatsapp_number: '+91 98765 43210',
     contact_page_title: 'Get In Touch',
@@ -34,7 +34,7 @@ const Contact = () => {
         setContactSettings({
           contact_email: settingsMap.contact_email || 'info@drbiditashah.com',
           phone_number: settingsMap.phone_number || '+1 234 567 890',
-          address: settingsMap.address || '123 Wellness Center, Health Street, Mumbai 400001',
+          address: settingsMap.address || 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
           working_hours: settingsMap.working_hours || 'Mon - Sat: 9:00 AM - 6:00 PM',
           whatsapp_number: settingsMap.whatsapp_number || '+91 98765 43210',
           contact_page_title: settingsMap.contact_page_title || 'Get In Touch',
@@ -109,7 +109,7 @@ const Contact = () => {
       icon: MapPin,
       title: "Address",
       content: contactSettings.address,
-      link: "https://maps.google.com",
+      link: "https://maps.google.com/maps?q=C/o+Priyam+Clinic,+Shop+No+18,+Mahalaxmi+Arcade,+Near+Mahalaxmi+Temple,+Opposite+Sagar+Complex,+Adajan+Dn,+Surat-395009,+Gujarat",
     },
     {
       icon: Clock,
@@ -297,17 +297,17 @@ const Contact = () => {
 
               {/* Map */}
               <div className="rounded-xl overflow-hidden border border-border">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.9025666891745!2d72.82476721490238!3d19.01744988712638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce6e65b32c71%3A0x2a5de3f8b8b0e!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1635000000000!5m2!1sen!2sin"
-                  width="100%"
-                  height="300"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Location Map"
-                />
-              </div>
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3728.8!2d72.7926!3d21.1905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395fc5c4d1a9d8b7%3A0x2e6b4c4a7a9c8f2!2sPriyam%20Clinic%2C%20Shop%20No%2018%2C%20Mahalaxmi%20Arcade%2C%20Near%20Mahalaxmi%20Temple%2C%20Opposite%20Sagar%20Complex%2C%20Adajan%20Dn%2C%20Surat%2C%20Gujarat%20395009!5e0!3m2!1sen!2sin!4v1703123456789!5m2!1sen!2sin&markers=color:red%7Clabel:P%7C21.1905,72.7926"
+    width="100%"
+    height="300"
+    style={{ border: 0 }}
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+    title="Location Map"
+  />
+</div>
             </div>
           </div>
         </div>

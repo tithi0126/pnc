@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
-import { X, Settings } from "lucide-react";
+import { X } from "lucide-react";
 import { galleryAPI, settingsAPI } from "@/lib/api";
 
 interface GalleryImage {

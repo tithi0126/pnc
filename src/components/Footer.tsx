@@ -8,11 +8,11 @@ const Footer = () => {
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'drbiditashah@gmail.com',
     phone_number: '+91 9876543210',
-    address: 'Mumbai, Maharashtra, India',
+    address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
   });
 
   const [footerSettings, setFooterSettings] = useState({
-    footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Mumbai.',
+    footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Surat.',
     footer_services: JSON.stringify([
       'Nutrition Consultation',
       'Diet Plans',
@@ -43,7 +43,7 @@ const Footer = () => {
         setContactSettings({
           contact_email: settingsMap.contact_email || contactSettings.contact_email,
           phone_number: settingsMap.phone_number || contactSettings.phone_number,
-          address: settingsMap.address || contactSettings.address,
+          address: settingsMap.address || 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
         });
 
         setFooterSettings({

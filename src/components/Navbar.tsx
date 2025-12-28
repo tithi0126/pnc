@@ -22,15 +22,8 @@ const Navbar = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const allSettings = await settingsAPI.getAll();
-        const settingsMap: any = {};
-        if (Array.isArray(allSettings)) {
-          allSettings.forEach((s: any) => {
-            settingsMap[s.key] = s.value;
-          });
-        } else if (typeof allSettings === 'object') {
-          Object.assign(settingsMap, allSettings);
-        }
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
         
         if (settingsMap.phone_number) {
           setPhoneNumber(settingsMap.phone_number);
@@ -127,7 +120,7 @@ const Navbar = () => {
             isOpen ? "max-h-96 mt-4" : "max-h-0"
           )}
         >
-          <div className="flex flex-col gap-2 py-4 border-t border-border">
+          <div className="flex flex-col gap-2 py-4 border-t border-border bg-background rounded-lg shadow-lg">
             {navLinks.map((link) => (
               <Link
                 key={link.path}

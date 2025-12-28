@@ -294,6 +294,10 @@ export const settingsAPI = {
     return await SettingsService.getAllSettings(token);
   },
 
+  async getPublic() {
+    return await SettingsService.getPublicSettings();
+  },
+
   async getByKey(key: string, defaultValue = '') {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');

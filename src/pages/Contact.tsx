@@ -25,15 +25,8 @@ const Contact = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const allSettings = await settingsAPI.getAll();
-        const settingsMap: any = {};
-        if (Array.isArray(allSettings)) {
-          allSettings.forEach((s: any) => {
-            settingsMap[s.key] = s.value;
-          });
-        } else if (typeof allSettings === 'object') {
-          Object.assign(settingsMap, allSettings);
-        }
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
         
         setContactSettings({
           contact_email: settingsMap.contact_email || 'info@drbiditashah.com',

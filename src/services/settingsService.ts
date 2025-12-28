@@ -20,14 +20,42 @@ export class SettingsService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const settings = await response.json();
-      const settingsMap: Record<string, string> = {};
-      settings.forEach((setting: ISetting) => {
-        settingsMap[setting.key] = setting.value;
-      });
-      return settingsMap;
+      // Backend returns an object (settingsMap), not an array
+      if (Array.isArray(settings)) {
+        const settingsMap: Record<string, string> = {};
+        settings.forEach((setting: ISetting) => {
+          settingsMap[setting.key] = setting.value;
+        });
+        return settingsMap;
+      }
+      // If it's already an object, return it directly
+      return settings as Record<string, string>;
     } catch (error) {
       console.error('Failed to fetch settings:', error);
       throw new Error('Failed to fetch settings');
+    }
+  }
+
+  static async getPublicSettings(): Promise<Record<string, string>> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/settings`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const settings = await response.json();
+      // Backend returns an object (settingsMap), not an array
+      if (Array.isArray(settings)) {
+        const settingsMap: Record<string, string> = {};
+        settings.forEach((setting: ISetting) => {
+          settingsMap[setting.key] = setting.value;
+        });
+        return settingsMap;
+      }
+      // If it's already an object, return it directly
+      return settings as Record<string, string>;
+    } catch (error) {
+      console.error('Failed to fetch public settings:', error);
+      throw new Error('Failed to fetch public settings');
     }
   }
 

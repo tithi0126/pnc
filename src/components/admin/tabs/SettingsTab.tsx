@@ -2,10 +2,16 @@ import { useState, useEffect } from "react";
 import { Save } from "lucide-react";
 import { settingsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/contexts/AuthContext";
+import { AccountInfoSection } from "./settings/AccountInfoSection";
+import { BasicSettingsSection } from "./settings/BasicSettingsSection";
+import { HeroSettingsSection } from "./settings/HeroSettingsSection";
+import { AboutSettingsSection } from "./settings/AboutSettingsSection";
+import { ValuePropositionSettingsSection } from "./settings/ValuePropositionSettingsSection";
+import { WhyChooseUsSettingsSection } from "./settings/WhyChooseUsSettingsSection";
+import { CTASettingsSection } from "./settings/CTASettingsSection";
+import { AboutPageSettingsSection } from "./settings/AboutPageSettingsSection";
 
 export const SettingsTab = () => {
-  const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -46,7 +52,19 @@ export const SettingsTab = () => {
       'Sustainable lifestyle changes, not quick fixes',
       'Holistic approach considering all aspects of health'
     ]),
-    
+
+    // Why Choose Us
+    why_choose_title: 'Why Choose Dr. Bidita Shah?',
+    why_choose_subtitle: 'Discover what makes our nutrition consulting services the right choice for your health journey.',
+    why_choose_features: JSON.stringify([
+      { title: 'Expert Certification', description: 'Over 15 years of clinical nutrition experience with advanced certifications' },
+      { title: 'Personalized Approach', description: 'Every plan is tailored to your unique needs, preferences, and lifestyle' },
+      { title: 'Evidence-Based Methods', description: 'All recommendations backed by the latest nutritional science and research' },
+      { title: 'Holistic Care', description: 'Comprehensive approach considering diet, lifestyle, and mental well-being' },
+      { title: 'Ongoing Support', description: 'Continuous guidance and adjustments throughout your transformation journey' },
+      { title: 'Proven Results', description: '98% client satisfaction rate with sustainable, long-lasting results' }
+    ]),
+
     // CTA Section
     cta_title: 'Ready to Start Your Wellness Journey?',
     cta_description: 'Take the first step towards a healthier you. Book a consultation today and discover how personalized nutrition can transform your life.',
@@ -85,14 +103,7 @@ export const SettingsTab = () => {
     try {
       const allSettings = await settingsAPI.getAll();
       
-      const settingsMap: any = {};
-      if (Array.isArray(allSettings)) {
-        allSettings.forEach((setting: any) => {
-          settingsMap[setting.key] = setting.value || '';
-        });
-      } else if (typeof allSettings === 'object') {
-        Object.assign(settingsMap, allSettings);
-      }
+      const settingsMap: any = allSettings || {};
 
       const getSetting = (key: string, defaultValue: string) => 
         settingsMap[key] || defaultValue;
@@ -124,6 +135,16 @@ export const SettingsTab = () => {
           'Direct communication with Dr. Shah',
           'Sustainable lifestyle changes, not quick fixes',
           'Holistic approach considering all aspects of health'
+        ])),
+        why_choose_title: getSetting('why_choose_title', 'Why Choose Dr. Bidita Shah?'),
+        why_choose_subtitle: getSetting('why_choose_subtitle', 'Discover what makes our nutrition consulting services the right choice for your health journey.'),
+        why_choose_features: getSetting('why_choose_features', JSON.stringify([
+          { title: 'Expert Certification', description: 'Over 15 years of clinical nutrition experience with advanced certifications' },
+          { title: 'Personalized Approach', description: 'Every plan is tailored to your unique needs, preferences, and lifestyle' },
+          { title: 'Evidence-Based Methods', description: 'All recommendations backed by the latest nutritional science and research' },
+          { title: 'Holistic Care', description: 'Comprehensive approach considering diet, lifestyle, and mental well-being' },
+          { title: 'Ongoing Support', description: 'Continuous guidance and adjustments throughout your transformation journey' },
+          { title: 'Proven Results', description: '98% client satisfaction rate with sustainable, long-lasting results' }
         ])),
         cta_title: getSetting('cta_title', 'Ready to Start Your Wellness Journey?'),
         cta_description: getSetting('cta_description', 'Take the first step towards a healthier you. Book a consultation today and discover how personalized nutrition can transform your life.'),
@@ -162,6 +183,10 @@ export const SettingsTab = () => {
     }
   };
 
+  const handleSettingChange = (key: string, value: string) => {
+    setSettings((prev) => ({ ...prev, [key]: value }));
+  };
+
   const saveSettings = async () => {
     setIsSaving(true);
     try {
@@ -197,397 +222,86 @@ export const SettingsTab = () => {
         <p className="text-sm text-muted-foreground">Manage all website content and preferences</p>
       </div>
 
-      {/* Account Info */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">Account Information</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Email</label>
-            <input
-              type="email"
-              value={user?.email || ""}
-              disabled
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted text-muted-foreground"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">User ID</label>
-            <input
-              type="text"
-              value={user?.id || ""}
-              disabled
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-muted text-muted-foreground font-mono text-sm"
-            />
-          </div>
-        </div>
-      </div>
+      <AccountInfoSection />
 
-      {/* Basic Website Settings */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">Basic Settings</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Site Name</label>
-            <input
-              type="text"
-              value={settings.site_name}
-              onChange={(e) => setSettings({ ...settings, site_name: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Contact Email</label>
-            <input
-              type="email"
-              value={settings.contact_email}
-              onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Phone Number</label>
-            <input
-              type="tel"
-              value={settings.phone_number}
-              onChange={(e) => setSettings({ ...settings, phone_number: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">WhatsApp Number</label>
-            <input
-              type="tel"
-              value={settings.whatsapp_number}
-              onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Address</label>
-            <input
-              type="text"
-              value={settings.address}
-              onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Working Hours</label>
-            <input
-              type="text"
-              value={settings.working_hours}
-              onChange={(e) => setSettings({ ...settings, working_hours: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-        </div>
-      </div>
+      <BasicSettingsSection 
+        settings={{
+          site_name: settings.site_name,
+          contact_email: settings.contact_email,
+          whatsapp_number: settings.whatsapp_number,
+          phone_number: settings.phone_number,
+          address: settings.address,
+          working_hours: settings.working_hours,
+        }}
+        onChange={handleSettingChange}
+      />
 
-      {/* Hero Section */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">Hero Section</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Badge Text</label>
-            <input
-              type="text"
-              value={settings.hero_badge}
-              onChange={(e) => setSettings({ ...settings, hero_badge: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              value={settings.hero_title}
-              onChange={(e) => setSettings({ ...settings, hero_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Title Highlight Text (will be styled differently)</label>
-            <input
-              type="text"
-              value={settings.hero_title_highlight}
-              onChange={(e) => setSettings({ ...settings, hero_title_highlight: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Subtitle</label>
-            <textarea
-              value={settings.hero_subtitle}
-              onChange={(e) => setSettings({ ...settings, hero_subtitle: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Clients Count</label>
-              <input
-                type="text"
-                value={settings.stat_clients}
-                onChange={(e) => setSettings({ ...settings, stat_clients: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Years Experience</label>
-              <input
-                type="text"
-                value={settings.stat_experience}
-                onChange={(e) => setSettings({ ...settings, stat_experience: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Success Rate</label>
-              <input
-                type="text"
-                value={settings.stat_success}
-                onChange={(e) => setSettings({ ...settings, stat_success: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSettingsSection 
+        settings={{
+          hero_badge: settings.hero_badge,
+          hero_title: settings.hero_title,
+          hero_title_highlight: settings.hero_title_highlight,
+          hero_subtitle: settings.hero_subtitle,
+          stat_clients: settings.stat_clients,
+          stat_experience: settings.stat_experience,
+          stat_success: settings.stat_success,
+        }}
+        onChange={handleSettingChange}
+      />
 
-      {/* About Section */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">About Section</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              value={settings.about_title}
-              onChange={(e) => setSettings({ ...settings, about_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Description (First Paragraph)</label>
-            <textarea
-              value={settings.about_description_1}
-              onChange={(e) => setSettings({ ...settings, about_description_1: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Description (Second Paragraph)</label>
-            <textarea
-              value={settings.about_description_2}
-              onChange={(e) => setSettings({ ...settings, about_description_2: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Credentials (one per line)</label>
-            <textarea
-              value={JSON.parse(settings.about_credentials || '[]').join('\n')}
-              onChange={(e) => {
-                const credentials = e.target.value.split('\n').filter(c => c.trim());
-                setSettings({ ...settings, about_credentials: JSON.stringify(credentials) });
-              }}
-              rows={4}
-              placeholder="Ph.D. in Nutrition Science&#10;Certified Dietitian&#10;Sports Nutrition Expert&#10;Published Author"
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
-            />
-          </div>
-        </div>
-      </div>
+      <AboutSettingsSection 
+        settings={{
+          about_title: settings.about_title,
+          about_description_1: settings.about_description_1,
+          about_description_2: settings.about_description_2,
+          about_credentials: settings.about_credentials,
+        }}
+        onChange={handleSettingChange}
+      />
 
-      {/* Value Proposition */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">Value Proposition Section</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              value={settings.value_prop_title}
-              onChange={(e) => setSettings({ ...settings, value_prop_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
-            <textarea
-              value={settings.value_prop_description}
-              onChange={(e) => setSettings({ ...settings, value_prop_description: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Benefits (one per line)</label>
-            <textarea
-              value={JSON.parse(settings.value_prop_benefits || '[]').join('\n')}
-              onChange={(e) => {
-                const benefits = e.target.value.split('\n').filter(b => b.trim());
-                setSettings({ ...settings, value_prop_benefits: JSON.stringify(benefits) });
-              }}
-              rows={6}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
-            />
-          </div>
-        </div>
-      </div>
+      <ValuePropositionSettingsSection
+        settings={{
+          value_prop_title: settings.value_prop_title,
+          value_prop_description: settings.value_prop_description,
+          value_prop_benefits: settings.value_prop_benefits,
+        }}
+        onChange={handleSettingChange}
+      />
 
-      {/* CTA Section */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">Call-to-Action Section</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <input
-              type="text"
-              value={settings.cta_title}
-              onChange={(e) => setSettings({ ...settings, cta_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
-            <textarea
-              value={settings.cta_description}
-              onChange={(e) => setSettings({ ...settings, cta_description: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-        </div>
-      </div>
+      <WhyChooseUsSettingsSection
+        settings={{
+          why_choose_title: settings.why_choose_title,
+          why_choose_subtitle: settings.why_choose_subtitle,
+          why_choose_features: settings.why_choose_features,
+        }}
+        onChange={handleSettingChange}
+      />
 
-      {/* About Page Section */}
-      <div className="bg-card rounded-2xl p-6 border border-border">
-        <h3 className="font-medium text-foreground mb-4">About Page</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Page Title</label>
-            <input
-              type="text"
-              value={settings.about_page_title}
-              onChange={(e) => setSettings({ ...settings, about_page_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Page Subtitle</label>
-            <textarea
-              value={settings.about_page_subtitle}
-              onChange={(e) => setSettings({ ...settings, about_page_subtitle: e.target.value })}
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Story Title</label>
-            <input
-              type="text"
-              value={settings.about_story_title}
-              onChange={(e) => setSettings({ ...settings, about_story_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Story Paragraph 1</label>
-            <textarea
-              value={settings.about_story_paragraph_1}
-              onChange={(e) => setSettings({ ...settings, about_story_paragraph_1: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Story Paragraph 2</label>
-            <textarea
-              value={settings.about_story_paragraph_2}
-              onChange={(e) => setSettings({ ...settings, about_story_paragraph_2: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Story Paragraph 3</label>
-            <textarea
-              value={settings.about_story_paragraph_3}
-              onChange={(e) => setSettings({ ...settings, about_story_paragraph_3: e.target.value })}
-              rows={3}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Mission Statement</label>
-            <textarea
-              value={settings.about_mission}
-              onChange={(e) => setSettings({ ...settings, about_mission: e.target.value })}
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Vision Statement</label>
-            <textarea
-              value={settings.about_vision}
-              onChange={(e) => setSettings({ ...settings, about_vision: e.target.value })}
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Qualifications (one per line)</label>
-            <textarea
-              value={JSON.parse(settings.about_page_credentials || '[]').join('\n')}
-              onChange={(e) => {
-                const credentials = e.target.value.split('\n').filter(c => c.trim());
-                setSettings({ ...settings, about_page_credentials: JSON.stringify(credentials) });
-              }}
-              rows={5}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Achievements (format: number|label, one per line)</label>
-            <textarea
-              value={JSON.parse(settings.about_page_achievements || '[]').map((a: any) => `${a.number}|${a.label}`).join('\n')}
-              onChange={(e) => {
-                const achievements = e.target.value.split('\n').filter(a => a.trim()).map(line => {
-                  const [number, label] = line.split('|');
-                  return { number: number?.trim() || '', label: label?.trim() || '' };
-                });
-                setSettings({ ...settings, about_page_achievements: JSON.stringify(achievements) });
-              }}
-              rows={4}
-              placeholder="5000+|Clients Helped&#10;15+|Years Experience"
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none font-mono text-sm"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Core Values Title</label>
-            <input
-              type="text"
-              value={settings.about_core_values_title}
-              onChange={(e) => setSettings({ ...settings, about_core_values_title: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">Core Values Subtitle</label>
-            <textarea
-              value={settings.about_core_values_subtitle}
-              onChange={(e) => setSettings({ ...settings, about_core_values_subtitle: e.target.value })}
-              rows={2}
-              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
-            />
-          </div>
-        </div>
-      </div>
+      <CTASettingsSection
+        settings={{
+          cta_title: settings.cta_title,
+          cta_description: settings.cta_description,
+        }}
+        onChange={handleSettingChange}
+      />
+
+      <AboutPageSettingsSection 
+        settings={{
+          about_page_title: settings.about_page_title,
+          about_page_subtitle: settings.about_page_subtitle,
+          about_story_title: settings.about_story_title,
+          about_story_paragraph_1: settings.about_story_paragraph_1,
+          about_story_paragraph_2: settings.about_story_paragraph_2,
+          about_story_paragraph_3: settings.about_story_paragraph_3,
+          about_mission: settings.about_mission,
+          about_vision: settings.about_vision,
+          about_page_credentials: settings.about_page_credentials,
+          about_page_achievements: settings.about_page_achievements,
+          about_core_values_title: settings.about_core_values_title,
+          about_core_values_subtitle: settings.about_core_values_subtitle,
+        }}
+        onChange={handleSettingChange}
+      />
 
       {/* Save Button */}
       <div className="flex justify-end">

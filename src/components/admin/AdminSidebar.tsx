@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard, FileText, MessageSquare, Image, Mail,
   LogOut, Users, Settings, ChevronLeft, ChevronRight
 } from "lucide-react";
+import { settingsAPI } from "@/lib/api";
 
 type TabType = "overview" | "services" | "testimonials" | "gallery" | "inquiries" | "settings";
 
@@ -31,6 +33,22 @@ export const AdminSidebar = ({
   setSidebarOpen,
   onSignOut,
 }: AdminSidebarProps) => {
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+        if (settingsMap.logo_url) {
+          setLogoUrl(settingsMap.logo_url);
+        }
+      } catch (error) {
+        console.error('Error loading logo settings:', error);
+      }
+    };
+    loadSettings();
+  }, []);
   return (
     <aside
       className={`fixed lg:static inset-y-0 left-0 z-40 bg-card border-r border-border transform transition-all duration-300 ${
@@ -41,8 +59,21 @@ export const AdminSidebar = ({
         {/* Logo */}
         <div className="p-4 border-b border-border">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-cta flex items-center justify-center flex-shrink-0">
-              <span className="font-heading text-lg text-primary-foreground font-bold">B</span>
+            <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+              <img
+                src={logoUrl}
+                alt="PNC Logo"
+                className="w-full h-full object-contain rounded-lg"
+                onError={(e) => {
+                  // Fallback to text logo if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const fallback = document.createElement('div');
+                  fallback.className = 'w-10 h-10 rounded-xl bg-gradient-cta flex items-center justify-center';
+                  fallback.innerHTML = '<span class="font-heading text-lg text-primary-foreground font-bold">PNC</span>';
+                  target.parentElement?.appendChild(fallback);
+                }}
+              />
             </div>
             {sidebarOpen && (
               <div className="overflow-hidden">

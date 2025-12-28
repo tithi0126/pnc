@@ -28,6 +28,7 @@ export const SettingsTab = () => {
   const [settings, setSettings] = useState({
     // Basic Settings
     site_name: 'Dr. Bidita Shah - Nutrition Consultant',
+    logo_url: '/pnc-logo.png',
     contact_email: 'contact@drbiditashah.com',
     whatsapp_number: '+91 98765 43210',
     phone_number: '+1 234 567 890',
@@ -176,6 +177,7 @@ export const SettingsTab = () => {
 
       setSettings({
         site_name: getSetting('site_name', 'Dr. Bidita Shah - Nutrition Consultant'),
+        logo_url: getSetting('logo_url', '/pnc-logo.png'),
         contact_email: getSetting('contact_email', 'drbiditashah@gmail.com'),
         whatsapp_number: getSetting('whatsapp_number', '+91 9876543210'),
         phone_number: getSetting('phone_number', '+91 9876543210'),
@@ -329,6 +331,7 @@ export const SettingsTab = () => {
       <BasicSettingsSection
         settings={{
           site_name: settings.site_name,
+          logo_url: settings.logo_url,
           contact_email: settings.contact_email,
           whatsapp_number: settings.whatsapp_number,
           phone_number: settings.phone_number,

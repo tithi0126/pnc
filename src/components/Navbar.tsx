@@ -20,6 +20,7 @@ const Navbar = () => {
   const [phoneNumber, setPhoneNumber] = useState('+91 9876543210');
   const [navbarBrandName, setNavbarBrandName] = useState('Dr. Bidita Shah');
   const [navbarBrandTagline, setNavbarBrandTagline] = useState('Nutrition Consultant');
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -35,6 +36,9 @@ const Navbar = () => {
         }
         if (settingsMap.navbar_brand_tagline) {
           setNavbarBrandTagline(settingsMap.navbar_brand_tagline);
+        }
+        if (settingsMap.logo_url) {
+          setLogoUrl(settingsMap.logo_url);
         }
       } catch (error) {
         console.error('Error loading navbar settings:', error);
@@ -68,8 +72,21 @@ const Navbar = () => {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-cta flex items-center justify-center">
-              <span className="font-heading text-xl text-primary-foreground font-bold">B</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img
+                src={logoUrl}
+                alt="PNC Logo"
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  // Fallback to default logo if image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  const fallback = document.createElement('div');
+                  fallback.className = 'w-10 h-10 rounded-full bg-gradient-cta flex items-center justify-center';
+                  fallback.innerHTML = '<span class="font-heading text-xl text-primary-foreground font-bold">PNC</span>';
+                  target.parentElement?.appendChild(fallback);
+                }}
+              />
             </div>
             <div className="hidden sm:block">
               <span className="font-heading text-xl font-semibold text-foreground">

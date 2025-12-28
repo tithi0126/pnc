@@ -9,25 +9,10 @@ declare global {
   }
 }
 
-window.debugGallery = async () => {
-  try {
-    const { galleryAPI } = await import('./lib/api');
-    const data = await galleryAPI.getAll();
-    console.log('Gallery debug data:', data);
-    console.log('Total images:', data?.length || 0);
-    console.log('Active images:', data?.filter((img: any) => img.isActive || img.is_active) || []);
-  } catch (error) {
-    console.error('Gallery debug error:', error);
-  }
-};
 
 // Initialize app and seed data
 const initApp = async () => {
-  console.log('🔄 Initializing Vitality Hub Admin Panel...');
-
-  console.log('🚀 Starting React application...');
   createRoot(document.getElementById("root")!).render(<App />);
-  console.log('✅ Application started successfully');
 };
 
 initApp().catch((error) => {

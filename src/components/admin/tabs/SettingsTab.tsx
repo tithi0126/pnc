@@ -147,7 +147,6 @@ export const SettingsTab = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (isLoading) {
-        console.log('Forcing settings to load with defaults due to timeout');
         setIsLoading(false);
         toast({
           title: "Settings loaded",
@@ -161,9 +160,7 @@ export const SettingsTab = () => {
 
   const loadSettings = async () => {
     try {
-      console.log('Loading settings...');
       const allSettings = await settingsAPI.getAll();
-      console.log('Settings loaded:', allSettings);
 
       // If we get here, API worked, so set loading to false
       setIsLoading(false);
@@ -281,7 +278,6 @@ export const SettingsTab = () => {
         gallery_page_subtitle: getSetting('gallery_page_subtitle', 'Explore our nutrition and wellness journey'),
       });
 
-      console.log('Settings loaded successfully');
     } catch (error: any) {
       console.error('Error loading settings:', error);
       // Don't show error toast - let timeout handle showing defaults

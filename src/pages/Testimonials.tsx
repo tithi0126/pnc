@@ -30,9 +30,7 @@ const Testimonials = () => {
         setIsLoading(true);
         setError(null);
 
-        console.log('Fetching testimonials from API...');
         const data = await testimonialsAPI.getAll();
-        console.log('API response:', data);
 
         if (!data || !Array.isArray(data)) {
           throw new Error('Invalid data format received from server');
@@ -58,7 +56,6 @@ const Testimonials = () => {
             is_featured: t.isFeatured ?? t.is_featured ?? false,
           }));
 
-        console.log('Transformed testimonials:', transformed);
         setTestimonials(transformed);
 
         // Fetch settings

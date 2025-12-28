@@ -62,10 +62,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      console.log('AuthContext.signIn called');
       const result: AuthResponse = await AuthService.login(email, password);
 
-      console.log('Login result:', result);
 
       // Store auth data
       localStorage.setItem('authToken', result.token);

@@ -27,7 +27,6 @@ const AdminAuth = () => {
 
     try {
       if (isLogin) {
-        console.log('Attempting admin login...');
         const { error } = await signIn(email, password);
         if (error) {
           console.error('Login failed:', error);
@@ -37,7 +36,6 @@ const AdminAuth = () => {
             description: error.message || "Invalid email or password",
           });
         } else {
-          console.log('Login successful, redirecting to admin');
           toast({
             title: "Welcome back!",
             description: "You have been logged in successfully.",

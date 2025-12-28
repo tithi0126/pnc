@@ -11,10 +11,10 @@ router.get('/', async (req, res) => {
       .sort({ sortOrder: 1 })
       .select('-__v');
 
-    console.log('Found', services.length, 'active services');
+    // console.log('Found', services.length, 'active services');
     res.json(services);
   } catch (error) {
-    console.error('Error fetching services:', error);
+    // console.error('Error fetching services:', error);
     res.status(500).json({ error: 'Server error fetching services.' });
   }
 });
@@ -26,10 +26,10 @@ router.get('/active', async (req, res) => {
       .sort({ sortOrder: 1 })
       .select('-__v');
 
-    console.log('Found', services.length, 'active services');
+    // console.log('Found', services.length, 'active services');
     res.json(services);
   } catch (error) {
-    console.error('Error fetching services:', error);
+    // console.error('Error fetching services:', error);
     res.status(500).json({ error: 'Server error fetching services.' });
   }
 });
@@ -41,12 +41,12 @@ router.get('/admin', auth, isAdmin, async (req, res) => {
       .sort({ sortOrder: 1 })
       .select('-__v');
 
-    console.log('Found', services.length, 'total services for admin');
+    // console.log('Found', services.length, 'total services for admin');
     services.forEach((s, i) => console.log(`${i+1}. ${s.title} - isActive: ${s.isActive}`));
 
     res.json(services);
   } catch (error) {
-    console.error('Error fetching services for admin:', error);
+    // console.error('Error fetching services for admin:', error);
     res.status(500).json({ error: 'Server error fetching services.' });
   }
 });
@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
 
     res.json(service);
   } catch (error) {
-    console.error('Error fetching service:', error);
+    // console.error('Error fetching service:', error);
     res.status(500).json({ error: 'Server error fetching service.' });
   }
 });

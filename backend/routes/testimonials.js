@@ -25,10 +25,10 @@ router.get('/approved', async (req, res) => {
       .sort({ isFeatured: -1, createdAt: -1 })
       .select('-__v');
 
-    console.log('Found', testimonials.length, 'approved testimonials');
+    // console.log('Found', testimonials.length, 'approved testimonials');
     res.json(testimonials);
   } catch (error) {
-    console.error('Error fetching approved testimonials:', error);
+    // console.error('Error fetching approved testimonials:', error);
     res.status(500).json({ error: 'Server error fetching testimonials.' });
   }
 });

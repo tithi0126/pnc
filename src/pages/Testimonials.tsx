@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import { testimonialsAPI, settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Testimonial {
   id: string;
@@ -52,7 +53,7 @@ const Testimonials = () => {
             location: t.location || null,
             content: t.content || 'No testimonial content available',
             rating: Math.max(1, Math.min(5, t.rating || 5)), // Ensure rating is between 1-5
-            image_url: t.imageUrl || t.image_url || null,
+            image_url: normalizeImageUrl(t.imageUrl || t.image_url || null),
             is_featured: t.isFeatured ?? t.is_featured ?? false,
           }));
 

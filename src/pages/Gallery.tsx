@@ -2,6 +2,7 @@ import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { galleryAPI, settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface GalleryImage {
   id: string;
@@ -34,7 +35,7 @@ const Gallery = () => {
           id: img._id?.toString() || img.id || '',
           title: img.title || '',
           alt_text: img.altText || img.alt_text || '',
-          image_url: img.imageUrl || img.image_url || '',
+          image_url: normalizeImageUrl(img.imageUrl || img.image_url || ''),
           category: img.category || '',
           is_active: img.isActive ?? img.is_active ?? true,
           sort_order: img.sortOrder || img.sort_order || 0,

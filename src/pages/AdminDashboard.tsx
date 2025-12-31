@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { servicesAPI, testimonialsAPI, galleryAPI, contactAPI } from "@/lib/api";
 import { AuthService } from "@/services/authService";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 import { AdminSidebar, TabType } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
@@ -157,7 +158,7 @@ const AdminDashboard = () => {
         location: t.location || '',
         content: t.content || '',
         rating: t.rating || 5,
-        image_url: t.imageUrl || t.image_url || '',
+        image_url: normalizeImageUrl(t.imageUrl || t.image_url || ''),
         is_approved: t.isApproved || t.is_approved || false,
         is_featured: t.isFeatured || t.is_featured || false,
       })) : []);
@@ -166,7 +167,7 @@ const AdminDashboard = () => {
         id: g._id?.toString() || g.id || '',
         title: g.title || '',
         alt_text: g.altText || g.alt_text || '',
-        image_url: g.imageUrl || g.image_url || '',
+        image_url: normalizeImageUrl(g.imageUrl || g.image_url || ''),
         category: g.category || 'General',
         is_active: g.isActive || g.is_active || true,
         sort_order: g.sortOrder || g.sort_order || 0,
@@ -321,7 +322,7 @@ const AdminDashboard = () => {
               stats={stats}
               recentInquiries={inquiries}
               dbStatus={dbStatus}
-              // onTabChange={}
+              onTabChange={setActiveTab}
               onReviewPending={() => setTestimonialsFilter("pending")}
             />
           )}

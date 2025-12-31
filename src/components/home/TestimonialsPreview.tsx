@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { ArrowRight, Quote, Star } from "lucide-react";
 import { testimonialsAPI, settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Testimonial {
   id: string;
@@ -33,7 +34,7 @@ const TestimonialsPreview = () => {
             role: t.role || '',
             content: t.content || '',
             rating: t.rating || 5,
-            image_url: t.imageUrl || t.image_url || '',
+            image_url: normalizeImageUrl(t.imageUrl || t.image_url || ''),
           }));
         setTestimonials(transformed);
 

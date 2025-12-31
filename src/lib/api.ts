@@ -101,7 +101,7 @@ export const servicesAPI = {
   async getAllAdmin() {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');
-    return await ServiceService.getAllServices(token);
+    return await ServiceService.getAllServices();
   },
 
   async getById(id: string) {

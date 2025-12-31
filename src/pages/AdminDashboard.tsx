@@ -321,7 +321,7 @@ const AdminDashboard = () => {
               stats={stats}
               recentInquiries={inquiries}
               dbStatus={dbStatus}
-              onTabChange={setActiveTab}
+              // onTabChange={}
               onReviewPending={() => setTestimonialsFilter("pending")}
             />
           )}
@@ -337,7 +337,7 @@ const AdminDashboard = () => {
             <TestimonialsTab
               testimonials={testimonials}
               onRefresh={fetchData}
-              initialFilter={testimonialsFilter}
+              // initialFilter={testimonialsFilter}
             />
           )}
 

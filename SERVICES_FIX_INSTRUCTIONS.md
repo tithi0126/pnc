@@ -1,26 +1,31 @@
 # Services Not Storing - Fix Instructions
 
 ## Problem
+
 Services added through the admin panel are not being stored properly in MongoDB.
 
 ## Root Cause
-The backend server at `http://localhost:5000` is not running, causing the application to fall back to localStorage instead of saving to MongoDB.
+
+The backend server at `http://localhost:5003` is not running, causing the application to fall back to localStorage instead of saving to MongoDB.
 
 ## Solution
 
 ### Step 1: Ensure MongoDB is Running
 
 Check if MongoDB is running:
+
 ```cmd
 tasklist | findstr mongod
 ```
 
 If MongoDB is not running, start it:
+
 ```cmd
 net start MongoDB
 ```
 
 Or if you installed MongoDB manually, navigate to your MongoDB bin directory and run:
+
 ```cmd
 mongod --dbpath="C:\data\db"
 ```
@@ -28,27 +33,31 @@ mongod --dbpath="C:\data\db"
 ### Step 2: Start the Backend Server
 
 Open a new terminal in the project root and run:
+
 ```cmd
 cd backend
 npm start
 ```
 
-The server should start on port 5000. You should see:
+The server should start on port 5003. You should see:
+
 ```
-Server running on port 5000
+Server running on port 5003
 MongoDB connected successfully
 ```
 
 ### Step 3: Verify Backend is Running
 
 In another terminal, test the health endpoint:
+
 ```cmd
-curl http://localhost:5000/api/health
+curl http://localhost:5003/api/health
 ```
 
 You should get a response like:
+
 ```json
-{"status":"OK","message":"PNC API is running","timestamp":"..."}
+{ "status": "OK", "message": "PNC API is running", "timestamp": "..." }
 ```
 
 ### Step 4: Test Service Creation
@@ -80,6 +89,7 @@ The service should now be saved to MongoDB and persist across page refreshes.
 ### Backend Routes
 
 The backend has the following service routes:
+
 - `GET /api/services` - Get active services (public)
 - `GET /api/services/admin` - Get all services including inactive (admin only, requires auth)
 - `GET /api/services/:id` - Get single service
@@ -90,6 +100,7 @@ The backend has the following service routes:
 ### Authentication
 
 The admin routes require:
+
 1. Valid JWT token in the Authorization header
 2. User must have 'admin' role
 
@@ -107,13 +118,15 @@ The frontend automatically includes the auth token from localStorage when making
 
 ### Backend won't start?
 
-1. **Port 5000 already in use**:
+1. **Port 5003 already in use**:
+
    ```cmd
-   netstat -ano | findstr :5000
+   netstat -ano | findstr :5003
    taskkill /PID <pid> /F
    ```
 
 2. **Missing dependencies**:
+
    ```cmd
    cd backend
    npm install
@@ -129,13 +142,14 @@ The frontend automatically includes the auth token from localStorage when making
 2. **Verify admin role** in the database:
    ```javascript
    // In MongoDB shell or Compass
-   db.users.find({ email: "your-email@example.com" })
+   db.users.find({ email: "your-email@example.com" });
    // Should show roles: ["admin"]
    ```
 
 ## Database Schema
 
 The Service model in MongoDB has the following fields:
+
 ```javascript
 {
   title: String (required),
@@ -155,6 +169,7 @@ The Service model in MongoDB has the following fields:
 ## Next Steps
 
 Once the backend is running:
+
 1. Services will be saved to MongoDB
 2. They will persist across page refreshes
 3. The admin panel will show all services (active and inactive)

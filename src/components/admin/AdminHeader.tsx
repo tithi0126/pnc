@@ -8,6 +8,8 @@ interface AdminHeaderProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
   newInquiriesCount: number;
+  onSignOut: () => Promise<void>;
+  onTabChange?: (tab: TabType) => void;
 }
 
 const tabTitles: Record<TabType, string> = {
@@ -24,6 +26,8 @@ export const AdminHeader = ({
   sidebarOpen,
   setSidebarOpen,
   newInquiriesCount,
+  onSignOut,
+  onTabChange,
 }: AdminHeaderProps) => {
   const navigate = useNavigate();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -69,27 +73,83 @@ export const AdminHeader = ({
     switch (activeTab) {
       case "services":
         return [
-          { label: "Add New Service", action: () => navigate("/admin"), icon: Plus },
+          {
+            label: "Add New Service",
+            action: () => {
+              // Stay on admin page but trigger service creation modal/form
+              if (onTabChange) {
+                onTabChange("services");
+              }
+            },
+            icon: Plus
+          },
           { label: "View All Services", action: () => navigate("/services"), icon: Eye },
         ];
       case "testimonials":
         return [
-          { label: "Add Testimonial", action: () => navigate("/admin"), icon: Plus },
+          {
+            label: "Add Testimonial",
+            action: () => {
+              // Stay on admin page but trigger testimonial creation
+              if (onTabChange) {
+                onTabChange("testimonials");
+              }
+            },
+            icon: Plus
+          },
           { label: "View Testimonials", action: () => navigate("/testimonials"), icon: Eye },
         ];
       case "gallery":
         return [
-          { label: "Upload Image", action: () => navigate("/admin"), icon: Plus },
+          {
+            label: "Upload Image",
+            action: () => {
+              // Stay on admin page but switch to gallery tab
+              if (onTabChange) {
+                onTabChange("gallery");
+              }
+            },
+            icon: Plus
+          },
           { label: "View Gallery", action: () => navigate("/gallery"), icon: Eye },
         ];
       case "inquiries":
         return [
-          { label: "View New Inquiries", action: () => navigate("/admin"), icon: Eye },
+          {
+            label: "View New Inquiries",
+            action: () => {
+              // Stay on admin page and switch to inquiries tab
+              if (onTabChange) {
+                onTabChange("inquiries");
+              }
+            },
+            icon: Eye
+          },
+        ];
+      case "settings":
+        return [
+          { label: "View Site", action: () => navigate("/"), icon: Eye },
+          {
+            label: "System Settings",
+            action: () => {
+              // Already on settings tab, maybe refresh or do nothing
+            },
+            icon: Settings
+          },
         ];
       default:
         return [
           { label: "View Site", action: () => navigate("/"), icon: Eye },
-          { label: "Settings", action: () => navigate("/admin"), icon: Settings },
+          {
+            label: "Settings",
+            action: () => {
+              // Switch to settings tab
+              if (onTabChange) {
+                onTabChange("settings");
+              }
+            },
+            icon: Settings
+          },
         ];
     }
   };
@@ -109,10 +169,18 @@ export const AdminHeader = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
-    // Clear auth data and redirect
-    localStorage.removeItem('authToken');
-    navigate('/');
+  const handleSignOut = async () => {
+    try {
+      // Use the auth context signOut function
+      await onSignOut();
+      // Navigate to home page after logout
+      navigate('/admin/auth');
+    } catch (error) {
+      console.error('Error signing out:', error);
+      // Fallback: clear localStorage and navigate
+      localStorage.removeItem('authToken');
+      navigate('/');
+    }
   };
 
   const handleNotificationClick = (notification: typeof notifications[0]) => {
@@ -158,7 +226,7 @@ export const AdminHeader = ({
         
         <div className="flex items-center gap-3">
           {/* Quick Actions */}
-          <div className="relative" ref={quickActionsRef}>
+          {/* <div className="relative" ref={quickActionsRef}>
             <button
               onClick={() => setQuickActionsOpen(!quickActionsOpen)}
               className="relative p-2 rounded-xl hover:bg-muted transition-colors"
@@ -192,10 +260,10 @@ export const AdminHeader = ({
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Notifications */}
-          <div className="relative" ref={notificationsRef}>
+          {/* <div className="relative" ref={notificationsRef}>
             <button
               onClick={() => setNotificationsOpen(!notificationsOpen)}
               className="relative p-2 rounded-xl hover:bg-muted transition-colors"
@@ -284,15 +352,25 @@ export const AdminHeader = ({
                 )}
               </div>
             )}
-          </div>
+          </div> */}
 
-          {/* Sign Out Button */}
+          {/* Sign Out Button - Mobile (icon only) */}
           <button
             onClick={handleSignOut}
-            className="p-2 rounded-xl hover:bg-muted transition-colors text-muted-foreground hover:text-destructive"
+            className="sm:hidden p-2 rounded-xl hover:bg-muted transition-colors text-muted-foreground hover:text-destructive"
             title="Sign Out"
           >
             <LogOut className="w-5 h-5" />
+          </button>
+
+          {/* Sign Out Button - Desktop (icon + text) */}
+          <button
+            onClick={handleSignOut}
+            className="hidden sm:flex items-center gap-1 text-sm text-muted-foreground hover:text-destructive transition-colors px-3 py-2 rounded-xl hover:bg-muted"
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
           </button>
 
           <Link

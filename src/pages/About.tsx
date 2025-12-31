@@ -23,7 +23,7 @@ const About = () => {
       'Member - Indian Medical Association'
     ]),
     about_page_achievements: JSON.stringify([
-      { number: '5000+', label: 'Clients Helped' },
+      { number: '5003+', label: 'Clients Helped' },
       { number: '15+', label: 'Years Experience' },
       { number: '12', label: 'Awards Won' },
       { number: '50+', label: 'Corporate Partners' }

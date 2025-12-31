@@ -15,15 +15,9 @@ const AboutPreview = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const allSettings = await settingsAPI.getAll();
-        const settingsMap: any = {};
-        if (Array.isArray(allSettings)) {
-          allSettings.forEach((s: any) => {
-            settingsMap[s.key] = s.value;
-          });
-        } else if (typeof allSettings === 'object') {
-          Object.assign(settingsMap, allSettings);
-        }
+        // Use public settings API that doesn't require authentication
+        const publicSettings = await settingsAPI.getPublic();
+        const settingsMap: any = publicSettings || {};
 
         setSettings({
           about_title: settingsMap.about_title || settings.about_title,
@@ -33,6 +27,7 @@ const AboutPreview = () => {
         });
       } catch (error) {
         console.error('Error loading about settings:', error);
+        // Settings will fall back to default values defined above
       }
     };
     loadSettings();

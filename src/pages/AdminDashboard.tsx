@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { servicesAPI, testimonialsAPI, galleryAPI, contactAPI } from "@/lib/api";
+import { AuthService } from "@/services/authService";
 import { AdminSidebar, TabType } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
@@ -64,6 +65,7 @@ const AdminDashboard = () => {
   
   const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [testimonialsFilter, setTestimonialsFilter] = useState<"all" | "approved" | "pending">("all");
   
   const [services, setServices] = useState<Service[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -73,17 +75,48 @@ const AdminDashboard = () => {
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      navigate("/admin/auth");
+  // TEMPORARY: Auto-promote user to admin if not already admin
+  // TODO: Remove this after initial setup
+  const promoteToAdmin = async () => {
+    if (!user) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      console.log('TEMP: Auto-promoting user to admin:', user.id);
+      await AuthService.promoteToAdmin(token, user.id);
+
+      // Refresh to reload admin privileges
+      window.location.reload();
+    } catch (error) {
+      console.error('TEMP: Failed to promote user:', error);
     }
-  }, [user, isLoading, navigate]);
+  };
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!user) {
+        navigate("/admin/auth");
+      } else if (!isAdmin) {
+        console.log("TEMP: User lacks admin privileges, auto-promoting...");
+        promoteToAdmin();
+      }
+    }
+  }, [user, isAdmin, isLoading, navigate]);
 
   useEffect(() => {
     if (user) {
       fetchData();
     }
   }, [user]);
+
+  // Reset testimonials filter when switching away from testimonials tab
+  useEffect(() => {
+    if (activeTab !== "testimonials") {
+      setTestimonialsFilter("all");
+    }
+  }, [activeTab]);
 
   const fetchData = async () => {
     setDataLoading(true);
@@ -186,8 +219,15 @@ const AdminDashboard = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
+    try {
+      await signOut();
+      // Redirect to admin login page after successful logout
+      navigate("/admin/auth");
+    } catch (error) {
+      console.error('Error during sign out:', error);
+      // Still redirect to login page even if there's an error
+      navigate("/admin/auth");
+    }
   };
 
   if (isLoading) {
@@ -270,6 +310,8 @@ const AdminDashboard = () => {
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           newInquiriesCount={stats.newInquiries}
+          onSignOut={handleSignOut}
+          onTabChange={setActiveTab}
         />
 
         {/* Content */}
@@ -279,6 +321,8 @@ const AdminDashboard = () => {
               stats={stats}
               recentInquiries={inquiries}
               dbStatus={dbStatus}
+              onTabChange={setActiveTab}
+              onReviewPending={() => setTestimonialsFilter("pending")}
             />
           )}
 
@@ -290,9 +334,10 @@ const AdminDashboard = () => {
           )}
 
           {activeTab === "testimonials" && (
-            <TestimonialsTab 
-              testimonials={testimonials} 
-              onRefresh={fetchData} 
+            <TestimonialsTab
+              testimonials={testimonials}
+              onRefresh={fetchData}
+              initialFilter={testimonialsFilter}
             />
           )}
 

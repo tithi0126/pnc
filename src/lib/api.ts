@@ -9,7 +9,7 @@ import { AuthService } from '@/services/authService';
 
 // HTTP API client for backend requests
 class HttpApiClient {
-  private baseUrl = 'http://localhost:5000/api';
+  private baseUrl = 'http://localhost:5003/api';
 
   private getAuthToken(): string | null {
     return localStorage.getItem('authToken');
@@ -239,6 +239,12 @@ export const contactAPI = {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');
     return await ContactInquiryService.updateStatus(id, status, token);
+  },
+
+  async updateNotes(id: string, notes: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ContactInquiryService.updateNotes(id, notes, token);
   },
 
   async delete(id: string) {

@@ -21,7 +21,7 @@ console.log('🔄 Priyam Nutrition Care - Services Data Workflow Setup\n');
 
 // Check if backend is running
 console.log('1. Checking backend server status...');
-exec('curl -s http://localhost:5000/api/health', (error, stdout, stderr) => {
+exec('curl -s http://localhost:5003/api/health', (error, stdout, stderr) => {
   if (error) {
     console.log('❌ Backend server not running');
     console.log('   Please start the backend server:');
@@ -39,7 +39,7 @@ exec('curl -s http://localhost:5000/api/health', (error, stdout, stderr) => {
 async function testServicesAPI() {
   try {
     // Test public endpoint
-    const publicResponse = await fetch('http://localhost:5000/api/services');
+    const publicResponse = await fetch('http://localhost:5003/api/services');
     const publicServices = await publicResponse.json();
 
     console.log(`✅ Public API (/api/services): ${publicServices.length} active services`);

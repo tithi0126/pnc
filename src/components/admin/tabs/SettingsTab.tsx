@@ -40,7 +40,7 @@ export const SettingsTab = () => {
     hero_title: 'Transform Your Health with Expert Nutrition Guidance',
     hero_title_highlight: 'Expert Nutrition',
     hero_subtitle: 'Personalized nutrition plans tailored to your unique needs. Achieve your wellness goals with science-backed strategies and compassionate support from Dr. Bidita Shah.',
-    stat_clients: '5000+',
+    stat_clients: '5003+',
     stat_experience: '15+',
     stat_success: '98%',
 
@@ -115,7 +115,7 @@ export const SettingsTab = () => {
     about_mission: 'To empower individuals with knowledge and personalized nutrition strategies.',
     about_vision: 'A world where everyone has access to expert nutrition guidance.',
     about_page_credentials: JSON.stringify(['Ph.D. in Clinical Nutrition', 'Certified Diabetes Educator']),
-    about_page_achievements: JSON.stringify([{ number: '5000+', label: 'Happy Clients' }]),
+    about_page_achievements: JSON.stringify([{ number: '5003+', label: 'Happy Clients' }]),
     about_core_values_title: 'Core Values',
     about_core_values_subtitle: 'The principles that guide every consultation.',
 
@@ -184,7 +184,7 @@ export const SettingsTab = () => {
         hero_title: getSetting('hero_title', 'Transform Your Health Journey with Dr. Bidita Shah'),
         hero_title_highlight: getSetting('hero_title_highlight', 'Dr. Bidita Shah'),
         hero_subtitle: getSetting('hero_subtitle', 'Expert nutrition guidance for weight management, diabetes care, sports nutrition, and holistic wellness. Personalized plans backed by 15+ years of clinical experience and scientific expertise.'),
-        stat_clients: getSetting('stat_clients', '5000+'),
+        stat_clients: getSetting('stat_clients', '5003+'),
         stat_experience: getSetting('stat_experience', '15+'),
         stat_success: getSetting('stat_success', '98%'),
         about_title: getSetting('about_title', 'Meet Dr. Bidita Shah - Your Nutrition Expert'),
@@ -259,7 +259,7 @@ export const SettingsTab = () => {
           'Member - Nutrition Society of India'
         ])),
         about_page_achievements: getSetting('about_page_achievements', JSON.stringify([
-          { number: '5000+', label: 'Happy Clients' },
+          { number: '5003+', label: 'Happy Clients' },
           { number: '15+', label: 'Years Experience' },
           { number: '98%', label: 'Success Rate' },
           { number: '50+', label: 'Corporate Partnerships' }

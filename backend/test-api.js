@@ -1,6 +1,6 @@
 // Test script to verify services API endpoints
 const testServicesAPI = async () => {
-  const baseUrl = 'http://localhost:5000/api';
+  const baseUrl = 'http://localhost:5003/api';
 
   console.log('Testing Services API Endpoints...\n');
 
@@ -40,7 +40,7 @@ const testServicesAPI = async () => {
 
   } catch (error) {
     console.error('❌ Network error:', error.message);
-    console.log('\nMake sure the backend server is running on http://localhost:5000');
+    console.log('\nMake sure the backend server is running on http://localhost:5003');
   }
 };
 

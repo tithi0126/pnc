@@ -53,30 +53,41 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
     // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('Login failed: User not found for email:', email);
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
+
+    console.log('User found:', user.email, 'Active:', user.isActive, 'Roles:', user.roles);
 
     // Check password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
+      console.log('Login failed: Invalid password for user:', user.email);
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     // Check if user is active
     if (!user.isActive) {
+      console.log('Login failed: User account deactivated:', user.email);
       return res.status(401).json({ error: 'Account is deactivated.' });
     }
 
     // Generate JWT token
+    const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
+    console.log('Generating JWT token with secret length:', jwtSecret.length);
+
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || 'your-secret-key',
+      jwtSecret,
       { expiresIn: '7d' }
     );
+
+    console.log('Login successful for user:', user.email);
 
     res.json({
       message: 'Login successful',
@@ -96,6 +107,10 @@ router.post('/login', async (req, res) => {
 
 // Get current user profile
 router.get('/profile', auth, async (req, res) => {
+  console.log('Profile request for user:', req.user.email);
+  console.log('User roles:', req.user.roles);
+  console.log('Has admin role:', req.user.roles.includes('admin'));
+
   res.json({
     user: {
       id: req.user._id,

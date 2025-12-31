@@ -12,11 +12,11 @@ interface IContactInquiry {
 }
 
 export class ContactInquiryService {
-  private static readonly API_BASE_URL = 'http://localhost:5000/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
 
   static async getAllInquiries(token: string): Promise<IContactInquiry[]> {
     try {
-      const response = await fetch(`${this.API_BASE_URL}/contact`, {
+      const response = await fetch(`${this.API_BASE_URL}/contact/admin`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -118,6 +118,29 @@ export class ContactInquiryService {
     } catch (error) {
       console.error('Failed to update inquiry status:', error);
       throw new Error('Failed to update inquiry status');
+    }
+  }
+
+  static async updateNotes(id: string, notes: string, token: string): Promise<IContactInquiry> {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/contact/${id}/notes`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ notes }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Failed to update inquiry notes:', error);
+      throw new Error('Failed to update inquiry notes');
     }
   }
 }

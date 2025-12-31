@@ -10,7 +10,7 @@ const HeroSection = () => {
     hero_title: 'Transform Your Health with Expert Nutrition Guidance',
     hero_title_highlight: 'Expert Nutrition',
     hero_subtitle: 'Personalized nutrition plans tailored to your unique needs. Achieve your wellness goals with science-backed strategies and compassionate support from Dr. Bidita Shah.',
-    stat_clients: '5000+',
+    stat_clients: '5003+',
     stat_experience: '15+',
     stat_success: '98%',
   });
@@ -18,15 +18,9 @@ const HeroSection = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const allSettings = await settingsAPI.getAll();
-        const settingsMap: any = {};
-        if (Array.isArray(allSettings)) {
-          allSettings.forEach((s: any) => {
-            settingsMap[s.key] = s.value;
-          });
-        } else if (typeof allSettings === 'object') {
-          Object.assign(settingsMap, allSettings);
-        }
+        // Use public settings API that doesn't require authentication
+        const publicSettings = await settingsAPI.getPublic();
+        const settingsMap: any = publicSettings || {};
 
         setSettings({
           hero_badge: settingsMap.hero_badge || settings.hero_badge,
@@ -39,6 +33,7 @@ const HeroSection = () => {
         });
       } catch (error) {
         console.error('Error loading hero settings:', error);
+        // Settings will fall back to default values defined above
       }
     };
     loadSettings();

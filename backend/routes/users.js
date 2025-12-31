@@ -66,6 +66,69 @@ router.patch('/:id/roles', auth, isAdmin, async (req, res) => {
   }
 });
 
+// TEMPORARY: Promote user to admin (remove after use)
+router.put('/:id/promote', auth, async (req, res) => {
+  try {
+    console.log('TEMP: Promoting user to admin:', req.params.id);
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    if (!user.roles.includes('admin')) {
+      user.roles.push('admin');
+      await user.save();
+      console.log('TEMP: User promoted to admin:', user.email);
+    }
+
+    res.json({
+      message: 'User promoted to admin successfully',
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        roles: user.roles
+      }
+    });
+  } catch (error) {
+    console.error('Error promoting user:', error);
+    res.status(500).json({ error: 'Server error promoting user.' });
+  }
+});
+
+// TEMPORARY: Demote user from admin (remove after use)
+router.put('/:id/demote', auth, async (req, res) => {
+  try {
+    console.log('TEMP: Demoting user from admin:', req.params.id);
+
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    user.roles = user.roles.filter(role => role !== 'admin');
+    if (!user.roles.includes('user')) {
+      user.roles.push('user');
+    }
+    await user.save();
+    console.log('TEMP: User demoted from admin:', user.email);
+
+    res.json({
+      message: 'User demoted from admin successfully',
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName,
+        roles: user.roles
+      }
+    });
+  } catch (error) {
+    console.error('Error demoting user:', error);
+    res.status(500).json({ error: 'Server error demoting user.' });
+  }
+});
+
 // Add role to user (admin only)
 router.post('/:id/roles', auth, isAdmin, async (req, res) => {
   try {

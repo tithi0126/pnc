@@ -5,6 +5,7 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 ## 🚀 Features
 
 ### Public Website
+
 - **Responsive Design**: Optimized for desktop and mobile
 - **Service Showcase**: Display nutrition services with detailed descriptions
 - **Testimonials**: Customer reviews and ratings
@@ -12,6 +13,7 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 - **Contact Form**: Lead capture and inquiry management
 
 ### Admin Panel
+
 - **Complete CRUD Operations**: Create, read, update, delete for all content
 - **User Authentication**: JWT-based authentication with role management
 - **Content Management**: Services, testimonials, gallery, contact inquiries
@@ -21,6 +23,7 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 ## 🛠️ Technologies Used
 
 ### Frontend
+
 - **React 18** with TypeScript
 - **Vite** for build tooling
 - **Tailwind CSS** for styling
@@ -29,6 +32,7 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 - **React Query** for data fetching
 
 ### Data Storage & Authentication
+
 - **Browser localStorage** for data persistence (no server required)
 - **Custom authentication** with secure token generation
 - **Service layer architecture** for data operations
@@ -43,18 +47,22 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 ## 🔧 Installation & Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <YOUR_GIT_URL>
 cd vitality-hub
 ```
 
 ### 2. Install Frontend Dependencies
+
 ```bash
 npm install
 ```
 
 ### 3. Start MongoDB
+
 Make sure MongoDB is running on `localhost:27017`. If not installed:
+
 ```bash
 # Windows (using Chocolatey)
 choco install mongodb
@@ -66,15 +74,18 @@ mongod
 ```
 
 ### 4. Start the Backend Server
+
 ```bash
 # Open a new terminal
 cd backend
 npm install
 npm start
 ```
-Backend will run on `http://localhost:5000`
+
+Backend will run on `http://localhost:5003`
 
 ### 5. Start the Frontend Server
+
 ```bash
 # Back in the main project directory
 npm run dev
@@ -83,6 +94,7 @@ npm run dev
 The application will be available at `http://localhost:8080`
 
 ### 6. Initial Setup (First Time Only)
+
 The application will automatically detect MongoDB connection and use it for all data operations. The backend connects to the `vitality-hub` database automatically.
 
 ## 👤 Admin Setup
@@ -94,46 +106,52 @@ The application will automatically detect MongoDB connection and use it for all 
 3. **Check Database Status**: The admin panel overview will show MongoDB connection status
 4. **Login**: Use your credentials at `http://localhost:8080/admin/auth`
 
-**Note**: The first registered user automatically gets admin privileges. You can manage additional admin roles through the Users tab in the admin panel.
-5. **Access Admin Panel**: Navigate to `http://localhost:8080/admin`
+**Note**: The first registered user automatically gets admin privileges. You can manage additional admin roles through the Users tab in the admin panel. 5. **Access Admin Panel**: Navigate to `http://localhost:8080/admin`
 
 ## 📊 Admin Panel Features
 
 ### Dashboard Overview
+
 - Statistics overview (services, testimonials, inquiries)
 - Recent activity and pending items
 
 ### Services Management
+
 - Add, edit, delete nutrition services
 - Configure pricing, duration, benefits
 - Activate/deactivate services
 - Reorder services for display
 
 ### Testimonials Management
+
 - Approve/reject customer testimonials
 - Mark testimonials as featured
 - Add ratings and customer information
 - Bulk management operations
 
 ### Gallery Management
+
 - Upload and manage images
 - Categorize images (Healthy Food, Consultation, Events, etc.)
 - Show/hide images on website
 - SEO-friendly alt text management
 
 ### Contact Inquiries
+
 - View all customer inquiries
 - Update inquiry status (new → read → responded → archived)
 - Add internal notes
 - Direct email and WhatsApp links
 
 ### User Management
+
 - View all registered users
 - Assign/remove admin privileges
 - Search and filter users
 - Role-based access control
 
 ### Settings
+
 - Update site name and contact information
 - Configure WhatsApp number
 - Manage global site settings
@@ -143,23 +161,26 @@ The application will automatically detect MongoDB connection and use it for all 
 The admin panel includes comprehensive database connection monitoring:
 
 ### Real-time Status Display
+
 - **Admin Dashboard**: Visual indicators showing MongoDB connection status
 - **Console Logging**: Detailed connection logs on application startup
 - **API Testing**: Automatic testing of backend API endpoints
 
 ### Browser Console Commands
+
 ```javascript
 // Check all database connections
-checkDB()
+checkDB();
 
 // Test MongoDB connection specifically
-testMongoDB()
+testMongoDB();
 
 // Log detailed connection status
-dbStatus.logAllConnections()
+dbStatus.logAllConnections();
 ```
 
 ### Connection Status Indicators
+
 - **🟢 Connected**: MongoDB is accessible and responding
 - **🟡 API Running**: Backend is running but MongoDB may have issues
 - **🔴 Disconnected**: Backend server or MongoDB is not available
@@ -184,6 +205,7 @@ src/
 ## 🔒 Authentication
 
 The application uses JWT (JSON Web Tokens) for authentication:
+
 - **Registration**: Users can create accounts
 - **Login**: JWT tokens stored in localStorage
 - **Authorization**: Role-based access (admin, user)
@@ -192,6 +214,7 @@ The application uses JWT (JSON Web Tokens) for authentication:
 ## 📱 Responsive Design
 
 The application is fully responsive and optimized for:
+
 - Desktop computers (1200px+)
 - Tablets (768px - 1199px)
 - Mobile phones (320px - 767px)
@@ -199,16 +222,19 @@ The application is fully responsive and optimized for:
 ## 🚀 Deployment
 
 ### Build for Production
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 ```bash
 npm run preview
 ```
 
 ### Deployment Options
+
 - **Vercel**: Connect your GitHub repo
 - **Netlify**: Drag & drop the dist folder
 - **Traditional Hosting**: Upload build files to any static host

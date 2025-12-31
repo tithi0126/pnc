@@ -19,9 +19,11 @@ interface OverviewTabProps {
     localStorage: { connected: boolean; type: string; message: string };
     mongodb: { connected: boolean; type: string; message: string };
   };
+  onTabChange?: (tab: string) => void;
+  onReviewPending?: () => void;
 }
 
-export const OverviewTab = ({ stats, recentInquiries, dbStatus }: OverviewTabProps) => {
+export const OverviewTab = ({ stats, recentInquiries, dbStatus, onTabChange, onReviewPending }: OverviewTabProps) => {
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
@@ -63,22 +65,37 @@ export const OverviewTab = ({ stats, recentInquiries, dbStatus }: OverviewTabPro
             Quick Actions
           </h3>
           <div className="grid grid-cols-2 gap-3">
-            <button className="p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/20 transition-colors text-left group">
+            <button
+              onClick={() => onTabChange?.("services")}
+              className="p-4 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/20 transition-colors text-left group cursor-pointer"
+            >
               <FileText className="w-6 h-6 text-primary mb-2 group-hover:scale-110 transition-transform" />
               <p className="font-medium text-sm text-foreground">Add Service</p>
               <p className="text-xs text-muted-foreground">Create new service</p>
             </button>
-            <button className="p-4 rounded-xl bg-accent/5 hover:bg-accent/10 border border-accent/20 transition-colors text-left group">
+            <button
+              onClick={() => onTabChange?.("gallery")}
+              className="p-4 rounded-xl bg-accent/5 hover:bg-accent/10 border border-accent/20 transition-colors text-left group cursor-pointer"
+            >
               <Image className="w-6 h-6 text-accent mb-2 group-hover:scale-110 transition-transform" />
               <p className="font-medium text-sm text-foreground">Upload Image</p>
               <p className="text-xs text-muted-foreground">Add to gallery</p>
             </button>
-            <button className="p-4 rounded-xl bg-sage/5 hover:bg-sage/10 border border-sage/20 transition-colors text-left group">
+            <button
+              onClick={() => {
+                onTabChange?.("testimonials");
+                onReviewPending?.();
+              }}
+              className="p-4 rounded-xl bg-sage/5 hover:bg-sage/10 border border-sage/20 transition-colors text-left group cursor-pointer"
+            >
               <MessageSquare className="w-6 h-6 text-sage mb-2 group-hover:scale-110 transition-transform" />
               <p className="font-medium text-sm text-foreground">Review</p>
               <p className="text-xs text-muted-foreground">Pending testimonials</p>
             </button>
-            <button className="p-4 rounded-xl bg-terracotta/5 hover:bg-terracotta/10 border border-terracotta/20 transition-colors text-left group">
+            <button
+              onClick={() => onTabChange?.("inquiries")}
+              className="p-4 rounded-xl bg-terracotta/5 hover:bg-terracotta/10 border border-terracotta/20 transition-colors text-left group cursor-pointer"
+            >
               <Mail className="w-6 h-6 text-terracotta mb-2 group-hover:scale-110 transition-transform" />
               <p className="font-medium text-sm text-foreground">Messages</p>
               <p className="text-xs text-muted-foreground">View inquiries</p>

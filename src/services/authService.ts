@@ -19,7 +19,7 @@ export interface User {
 }
 
 export class AuthService {
-  private static readonly API_BASE_URL = 'http://localhost:5000/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
 
   static async register(email: string, password: string, fullName: string): Promise<AuthResponse> {
     const response = await fetch(`${this.API_BASE_URL}/auth/register`, {
@@ -131,6 +131,36 @@ export class AuthService {
       return true;
     } catch (error) {
       return false;
+    }
+  }
+
+  static async promoteToAdmin(token: string, userId: string): Promise<void> {
+    const response = await fetch(`${this.API_BASE_URL}/users/${userId}/promote`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to promote user');
+    }
+  }
+
+  static async demoteFromAdmin(token: string, userId: string): Promise<void> {
+    const response = await fetch(`${this.API_BASE_URL}/users/${userId}/demote`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to demote user');
     }
   }
 

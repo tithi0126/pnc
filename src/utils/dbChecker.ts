@@ -27,7 +27,7 @@ export const checkDatabaseStatus = async () => {
 
 // Test actual MongoDB connection via API (backend server)
 export const testMongoDBConnection = async () => {
-  const apiUrl = 'http://localhost:5000/api';
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
 
   try {
     console.log('🔄 Testing MongoDB connection via backend API...');
@@ -37,7 +37,7 @@ export const testMongoDBConnection = async () => {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       // Add timeout
-      signal: AbortSignal.timeout(5000)
+      signal: AbortSignal.timeout(5003)
     });
 
     if (healthResponse.ok) {
@@ -49,7 +49,7 @@ export const testMongoDBConnection = async () => {
         const dbTestResponse = await fetch(`${apiUrl}/services`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
-          signal: AbortSignal.timeout(5000)
+          signal: AbortSignal.timeout(5003)
         });
 
         if (dbTestResponse.ok) {

@@ -28,6 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuthStatus = async () => {
     const token = localStorage.getItem('authToken');
+    console.log('AuthContext: Checking auth status, token exists:', !!token);
+
     if (!token) {
       setIsLoading(false);
       return;
@@ -36,11 +38,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       // Verify token with AuthService
       const isValid = await AuthService.verifyToken(token);
+      console.log('AuthContext: Token valid:', isValid);
+
       if (isValid) {
         const userData = await AuthService.getProfile(token);
+        console.log('AuthContext: User profile loaded:', userData);
+        console.log('AuthContext: User roles:', userData.roles);
+        console.log('AuthContext: Setting isAdmin:', userData.roles.includes('admin'));
+
         setUser(userData);
         setIsAdmin(userData.roles.includes('admin'));
       } else {
+        console.log('AuthContext: Token invalid, clearing auth');
         // Token is invalid, remove it
         localStorage.removeItem('authToken');
         setUser(null);
@@ -64,6 +73,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const result: AuthResponse = await AuthService.login(email, password);
 
+      console.log('AuthContext: Login successful');
+      console.log('AuthContext: User data:', result.user);
+      console.log('AuthContext: User roles:', result.user.roles);
+      console.log('AuthContext: Is admin:', result.user.roles.includes('admin'));
 
       // Store auth data
       localStorage.setItem('authToken', result.token);

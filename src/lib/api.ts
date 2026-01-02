@@ -9,7 +9,7 @@ import { AuthService } from '@/services/authService';
 
 // HTTP API client for backend requests
 class HttpApiClient {
-  private baseUrl = 'http://localhost:5003/api';
+  private baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://pncapi.aangandevelopers.com/api';
 
   private getAuthToken(): string | null {
     return localStorage.getItem('authToken');

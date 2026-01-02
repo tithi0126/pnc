@@ -45,7 +45,7 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
       formData.append('image', file);
       formData.append('bucket', bucket);
 
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
 
       const token = localStorage.getItem('authToken');
 

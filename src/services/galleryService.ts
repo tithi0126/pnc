@@ -10,7 +10,7 @@ interface IGallery {
 }
 
 export class GalleryService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
 
   static async getAllImages(token: string): Promise<IGallery[]> {
     try {

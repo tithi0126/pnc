@@ -13,7 +13,7 @@ interface ITestimonial {
 }
 
 export class TestimonialService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
 
   static async getAllTestimonials(token: string): Promise<ITestimonial[]> {
     try {

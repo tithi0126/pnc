@@ -27,7 +27,7 @@ export const checkDatabaseStatus = async () => {
 
 // Test actual MongoDB connection via API (backend server)
 export const testMongoDBConnection = async () => {
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5003/api';
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
 
   try {
     console.log('🔄 Testing MongoDB connection via backend API...');

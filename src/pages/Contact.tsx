@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { contactAPI, settingsAPI } from "@/lib/api";
+import { colors } from "@/theme/colors";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -289,7 +290,7 @@ const Contact = () => {
                 href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-[#25D366] text-primary-foreground font-medium hover:bg-[#20BD5A] transition-colors mb-8 w-full sm:w-auto justify-center"
+                className={`inline-flex items-center gap-3 px-6 py-4 rounded-xl font-medium transition-colors mb-8 w-full sm:w-auto justify-center ${colors.whatsappButton}`}
               >
                 <MessageCircle className="w-5 h-5" />
                 Chat on WhatsApp

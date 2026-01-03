@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { galleryAPI, settingsAPI } from "@/lib/api";
 import { normalizeImageUrl } from "@/utils/imageUrl";
+import { colors } from "@/theme/colors";
 
 interface GalleryImage {
   id: string;
@@ -146,7 +147,9 @@ const Gallery = () => {
                       </span>
                       <p className="text-primary-foreground text-sm">{image.title}</p>
                       {!image.is_active && (
-                        <span className="inline-block px-2 py-1 rounded-full bg-red-500/90 text-white text-xs font-medium mt-1">
+                        <span
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${colors.galleryInactiveBadge}`}
+                        >
                           INACTIVE
                         </span>
                       )}

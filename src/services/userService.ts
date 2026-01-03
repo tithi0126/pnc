@@ -10,7 +10,10 @@ interface IUser {
 }
 
 export class UserService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL 
+  || 'https://pncapi.aangandevelopers.com/api'
+  // || 'http://localhost:5003/api'
+  ;
 
   static async getAllUsers(token: string): Promise<IUser[]> {
     try {

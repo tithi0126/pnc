@@ -1,3 +1,5 @@
+import { ImageUpload } from "../../ImageUpload";
+
 interface HeroSettingsSectionProps {
   settings: {
     hero_badge: string;
@@ -7,6 +9,7 @@ interface HeroSettingsSectionProps {
     stat_clients: string;
     stat_experience: string;
     stat_success: string;
+    hero_image_url: string;
   };
   onChange: (key: string, value: string) => void;
 }
@@ -80,6 +83,17 @@ export const HeroSettingsSection = ({ settings, onChange }: HeroSettingsSectionP
               className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             />
           </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Hero Background Image</label>
+          <ImageUpload
+            onImageUpload={(url) => onChange('hero_image_url', url)}
+            currentImage={settings.hero_image_url}
+            folder="hero"
+          />
+          <p className="text-sm text-muted-foreground mt-2">
+            Upload a high-quality background image for the hero section. Recommended size: 1600x1200px or larger.
+          </p>
         </div>
       </div>
     </div>

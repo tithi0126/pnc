@@ -10,6 +10,8 @@ const AboutPreview = () => {
     about_description_1: 'With over 15 years of experience in clinical nutrition and wellness consulting, Dr. Bidita Shah has helped thousands of individuals achieve their health goals through personalized nutrition strategies and sustainable lifestyle changes.',
     about_description_2: 'Her holistic approach combines cutting-edge nutritional science with practical, real-world solutions that fit seamlessly into your daily life. Whether you\'re looking to manage weight, improve athletic performance, or address specific health concerns, Dr. Shah provides the guidance and support you need.',
     about_credentials: JSON.stringify(['Ph.D. in Nutrition Science', 'Certified Dietitian', 'Sports Nutrition Expert', 'Published Author']),
+    about_image_url: '',
+    logo_url: '/pnc-logo.png',
   });
 
   useEffect(() => {
@@ -24,6 +26,8 @@ const AboutPreview = () => {
           about_description_1: settingsMap.about_description_1 || settings.about_description_1,
           about_description_2: settingsMap.about_description_2 || settings.about_description_2,
           about_credentials: settingsMap.about_credentials || settings.about_credentials,
+          about_image_url: settingsMap.about_image_url || settings.about_image_url,
+          logo_url: settingsMap.logo_url || settings.logo_url,
         });
       } catch (error) {
         console.error('Error loading about settings:', error);
@@ -43,15 +47,35 @@ const AboutPreview = () => {
           <div className="relative animate-fade-up">
             <div className="relative rounded-2xl overflow-hidden shadow-large">
               <img
-                src={doctorPortrait}
+                src={settings.about_image_url || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
                 alt="Dr. Bidita Shah"
                 className="w-full h-auto aspect-[4/5] object-cover"
+                onError={(e) => {
+                  // Fallback to static image if dynamic image fails
+                  const target = e.target as HTMLImageElement;
+                  if (target.src !== doctorPortrait) {
+                    target.src = doctorPortrait;
+                  }
+                }}
               />
               {/* Overlay Card */}
               <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-sm rounded-xl p-4 shadow-medium">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-cta flex items-center justify-center">
-                    <span className="font-heading text-xl text-primary-foreground font-bold">B</span>
+                  <div className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center overflow-hidden">
+                    <img
+                      src={settings.logo_url}
+                      alt="PNC Logo"
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // Fallback to "PNC" text if logo fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const fallback = document.createElement('span');
+                        fallback.className = 'font-heading text-lg text-primary font-bold';
+                        fallback.textContent = 'PNC';
+                        target.parentElement?.appendChild(fallback);
+                      }}
+                    />
                   </div>
                   <div>
                     <h4 className="font-heading font-semibold text-foreground">Dr. Bidita Shah</h4>

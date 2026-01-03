@@ -3,15 +3,30 @@ import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImageUploadProps {
-  value: string;
-  onChange: (url: string) => void;
-  bucket: 'gallery' | 'testimonials';
+  value?: string;
+  onChange?: (url: string) => void;
+  bucket?: 'gallery' | 'testimonials' | 'awards' | 'services';
+  folder?: string; // Alternative prop name for backward compatibility
+  currentImage?: string; // Alternative prop name
   className?: string;
+  onImageUpload?: (url: string) => void; // Alternative callback
 }
 
-export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUploadProps) => {
+export const ImageUpload = ({
+  value,
+  onChange,
+  bucket,
+  folder,
+  currentImage,
+  onImageUpload,
+  className = ""
+}: ImageUploadProps) => {
+  // Handle alternative prop names for backward compatibility
+  const actualValue = value || currentImage || "";
+  const actualOnChange = onChange || onImageUpload;
+  const actualBucket = bucket || folder || 'gallery';
   const [isUploading, setIsUploading] = useState(false);
-  const [preview, setPreview] = useState<string>(value);
+  const [preview, setPreview] = useState<string>(actualValue);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -43,9 +58,12 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
     try {
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('bucket', bucket);
+      formData.append('bucket', actualBucket);
 
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
+      const API_BASE_URL = import.meta.env.VITE_API_URL
+      || 'http://localhost:5003/api'
+      // || 'https://pncapi.aangandevelopers.com/api'
+      ;
 
       const token = localStorage.getItem('authToken');
 
@@ -64,7 +82,7 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
           const imageUrl = `${API_BASE_URL.replace('/api', '')}/uploads/${data.filename}`;
 
           setPreview(imageUrl);
-          onChange(imageUrl);
+          actualOnChange?.(imageUrl);
 
           toast({
             title: "Image uploaded",
@@ -83,6 +101,11 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
         setIsUploading(false);
         return;
       }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreview(e.target?.result as string);
+      };
 
       reader.onerror = () => {
         toast({
@@ -107,7 +130,7 @@ export const ImageUpload = ({ value, onChange, bucket, className = "" }: ImageUp
 
   const handleRemove = () => {
     setPreview("");
-    onChange("");
+    actualOnChange?.("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }

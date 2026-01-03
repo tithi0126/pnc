@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { servicesAPI, testimonialsAPI, galleryAPI, contactAPI } from "@/lib/api";
+import { servicesAPI, testimonialsAPI, awardsAPI, galleryAPI, contactAPI } from "@/lib/api";
 import { AuthService } from "@/services/authService";
 import { normalizeImageUrl } from "@/utils/imageUrl";
 import { AdminSidebar, TabType } from "@/components/admin/AdminSidebar";
@@ -9,6 +9,7 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { OverviewTab } from "@/components/admin/tabs/OverviewTab";
 import { ServicesTab } from "@/components/admin/tabs/ServicesTab";
 import { TestimonialsTab } from "@/components/admin/tabs/TestimonialsTab";
+import { AwardsTab } from "@/components/admin/tabs/AwardsTab";
 import { GalleryTab } from "@/components/admin/tabs/GalleryTab";
 import { InquiriesTab } from "@/components/admin/tabs/InquiriesTab";
 import { SettingsTab } from "@/components/admin/tabs/SettingsTab";
@@ -48,6 +49,18 @@ interface GalleryImage {
   sort_order: number | null;
 }
 
+interface Award {
+  id: string;
+  title: string;
+  description?: string;
+  organization?: string;
+  date: string;
+  type: 'award' | 'event';
+  image_url?: string;
+  is_active: boolean;
+  sort_order: number;
+}
+
 interface Inquiry {
   id: string;
   name: string;
@@ -70,6 +83,7 @@ const AdminDashboard = () => {
   
   const [services, setServices] = useState<Service[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
   const [gallery, setGallery] = useState<GalleryImage[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [dbStatus, setDbStatus] = useState<any>(null);
@@ -124,9 +138,10 @@ const AdminDashboard = () => {
     setDataError(null);
 
     try {
-      const [servicesData, testimonialsData, galleryData, inquiriesData] = await Promise.all([
+      const [servicesData, testimonialsData, awardsData, galleryData, inquiriesData] = await Promise.all([
         servicesAPI.getAllAdmin().catch(() => []),
         testimonialsAPI.getAllAdmin().catch(() => []),
+        awardsAPI.getAllAdmin().catch(() => []),
         galleryAPI.getAllAdmin().catch(() => []),
         contactAPI.getAllAdmin().catch(() => []),
       ]);
@@ -161,6 +176,18 @@ const AdminDashboard = () => {
         image_url: normalizeImageUrl(t.imageUrl || t.image_url || ''),
         is_approved: t.isApproved || t.is_approved || false,
         is_featured: t.isFeatured || t.is_featured || false,
+      })) : []);
+
+      setAwards(Array.isArray(awardsData) ? awardsData.map(a => ({
+        id: a._id?.toString() || a.id || '',
+        title: a.title || '',
+        description: a.description || '',
+        organization: a.organization || '',
+        date: a.date || '',
+        type: a.type || 'award',
+        image_url: normalizeImageUrl(a.imageUrl || a.image_url || ''),
+        is_active: a.isActive || a.is_active || false,
+        sort_order: a.sortOrder || a.sort_order || 0,
       })) : []);
 
       setGallery(Array.isArray(galleryData) ? galleryData.map(g => ({
@@ -339,6 +366,13 @@ const AdminDashboard = () => {
               testimonials={testimonials}
               onRefresh={fetchData}
               // initialFilter={testimonialsFilter}
+            />
+          )}
+
+          {activeTab === "awards" && (
+            <AwardsTab
+              awards={awards}
+              onRefresh={fetchData}
             />
           )}
 

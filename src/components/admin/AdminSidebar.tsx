@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
-  LayoutDashboard, FileText, MessageSquare, Image, Mail,
+  LayoutDashboard, FileText, MessageSquare, Trophy, Image, Mail,
   LogOut, Users, Settings, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { settingsAPI } from "@/lib/api";
 
-type TabType = "overview" | "services" | "testimonials" | "gallery" | "inquiries" | "settings";
+type TabType = "overview" | "services" | "testimonials" | "awards" | "gallery" | "inquiries" | "settings";
 
 interface AdminSidebarProps {
   activeTab: TabType;
@@ -20,6 +20,7 @@ const menuItems = [
   { id: "overview", label: "Dashboard", icon: LayoutDashboard },
   { id: "services", label: "Services", icon: FileText },
   { id: "testimonials", label: "Testimonials", icon: MessageSquare },
+  { id: "awards", label: "Awards & Events", icon: Trophy },
   { id: "gallery", label: "Gallery", icon: Image },
   { id: "inquiries", label: "Inquiries", icon: Mail },
   // { id: "users", label: "Users", icon: Users }, // Commented out user management

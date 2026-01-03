@@ -1,6 +1,7 @@
 // MongoDB API client - simplified to only use HTTP requests
 import { ServiceService } from '@/services/serviceService';
 import { TestimonialService } from '@/services/testimonialService';
+import { AwardsService } from '@/services/awardsService';
 import { GalleryService } from '@/services/galleryService';
 import { ContactInquiryService } from '@/services/contactInquiryService';
 import { UserService } from '@/services/userService';
@@ -9,7 +10,10 @@ import { AuthService } from '@/services/authService';
 
 // HTTP API client for backend requests
 class HttpApiClient {
-  private baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://pncapi.aangandevelopers.com/api';
+  private baseUrl = import.meta.env.VITE_API_BASE_URL 
+  || 'https://pncapi.aangandevelopers.com/api'
+  // ||  'http://localhost:5003/api'
+  ;
 
   private getAuthToken(): string | null {
     return localStorage.getItem('authToken');
@@ -321,6 +325,46 @@ export const settingsAPI = {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');
     return await SettingsService.updateSetting(key, value, token);
+  },
+};
+
+export const awardsAPI = {
+  async getAll() {
+    return await httpClient.get('/awards/active');
+  },
+
+  async getAllAdmin() {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await AwardsService.getAllAwards(token);
+  },
+
+  async getById(id: string) {
+    return await httpClient.get(`/awards/${id}`);
+  },
+
+  async create(data: any) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await AwardsService.createAward(data, token);
+  },
+
+  async update(id: string, data: any) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await AwardsService.updateAward(id, data, token);
+  },
+
+  async delete(id: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await AwardsService.deleteAward(id, token);
+  },
+
+  async toggleStatus(id: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await AwardsService.toggleAwardStatus(id, token);
   },
 };
 

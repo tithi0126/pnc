@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Leaf, Award, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
-import heroImage from "@/assets/hero-image.jpg";
+// Note: heroImage is now loaded dynamically from settings
 
 const HeroSection = () => {
   const [settings, setSettings] = useState({
@@ -13,6 +13,7 @@ const HeroSection = () => {
     stat_clients: '5003+',
     stat_experience: '15+',
     stat_success: '98%',
+    hero_image_url: '',
   });
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const HeroSection = () => {
           stat_clients: settingsMap.stat_clients || settings.stat_clients,
           stat_experience: settingsMap.stat_experience || settings.stat_experience,
           stat_success: settingsMap.stat_success || settings.stat_success,
+          hero_image_url: settingsMap.hero_image_url || settings.hero_image_url,
         });
       } catch (error) {
         console.error('Error loading hero settings:', error);
@@ -59,9 +61,16 @@ const HeroSection = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
-          src={heroImage}
+          src={settings.hero_image_url || 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop'}
           alt="Dr. Bidita Shah - Nutrition Consultant"
           className="w-full h-full object-cover"
+          onError={(e) => {
+            // Fallback to static image if dynamic image fails
+            const target = e.target as HTMLImageElement;
+            if (!target.src.includes('unsplash.com')) {
+              target.src = 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop';
+            }
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-transparent" />
       </div>

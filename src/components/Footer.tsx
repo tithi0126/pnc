@@ -11,6 +11,8 @@ const Footer = () => {
     address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
   });
 
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
+
   const [footerSettings, setFooterSettings] = useState({
     footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Surat.',
     footer_services: JSON.stringify([
@@ -53,6 +55,10 @@ const Footer = () => {
           footer_links: settingsMap.footer_links || footerSettings.footer_links,
           social_links: settingsMap.social_links || footerSettings.social_links,
         });
+
+        if (settingsMap.logo_url) {
+          setLogoUrl(settingsMap.logo_url);
+        }
       } catch (error) {
         console.error('Error loading footer settings:', error);
       }
@@ -75,8 +81,21 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                <span className="font-heading text-xl text-primary-foreground font-bold">B</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <img
+                  src={logoUrl}
+                  alt="PNC Logo"
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    // Fallback to default logo if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'w-10 h-10 rounded-full bg-gradient-cta flex items-center justify-center';
+                    fallback.innerHTML = '<span class="font-heading text-xl text-primary-foreground font-bold">PNC</span>';
+                    target.parentElement?.appendChild(fallback);
+                  }}
+                />
               </div>
               <span className="font-heading text-xl font-semibold">Dr. Bidita Shah</span>
             </div>

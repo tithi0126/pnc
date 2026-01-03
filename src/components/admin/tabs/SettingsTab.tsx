@@ -43,6 +43,7 @@ export const SettingsTab = () => {
     stat_clients: '5003+',
     stat_experience: '15+',
     stat_success: '98%',
+    hero_image_url: '',
 
     // About Preview Section
     about_title: 'Passionate About Transforming Lives Through Nutrition',
@@ -118,6 +119,7 @@ export const SettingsTab = () => {
     about_page_achievements: JSON.stringify([{ number: '5003+', label: 'Happy Clients' }]),
     about_core_values_title: 'Core Values',
     about_core_values_subtitle: 'The principles that guide every consultation.',
+    about_image_url: '',
 
     // Services Page
     services_page_title: 'Our Nutrition Services',
@@ -187,6 +189,7 @@ export const SettingsTab = () => {
         stat_clients: getSetting('stat_clients', '5003+'),
         stat_experience: getSetting('stat_experience', '15+'),
         stat_success: getSetting('stat_success', '98%'),
+        hero_image_url: getSetting('hero_image_url', ''),
         about_title: getSetting('about_title', 'Meet Dr. Bidita Shah - Your Nutrition Expert'),
         about_description_1: getSetting('about_description_1', 'Dr. Bidita Shah is a renowned Clinical Nutritionist and Dietitian with over 15 years of experience in the field of nutrition and wellness. She specializes in personalized nutrition counseling, weight management, diabetes care, and sports nutrition.'),
         about_description_2: getSetting('about_description_2', 'As a certified dietitian and nutrition consultant, Dr. Shah combines her extensive clinical experience with the latest scientific research to create customized nutrition plans that deliver real, sustainable results.'),
@@ -266,6 +269,7 @@ export const SettingsTab = () => {
         ])),
         about_core_values_title: getSetting('about_core_values_title', 'Core Values'),
         about_core_values_subtitle: getSetting('about_core_values_subtitle', 'The principles that guide every consultation and every recommendation I make.'),
+        about_image_url: getSetting('about_image_url', ''),
         services_page_title: getSetting('services_page_title', 'Our Nutrition Services'),
         services_page_subtitle: getSetting('services_page_subtitle', 'Comprehensive nutrition solutions for optimal health'),
         services_page_intro: getSetting('services_page_intro', 'We offer a wide range of personalized nutrition services...'),
@@ -355,6 +359,7 @@ export const SettingsTab = () => {
           stat_clients: settings.stat_clients,
           stat_experience: settings.stat_experience,
           stat_success: settings.stat_success,
+          hero_image_url: settings.hero_image_url,
         }}
         onChange={handleSettingChange}
       />
@@ -429,6 +434,7 @@ export const SettingsTab = () => {
           about_page_achievements: settings.about_page_achievements,
           about_core_values_title: settings.about_core_values_title,
           about_core_values_subtitle: settings.about_core_values_subtitle,
+          about_image_url: settings.about_image_url,
         }}
         onChange={handleSettingChange}
       />

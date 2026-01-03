@@ -40,11 +40,24 @@ export const ServicesTab = ({ services, onRefresh }: ServicesTabProps) => {
 
   const handleSave = async (formData: Service) => {
     try {
+      // Transform field names from frontend format to backend format
+      const transformedData = {
+        title: formData.title,
+        shortDescription: formData.short_description,
+        fullDescription: formData.full_description,
+        icon: formData.icon,
+        duration: formData.duration,
+        idealFor: formData.ideal_for,
+        benefits: formData.benefits,
+        isActive: formData.is_active,
+        sortOrder: formData.sort_order,
+      };
+
       if (formData.id) {
-        await servicesAPI.update(formData.id, formData);
+        await servicesAPI.update(formData.id, transformedData);
         toast({ title: "Service updated" });
       } else {
-        await servicesAPI.create(formData);
+        await servicesAPI.create(transformedData);
         toast({ title: "Service created" });
       }
       setEditingService(null);

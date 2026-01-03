@@ -1,3 +1,5 @@
+import { ImageUpload } from "../../ImageUpload";
+
 interface AboutPageSettingsSectionProps {
   settings: {
     about_page_title: string;
@@ -12,6 +14,7 @@ interface AboutPageSettingsSectionProps {
     about_page_achievements: string;
     about_core_values_title: string;
     about_core_values_subtitle: string;
+    about_image_url: string;
   };
   onChange: (key: string, value: string) => void;
 }
@@ -143,6 +146,17 @@ export const AboutPageSettingsSection = ({ settings, onChange }: AboutPageSettin
               className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
             />
           </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">About Page Image</label>
+          <ImageUpload
+            onImageUpload={(url) => onChange('about_image_url', url)}
+            currentImage={settings.about_image_url}
+            folder="about"
+          />
+          <p className="text-sm text-muted-foreground mt-2">
+            Upload an image for the about page. This will replace the default doctor portrait image.
+          </p>
         </div>
       </div>
     </div>

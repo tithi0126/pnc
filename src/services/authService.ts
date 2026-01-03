@@ -19,7 +19,10 @@ export interface User {
 }
 
 export class AuthService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
+  || 'http://localhost:5003/api'
+  // || 'https://pncapi.aangandevelopers.com/api'
+  ;
 
   static async register(email: string, password: string, fullName: string): Promise<AuthResponse> {
     const response = await fetch(`${this.API_BASE_URL}/auth/register`, {

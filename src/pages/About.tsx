@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Award, BookOpen, Target, Users, CheckCircle, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
-import doctorPortrait from "@/assets/doctor-portrait.jpg";
+// Note: doctorPortrait is now loaded dynamically from settings
 
 const About = () => {
   const [settings, setSettings] = useState({
@@ -30,6 +30,7 @@ const About = () => {
     ]),
     about_core_values_title: 'Core Values',
     about_core_values_subtitle: 'The principles that guide every consultation and recommendation.',
+    about_image_url: '',
   });
 
   useEffect(() => {
@@ -51,7 +52,9 @@ const About = () => {
           about_page_achievements: settingsMap.about_page_achievements || settings.about_page_achievements,
           about_core_values_title: settingsMap.about_core_values_title || settings.about_core_values_title,
           about_core_values_subtitle: settingsMap.about_core_values_subtitle || settings.about_core_values_subtitle,
+          about_image_url: settingsMap.about_image_url || settings.about_image_url,
         });
+
       } catch (error) {
         console.error('Error loading about page settings:', error);
       }
@@ -87,9 +90,16 @@ const About = () => {
             <div className="animate-fade-up">
               <div className="relative">
                 <img
-                  src={doctorPortrait}
+                  src={settings.about_image_url || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
                   alt="Dr. Bidita Shah"
                   className="w-full rounded-2xl shadow-large"
+                  onError={(e) => {
+                    // Fallback to static image if dynamic image fails
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== doctorPortrait) {
+                      target.src = doctorPortrait;
+                    }
+                  }}
                 />
                 <div className="absolute -bottom-6 -right-6 w-full h-full rounded-2xl bg-primary/10 -z-10" />
               </div>

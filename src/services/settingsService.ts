@@ -7,7 +7,10 @@ interface ISetting {
 }
 
 export class SettingsService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL || 'https://pncapi.aangandevelopers.com/api';
+  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL 
+  || 'https://pncapi.aangandevelopers.com/api'
+  // || 'http://localhost:5003/api'
+  ;
 
   static async getAllSettings(token: string): Promise<Record<string, string>> {
     try {

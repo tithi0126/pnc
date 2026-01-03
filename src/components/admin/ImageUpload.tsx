@@ -61,8 +61,8 @@ export const ImageUpload = ({
       formData.append('bucket', actualBucket);
 
       const API_BASE_URL = import.meta.env.VITE_API_URL
-      || 'http://localhost:5003/api'
-      // || 'https://pncapi.aangandevelopers.com/api'
+      || 'https://api.pncpriyamnutritioncare.com/api'
+      // || 'http://localhost:5003/api'
       ;
 
       const token = localStorage.getItem('authToken');

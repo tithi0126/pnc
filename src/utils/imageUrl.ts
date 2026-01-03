@@ -8,8 +8,8 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   if (!imageUrl) return null;
 
   // If it's already a full URL with the current API base, return as-is
-  const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') 
-  || 'https://pncapi.aangandevelopers.com' 
+  const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '')
+  || 'https://api.pncpriyamnutritioncare.com'
   // || 'http://localhost:5003'
   ;
   if (imageUrl.startsWith(apiBase)) {
@@ -37,8 +37,8 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
  * Gets the base URL for API calls (without /api suffix)
  */
 export const getApiBaseUrl = (): string => {
-  return import.meta.env.VITE_API_URL?.replace('/api', '') 
-  || 'https://pncapi.aangandevelopers.com'
+  return import.meta.env.VITE_API_URL?.replace('/api', '')
+  || 'https://api.pncpriyamnutritioncare.com'
   // || 'http://localhost:5003'
   ;
 };

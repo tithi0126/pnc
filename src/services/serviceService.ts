@@ -15,7 +15,7 @@ interface IService {
 
 export class ServiceService {
   private static readonly API_BASE_URL = import.meta.env.VITE_API_URL 
-  || 'https://pncapi.aangandevelopers.com/api'
+  || 'https://api.pncpriyamnutritioncare.com/api'
   // || 'http://localhost:5003/api'
   ;
 

@@ -14,8 +14,8 @@ interface IAward {
 
 export class AwardsService {
   private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
+  || 'https://api.pncpriyamnutritioncare.com/api'
   // || 'http://localhost:5003/api'
-  || 'https://pncapi.aangandevelopers.com/api'
   ;
 
   static async getAllAwards(token: string): Promise<IAward[]> {

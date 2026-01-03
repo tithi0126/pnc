@@ -28,7 +28,7 @@ export const checkDatabaseStatus = async () => {
 // Test actual MongoDB connection via API (backend server)
 export const testMongoDBConnection = async () => {
   const apiUrl = import.meta.env.VITE_API_URL 
-  || 'https://pncapi.aangandevelopers.com/api'
+  || 'https://api.pncpriyamnutritioncare.com/api'
   // || 'http://localhost:5003/api'
   ;
 

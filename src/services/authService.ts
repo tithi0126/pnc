@@ -20,8 +20,8 @@ export interface User {
 
 export class AuthService {
   private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
-  || 'http://localhost:5003/api'
-  // || 'https://pncapi.aangandevelopers.com/api'
+  || 'https://api.pncpriyamnutritioncare.com/api'
+  // || 'http://localhost:5003/api'
   ;
 
   static async register(email: string, password: string, fullName: string): Promise<AuthResponse> {

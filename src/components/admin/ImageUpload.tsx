@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeImageUrl } from "@/utils/imageUrl";
-
+require('dotenv').config();
 interface ImageUploadProps {
   value?: string;
   onChange?: (url: string) => void;
@@ -87,7 +87,7 @@ export const ImageUpload = ({
         if (response.ok) {
           const data = await response.json();
           // Use the URL returned from backend (constructed with PUBLIC_BASE_URL)
-          const imageUrl = data.url || `/uploads/${data.filename}`;
+          const imageUrl = data.url || `${API_BASE_URL.replace('/api', '')}/api/uploads/${data.filename}`;
 
           setPreview(normalizeImageUrl(imageUrl));
           actualOnChange?.(normalizeImageUrl(imageUrl));

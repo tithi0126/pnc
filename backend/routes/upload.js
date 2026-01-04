@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { auth, isAdmin } = require('../middleware/auth');
-
+require('dotenv').config();
 const router = express.Router();
 
 // Create uploads directory if it doesn't exist

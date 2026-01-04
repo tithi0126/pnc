@@ -86,11 +86,11 @@ export const ImageUpload = ({
 
         if (response.ok) {
           const data = await response.json();
-          const imageUrl = `/uploads/${data.filename}`;
-          const normalizedUrl = normalizeImageUrl(imageUrl);
+          // Use the URL returned from backend (constructed with PUBLIC_BASE_URL)
+          const imageUrl = data.url || `/uploads/${data.filename}`;
 
-          setPreview(normalizedUrl);
-          actualOnChange?.(normalizedUrl);
+          setPreview(normalizeImageUrl(imageUrl));
+          actualOnChange?.(normalizeImageUrl(imageUrl));
 
           toast({
             title: "Image uploaded",

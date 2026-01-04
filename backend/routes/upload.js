@@ -52,11 +52,16 @@ router.post('/', auth, isAdmin, upload.single('image'), (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // Construct the public URL using the environment variable
+    const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://pncpriyamnutritioncare.com';
+    const publicUrl = `${publicBaseUrl}/api/uploads/${req.file.filename}`;
+
     res.json({
       message: 'File uploaded successfully',
       filename: req.file.filename,
       path: req.file.path,
-      size: req.file.size
+      size: req.file.size,
+      url: publicUrl
     });
   } catch (error) {
     console.error('Upload error:', error);

@@ -136,7 +136,7 @@ const Gallery = () => {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <img
-                    src={image.image_url}
+                    src={normalizeImageUrl(image.image_url)}
                     alt={image.alt_text || image.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />

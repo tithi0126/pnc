@@ -4,6 +4,7 @@ import { galleryAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Modal } from "../Modal";
 import { ImageUpload } from "../ImageUpload";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface GalleryImage {
   id: string;
@@ -124,7 +125,7 @@ export const GalleryTab = ({ images, onRefresh }: GalleryTabProps) => {
           >
             <div className="aspect-square">
               <img
-                src={image.image_url}
+                src={normalizeImageUrl(image.image_url)}
                 alt={image.alt_text || image.title}
                 className="w-full h-full object-cover"
               />

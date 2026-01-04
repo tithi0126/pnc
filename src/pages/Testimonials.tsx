@@ -197,7 +197,7 @@ const Testimonials = () => {
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
                       {testimonials[activeIndex].image_url ? (
                         <img
-                          src={testimonials[activeIndex].image_url}
+                          src={normalizeImageUrl(testimonials[activeIndex].image_url)}
                           alt={testimonials[activeIndex].name}
                           className="w-full h-full rounded-full object-cover"
                           onError={(e) => {
@@ -299,7 +299,7 @@ const Testimonials = () => {
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
                     {testimonial.image_url ? (
                       <img
-                        src={testimonial.image_url}
+                        src={normalizeImageUrl(testimonial.image_url)}
                         alt={testimonial.name}
                         className="w-full h-full rounded-full object-cover"
                         onError={(e) => {

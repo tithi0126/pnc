@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Award, BookOpen, Target, Users, CheckCircle, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 // Note: doctorPortrait is now loaded dynamically from settings
 
 const About = () => {
@@ -90,7 +91,7 @@ const About = () => {
             <div className="animate-fade-up">
               <div className="relative">
                 <img
-                  src={settings.about_image_url || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
+                  src={normalizeImageUrl(settings.about_image_url) || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
                   alt="Dr. Bidita Shah"
                   className="w-full rounded-2xl shadow-large"
                   onError={(e) => {

@@ -4,6 +4,7 @@ import { Trophy, Calendar, Award as AwardIcon, MapPin } from "lucide-react";
 import { awardsAPI } from "@/lib/api";
 import { ImageModal } from "@/components/ImageModal";
 import { colors } from "@/theme/colors";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Award {
   id: string;
@@ -158,7 +159,7 @@ const Awards = () => {
                             onClick={() => openImageModal(award.images, 0, award.title)}
                           >
                             <img
-                              src={award.images[0]}
+                              src={normalizeImageUrl(award.images[0])}
                               alt={award.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               onError={(e) => {
@@ -192,7 +193,7 @@ const Awards = () => {
                                   onClick={() => openImageModal(award.images, idx + 1, award.title)}
                                 >
                                   <img
-                                    src={image}
+                                    src={normalizeImageUrl(image)}
                                     alt={`${award.title} ${idx + 2}`}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {
@@ -291,7 +292,7 @@ const Awards = () => {
                             onClick={() => openImageModal(event.images, 0, event.title)}
                           >
                             <img
-                              src={event.images[0]}
+                              src={normalizeImageUrl(event.images[0])}
                               alt={event.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               onError={(e) => {
@@ -325,7 +326,7 @@ const Awards = () => {
                                   onClick={() => openImageModal(event.images, idx + 1, event.title)}
                                 >
                                   <img
-                                    src={image}
+                                    src={normalizeImageUrl(image)}
                                     alt={`${event.title} ${idx + 2}`}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {

@@ -4,6 +4,7 @@ import { testimonialsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Modal } from "../Modal";
 import { ImageUpload } from "../ImageUpload";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Testimonial {
   id: string;
@@ -136,8 +137,8 @@ export const TestimonialsTab = ({ testimonials, onRefresh }: TestimonialsTabProp
                 {/* Avatar */}
                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
                   {testimonial.image_url ? (
-                    <img 
-                      src={testimonial.image_url} 
+                    <img
+                      src={normalizeImageUrl(testimonial.image_url)}
                       alt={testimonial.name} 
                       className="w-full h-full object-cover"
                     />

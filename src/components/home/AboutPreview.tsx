@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 import doctorPortrait from "@/assets/doctor-portrait.jpg";
 
 const AboutPreview = () => {
@@ -47,7 +48,7 @@ const AboutPreview = () => {
           <div className="relative animate-fade-up">
             <div className="relative rounded-2xl overflow-hidden shadow-large">
               <img
-                src={settings.about_image_url || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
+                src={normalizeImageUrl(settings.about_image_url) || 'https://images.unsplash.com/800x600/?portrait,doctor,medical&w=400&h=500&fit=crop&crop=face'}
                 alt="Dr. Bidita Shah"
                 className="w-full h-auto aspect-[4/5] object-cover"
                 onError={(e) => {

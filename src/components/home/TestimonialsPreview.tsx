@@ -94,7 +94,7 @@ const TestimonialsPreview = () => {
               <div className="flex items-center gap-4">
                 {testimonial.image_url && (
                   <img
-                    src={testimonial.image_url}
+                    src={normalizeImageUrl(testimonial.image_url)}
                     alt={testimonial.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />

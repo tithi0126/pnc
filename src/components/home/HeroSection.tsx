@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Leaf, Award, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 // Note: heroImage is now loaded dynamically from settings
 
 const HeroSection = () => {
@@ -61,7 +62,7 @@ const HeroSection = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
-          src={settings.hero_image_url || 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop'}
+          src={normalizeImageUrl(settings.hero_image_url) || 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop'}
           alt="Dr. Bidita Shah - Nutrition Consultant"
           className="w-full h-full object-cover"
           onError={(e) => {

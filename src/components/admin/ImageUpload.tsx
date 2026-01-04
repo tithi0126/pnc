@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeImageUrl } from "@/utils/imageUrl";
@@ -27,9 +27,12 @@ export const ImageUpload = ({
   const actualOnChange = onChange || onImageUpload;
   const actualBucket = bucket || folder || 'gallery';
   const [isUploading, setIsUploading] = useState(false);
-  const normalizedValue = normalizeImageUrl(actualValue);
-  console.log('ImageUpload initialization:', { actualValue, normalizedValue });
-  const [preview, setPreview] = useState<string>(normalizedValue);
+  const [preview, setPreview] = useState<string>("");
+
+  // Update preview when actualValue changes
+  useEffect(() => {
+    setPreview(normalizeImageUrl(actualValue));
+  }, [actualValue]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -85,7 +88,6 @@ export const ImageUpload = ({
           const data = await response.json();
           const imageUrl = `/uploads/${data.filename}`;
           const normalizedUrl = normalizeImageUrl(imageUrl);
-
 
           setPreview(normalizedUrl);
           actualOnChange?.(normalizedUrl);
@@ -165,7 +167,6 @@ export const ImageUpload = ({
             className="w-full h-48 object-cover rounded-xl border border-border"
             onError={(e) => {
               console.error('Image preview failed to load:', preview);
-              console.error('Image error event:', e);
             }}
             onLoad={() => {
               console.log('Image preview loaded successfully:', preview);

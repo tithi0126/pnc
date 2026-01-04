@@ -1,9 +1,8 @@
 const express = require('express');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { auth, isAdmin } = require('../middleware/auth');
 require('dotenv').config();
+const { uploadSingle, handleUploadError } = require('../utils/upload');
 const router = express.Router();
 
 // Create uploads directory if it doesn't exist
@@ -12,61 +11,33 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    // Generate unique filename with timestamp
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const extension = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, extension);
-    cb(null, `${basename}-${uniqueSuffix}${extension}`);
-  }
-});
-
-// File filter
-const fileFilter = (req, file, cb) => {
-  // Accept images only
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed!'), false);
-  }
-};
-
-// Upload middleware
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5242880 // 5MB default
-  }
-});
-
-// Upload image route (admin only)
-router.post('/', auth, isAdmin, upload.single('image'), (req, res) => {
+// Upload image route
+router.post('/', uploadSingle('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Construct the public URL using the environment variable
-    const publicBaseUrl = process.env.PUBLIC_BASE_URL || 'https://pncpriyamnutritioncare.com';
-    const publicUrl = `${publicBaseUrl}/api/uploads/${req.file.filename}`;
+    const baseUrl =
+      process.env.PUBLIC_BASE_URL ||
+      `${req.protocol}://${req.get('host')}`;
 
-    res.json({
-      message: 'File uploaded successfully',
-      filename: req.file.filename,
-      path: req.file.path,
-      size: req.file.size,
-      url: publicUrl
+    const cleanBaseUrl = baseUrl.replace(/\/$/, '');
+
+    const imageUrl = `${cleanBaseUrl}/api/uploads/${req.file.filename}`;
+
+    res.status(200).json({
+      success: true,
+      url: imageUrl,
+      filename: req.file.filename
     });
   } catch (error) {
     console.error('Upload error:', error);
-    res.status(500).json({ error: 'Server error during upload' });
+    res.status(500).json({ error: 'Upload failed' });
   }
 });
+
+// Error handling middleware for upload errors
+router.use(handleUploadError);
 
 module.exports = router;

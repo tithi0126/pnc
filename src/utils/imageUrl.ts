@@ -7,6 +7,8 @@
 export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   if (!imageUrl) return null;
 
+  const originalUrl = imageUrl;
+
   // Fix malformed URLs (missing // after https:)
   if (imageUrl.startsWith('https:/') && !imageUrl.startsWith('https://')) {
     imageUrl = imageUrl.replace('https:/', 'https://');
@@ -22,24 +24,36 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   || 'https://api.pncpriyamnutritioncare.com'
   // || 'http://localhost:5003'
   ;
+
+  // Debug logging
+  if (originalUrl !== imageUrl) {
+    console.log('normalizeImageUrl - Fixed malformed URL:', { original: originalUrl, fixed: imageUrl });
+  }
+
   if (imageUrl.startsWith(apiBase)) {
+    console.log('normalizeImageUrl - Already correct URL:', imageUrl);
     return imageUrl;
   }
 
   // If it's a relative path to uploads, construct full URL
   if (imageUrl.startsWith('/uploads/') || imageUrl.startsWith('uploads/')) {
-    return `${apiBase}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    const result = `${apiBase}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+    console.log('normalizeImageUrl - Constructed from relative path:', { input: imageUrl, result });
+    return result;
   }
 
   // If it's an old URL with different port, replace with current base
   if (imageUrl.includes('/uploads/')) {
     const filename = imageUrl.split('/uploads/')[1];
     if (filename) {
-      return `${apiBase}/uploads/${filename}`;
+      const result = `${apiBase}/uploads/${filename}`;
+      console.log('normalizeImageUrl - Replaced old URL:', { input: imageUrl, result });
+      return result;
     }
   }
 
   // Return as-is if we can't normalize it
+  console.log('normalizeImageUrl - Returning as-is:', imageUrl);
   return imageUrl;
 };
 

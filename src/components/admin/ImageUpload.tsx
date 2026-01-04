@@ -27,7 +27,9 @@ export const ImageUpload = ({
   const actualOnChange = onChange || onImageUpload;
   const actualBucket = bucket || folder || 'gallery';
   const [isUploading, setIsUploading] = useState(false);
-  const [preview, setPreview] = useState<string>(normalizeImageUrl(actualValue));
+  const normalizedValue = normalizeImageUrl(actualValue);
+  console.log('ImageUpload initialization:', { actualValue, normalizedValue });
+  const [preview, setPreview] = useState<string>(normalizedValue);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 

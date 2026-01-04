@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface ImageUploadProps {
   value?: string;
@@ -26,13 +27,14 @@ export const ImageUpload = ({
   const actualOnChange = onChange || onImageUpload;
   const actualBucket = bucket || folder || 'gallery';
   const [isUploading, setIsUploading] = useState(false);
-  const [preview, setPreview] = useState<string>(actualValue);
+  const [preview, setPreview] = useState<string>(normalizeImageUrl(actualValue));
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
@@ -79,10 +81,12 @@ export const ImageUpload = ({
 
         if (response.ok) {
           const data = await response.json();
-          const imageUrl = `${API_BASE_URL.replace('/api', '')}/uploads/${data.filename}`;
+          const imageUrl = `/uploads/${data.filename}`;
+          const normalizedUrl = normalizeImageUrl(imageUrl);
 
-          setPreview(imageUrl);
-          actualOnChange?.(imageUrl);
+
+          setPreview(normalizedUrl);
+          actualOnChange?.(normalizedUrl);
 
           toast({
             title: "Image uploaded",
@@ -136,6 +140,7 @@ export const ImageUpload = ({
     }
   };
 
+
   const handleClick = () => {
     fileInputRef.current?.click();
   };
@@ -156,6 +161,13 @@ export const ImageUpload = ({
             src={preview}
             alt="Preview"
             className="w-full h-48 object-cover rounded-xl border border-border"
+            onError={(e) => {
+              console.error('Image preview failed to load:', preview);
+              console.error('Image error event:', e);
+            }}
+            onLoad={() => {
+              console.log('Image preview loaded successfully:', preview);
+            }}
           />
           <button
             type="button"

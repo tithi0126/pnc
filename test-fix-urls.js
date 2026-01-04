@@ -1,10 +1,5 @@
-// Utility functions for handling image URLs
-
-/**
- * Normalizes image URLs to use the current API base URL
- * This handles cases where images were saved with different ports
- */
-export const normalizeImageUrl = (imageUrl: string | null): string | null => {
+// Test the fixed normalizeImageUrl function
+const normalizeImageUrl = (imageUrl) => {
   if (!imageUrl) return null;
 
   // Fix malformed URLs (missing // after https:)
@@ -18,10 +13,7 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   }
 
   // If it's already a full URL with the current API base, return as-is
-  const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '')
-  || 'https://api.pncpriyamnutritioncare.com'
-  // || 'http://localhost:5003'
-  ;
+  const apiBase = 'https://api.pncpriyamnutritioncare.com';
   if (imageUrl.startsWith(apiBase)) {
     return imageUrl;
   }
@@ -43,12 +35,23 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   return imageUrl;
 };
 
-/**
- * Gets the base URL for API calls (without /api suffix)
- */
-export const getApiBaseUrl = (): string => {
-  return import.meta.env.VITE_API_URL?.replace('/api', '')
-  || 'https://api.pncpriyamnutritioncare.com'
-  // || 'http://localhost:5003'
-  ;
-};
+// Test the malformed URLs from the console
+console.log('Testing malformed URLs from console:');
+console.log('');
+
+const malformedUrls = [
+  'https:/.pncpriyamnutritioncare.com/api/uploads/assorted-colorful-vegetables-and-nuts-on-wooden-background-photo-1767501055464-781797602.jpg',
+  'https:/.pncpriyamnutritioncare.com/api/uploads/{ AanganDevelopers }-1767501085919-429197670.png',
+  '/uploads/test-image.jpg',
+  'https://api.pncpriyamnutritioncare.com/uploads/correct-image.jpg'
+];
+
+malformedUrls.forEach((url, index) => {
+  const result = normalizeImageUrl(url);
+  console.log(`Test ${index + 1}:`);
+  console.log(`  Input:  "${url}"`);
+  console.log(`  Output: "${result}"`);
+  console.log('');
+});
+
+console.log('Expected: All URLs should become https://api.pncpriyamnutritioncare.com/uploads/filename.jpg');

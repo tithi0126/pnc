@@ -212,8 +212,8 @@ const Services = () => {
     );
   }
 
-  // Get featured services (first 2-3)
-  const featuredServices = services.slice(0, Math.min(3, services.length));
+  // Display all active services
+  const featuredServices = services;
 
   // Create contact links
   const phoneLink = `tel:${contactSettings.phone_number.replace(/\s/g, '')}`;
@@ -277,7 +277,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* Featured Services Section */}
+      {/* All Services Section */}
       <section className="section-padding">
         <div className="container-custom">
           <div className="text-center mb-16">
@@ -285,7 +285,7 @@ const Services = () => {
               Our Services
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Browse our most popular and comprehensive nutrition services
+              Explore our comprehensive range of nutrition services tailored to your health needs
             </p>
           </div>
 

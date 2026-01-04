@@ -1,55 +1,75 @@
-// Utility functions for handling image URLs
+export const getApiBaseUrl = (): string => {
+  // Get API URL from env or fallback to the main domain
+  let apiBase = import.meta.env.VITE_API_URL;
 
-/**
- * Normalizes image URLs to use the current API base URL
- * This handles cases where images were saved with different ports
- */
+  // Fallback if env is missing
+  if (!apiBase) {
+    return 'https://pncpriyamnutritioncare.com';
+  }
+
+  // Remove /api suffix if present to get the root domain
+  apiBase = apiBase.replace(/\/api\/?$/, '');
+
+  // Fix common protocol typos
+  if (apiBase.startsWith('https:/') && !apiBase.startsWith('https://')) {
+    apiBase = apiBase.replace('https:/', 'https://');
+  }
+
+  // Ensure no trailing slash
+  if (apiBase.endsWith('/')) {
+    apiBase = apiBase.slice(0, -1);
+  }
+
+  return apiBase;
+};
+
 export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   if (!imageUrl) return null;
 
-  // Fix malformed URLs (missing // after https:)
+  // 1. Fix malformed protocol (missing //)
   if (imageUrl.startsWith('https:/') && !imageUrl.startsWith('https://')) {
     imageUrl = imageUrl.replace('https:/', 'https://');
   }
 
-  // Fix URLs with wrong path (/api/uploads/ should be /uploads/)
-  if (imageUrl.includes('/api/uploads/')) {
-    imageUrl = imageUrl.replace('/api/uploads/', '/uploads/');
+  // 2. Fix specific domain typos if they exist in database
+  if (imageUrl.includes('https:/.pncpriyam')) {
+    imageUrl = imageUrl.replace('https:/.pncpriyam', 'https://pncpriyam');
   }
 
-  // If it's already a full URL with the current API base, return as-is
-  const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '')
-  || 'https://api.pncpriyamnutritioncare.com'
-  // || 'http://localhost:5003'
-  ;
+  const apiBase = getApiBaseUrl();
 
+  // 3. Handle relative paths
+  
+  // Case A: Path starts with /api/uploads/ (Correct relative path)
+  if (imageUrl.startsWith('/api/uploads/')) {
+    return `${apiBase}${imageUrl}`;
+  }
+
+  // Case B: Path starts with /uploads/ or uploads/ (Legacy/Short path)
+  // We MUST prepend /api because server.js serves files at /api/uploads
+  if (imageUrl.startsWith('/uploads/') || imageUrl.startsWith('uploads/')) {
+    const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    return `${apiBase}/api${cleanPath}`;
+  }
+
+  // 4. Handle Full URLs
+  
+  // If it matches our current base, return as is
   if (imageUrl.startsWith(apiBase)) {
     return imageUrl;
   }
 
-  // If it's a relative path to uploads, construct full URL
-  if (imageUrl.startsWith('/uploads/') || imageUrl.startsWith('uploads/')) {
-    return `${apiBase}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
-  }
-
-  // If it's an old URL with different port, replace with current base
-  if (imageUrl.includes('/uploads/')) {
-    const filename = imageUrl.split('/uploads/')[1];
+  // If it points to the old 'api.' subdomain or localhost, rewrite it to current base
+  if (imageUrl.includes('/api/uploads/') || imageUrl.includes('/uploads/')) {
+    // Extract the filename/path after 'uploads'
+    const parts = imageUrl.split('/uploads/');
+    const filename = parts[1];
+    
     if (filename) {
-      return `${apiBase}/uploads/${filename}`;
+      // Reconstruct using the correct base and /api/uploads path
+      return `${apiBase}/api/uploads/${filename}`;
     }
   }
 
-  // Return as-is if we can't normalize it
   return imageUrl;
-};
-
-/**
- * Gets the base URL for API calls (without /api suffix)
- */
-export const getApiBaseUrl = (): string => {
-  return import.meta.env.VITE_API_URL?.replace('/api', '')
-  || 'https://api.pncpriyamnutritioncare.com'
-  // || 'http://localhost:5003'
-  ;
 };

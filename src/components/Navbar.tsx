@@ -175,31 +175,26 @@
 // };
 
 // export default Navbar;
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { settingsAPI } from "@/lib/api";
 
-// Group related navigation items
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
-  { name: "Awards & Events", path: "/awards" },
+  { name: "Awards", path: "/awards" },
   { name: "Gallery", path: "/gallery" },
   { name: "Testimonials", path: "/testimonials" },
   { name: "Contact", path: "/contact" },
 ];
 
-// Split into primary and secondary for better organization
-const primaryNavLinks = navLinks.slice(0, 4); // Home, About, Services, Awards
-const secondaryNavLinks = navLinks.slice(4); // Gallery, Testimonials, Contact
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showMore, setShowMore] = useState(false);
   const location = useLocation();
   const [phoneNumber, setPhoneNumber] = useState('+91 9876543210');
   const [navbarBrandName, setNavbarBrandName] = useState('Dr. Bidita Shah');
@@ -254,9 +249,9 @@ const Navbar = () => {
     >
       <div className="container-custom">
         <nav className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 flex items-center justify-center">
+          {/* Logo - Left Side */}
+          <Link to="/" className="flex items-center gap-3 min-w-0 flex-shrink-0">
+            <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
               <img
                 src={logoUrl}
                 alt="PNC Logo"
@@ -265,73 +260,50 @@ const Navbar = () => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                   const fallback = document.createElement('div');
-                  fallback.className = 'w-10 h-10 rounded-full bg-gradient-cta flex items-center justify-center';
+                  fallback.className = 'w-10 h-10 rounded-full bg-gradient-cta flex items-center justify-center flex-shrink-0';
                   fallback.innerHTML = '<span class="font-heading text-xl text-primary-foreground font-bold">PNC</span>';
                   target.parentElement?.appendChild(fallback);
                 }}
               />
             </div>
-            <div className="hidden sm:block">
-              <span className="font-heading text-xl font-semibold text-foreground">
+            <div className="hidden sm:block min-w-0">
+              <span className="font-heading text-xl font-semibold text-foreground truncate block">
                 {navbarBrandName}
               </span>
-              <p className="text-xs text-muted-foreground -mt-1">{navbarBrandTagline}</p>
+              <p className="text-xs text-muted-foreground -mt-1 truncate">{navbarBrandTagline}</p>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
-            {/* Primary Navigation */}
-            {primaryNavLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary px-1",
-                  location.pathname === link.path
-                    ? "text-primary border-b-2 border-primary"
-                    : "text-foreground/80"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            {/* More Dropdown for Secondary Items */}
-            <div className="relative group">
-              <button className="flex items-center gap-1 text-sm font-medium text-foreground/80 hover:text-primary px-1 transition-colors">
-                More
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
-              </button>
-              <div className="absolute top-full left-0 mt-2 w-48 bg-background/95 backdrop-blur-md rounded-lg shadow-lg border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                {secondaryNavLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={cn(
-                      "block px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/50",
-                      location.pathname === link.path
-                        ? "text-primary bg-primary/5"
-                        : "text-foreground/80"
-                    )}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
+          {/* Desktop Navigation - Center, takes available space */}
+          <div className="hidden lg:flex items-center justify-center flex-1 mx-8">
+            <div className="flex items-center justify-between w-full max-w-3xl">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    "text-sm font-medium transition-colors px-2 py-1 flex-shrink-0",
+                    location.pathname === link.path
+                      ? "text-primary"
+                      : "text-foreground/80 hover:text-primary"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center gap-4">
+          {/* CTA Button - Right Side */}
+          <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
             <a
               href={`tel:${phoneNumber.replace(/\s/g, '')}`}
-              className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors whitespace-nowrap"
             >
-              <Phone className="w-4 h-4" />
-              <span>{phoneNumber}</span>
+              <Phone className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate max-w-[120px]">{phoneNumber}</span>
             </a>
-            <Link to="/contact" className="btn-primary text-sm">
+            <Link to="/contact" className="btn-primary text-sm whitespace-nowrap">
               Book Consultation
             </Link>
           </div>
@@ -339,7 +311,7 @@ const Navbar = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-foreground"
+            className="lg:hidden p-2 text-foreground flex-shrink-0"
             aria-label="Toggle menu"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -350,12 +322,11 @@ const Navbar = () => {
         <div
           className={cn(
             "lg:hidden overflow-hidden transition-all duration-300",
-            isOpen ? "max-h-[500px] mt-4" : "max-h-0"
+            isOpen ? "max-h-96 mt-4" : "max-h-0"
           )}
         >
-          <div className="flex flex-col gap-1 py-4 border-t border-border bg-background rounded-lg shadow-lg">
-            {/* Primary Mobile Links */}
-            {primaryNavLinks.map((link) => (
+          <div className="grid grid-cols-2 gap-2 py-4 border-t border-border bg-background rounded-lg shadow-lg">
+            {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -369,52 +340,17 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            
-            {/* Secondary Mobile Links - Collapsible */}
-            <div className="mt-1">
-              <button
-                onClick={() => setShowMore(!showMore)}
-                className="w-full px-4 py-3 rounded-lg text-sm font-medium text-foreground/80 hover:bg-muted flex items-center justify-between transition-colors"
-              >
-                More
-                <ChevronDown className={cn(
-                  "w-4 h-4 transition-transform",
-                  showMore && "rotate-180"
-                )} />
-              </button>
-              <div className={cn(
-                "overflow-hidden transition-all duration-300",
-                showMore ? "max-h-60" : "max-h-0"
-              )}>
-                {secondaryNavLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={cn(
-                      "block px-8 py-3 text-sm font-medium transition-colors",
-                      location.pathname === link.path
-                        ? "text-primary bg-primary/5"
-                        : "text-foreground/80 hover:bg-muted/50"
-                    )}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile Contact Info */}
-            <div className="px-4 py-3 mt-2">
+            <div className="col-span-2 flex flex-col gap-3 mt-2 pt-4 border-t border-border">
               <a
                 href={`tel:${phoneNumber.replace(/\s/g, '')}`}
-                className="flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors mb-3"
+                className="flex items-center justify-center gap-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
               >
                 <Phone className="w-4 h-4" />
                 <span>{phoneNumber}</span>
               </a>
               <Link
                 to="/contact"
-                className="btn-primary text-sm text-center w-full block"
+                className="btn-primary text-sm text-center"
               >
                 Book Consultation
               </Link>

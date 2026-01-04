@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { normalizeImageUrl } from "@/utils/imageUrl";
-require('dotenv').config();
 interface ImageUploadProps {
   value?: string;
   onChange?: (url: string) => void;

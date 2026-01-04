@@ -26,16 +26,12 @@ export const ImageUpload = ({
   const actualValue = value || currentImage || "";
   const actualOnChange = onChange || onImageUpload;
   const actualBucket = bucket || folder || 'gallery';
-
-  console.log('ImageUpload props:', { value, currentImage, actualValue });
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string>("");
 
   // Update preview when actualValue changes
   useEffect(() => {
-    const normalized = normalizeImageUrl(actualValue);
-    console.log('ImageUpload useEffect triggered:', { actualValue, normalized, currentImage });
-    setPreview(normalized);
+    setPreview(normalizeImageUrl(actualValue));
   }, [actualValue]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();

@@ -11,7 +11,7 @@ const Footer = () => {
     address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
   });
 
-  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.svg');
 
   const [footerSettings, setFooterSettings] = useState({
     footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Surat.',

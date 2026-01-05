@@ -34,7 +34,7 @@ export const AdminSidebar = ({
   setSidebarOpen,
   onSignOut,
 }: AdminSidebarProps) => {
-  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.svg');
 
   useEffect(() => {
     const loadSettings = async () => {

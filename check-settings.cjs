@@ -1,9 +1,9 @@
-const mongoose = require('./backend/utils/database');
+const connectDB = require('./backend/utils/database');
 const Setting = require('./backend/models/Setting');
 
 async function checkSettings() {
   try {
-    await mongoose.connectDB();
+    await connectDB();
     const setting = await Setting.findOne({ key: 'about_image_url' });
     console.log('about_image_url setting:', setting);
 
@@ -15,6 +15,7 @@ async function checkSettings() {
   } catch (error) {
     console.error('Error:', error);
   } finally {
+    const mongoose = require('mongoose');
     mongoose.connection.close();
   }
 }

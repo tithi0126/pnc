@@ -199,7 +199,7 @@ const Navbar = () => {
   const [phoneNumber, setPhoneNumber] = useState('+91 9876543210');
   const [navbarBrandName, setNavbarBrandName] = useState('Dr. Bidita Shah');
   const [navbarBrandTagline, setNavbarBrandTagline] = useState('Nutrition Consultant');
-  const [logoUrl, setLogoUrl] = useState('/pnc-logo.png');
+  const [logoUrl, setLogoUrl] = useState('/pnc-logo.svg');
 
   useEffect(() => {
     const loadSettings = async () => {

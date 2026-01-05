@@ -153,9 +153,9 @@ const Awards = () => {
                     <div className="text-center">
                       {award.images && award.images.length > 0 ? (
                         <div className="mb-6">
-                          {/* Main image - much larger and clickable */}
+                          {/* Main image - large and prominent */}
                           <div
-                            className="relative w-48 h-32 mx-auto mb-3 rounded-xl overflow-hidden shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 group"
+                            className="relative w-80 h-56 mx-auto mb-4 rounded-2xl overflow-hidden shadow-xl cursor-pointer hover:shadow-2xl transition-all duration-300 group"
                             onClick={() => openImageModal(award.images, 0, award.title)}
                           >
                             <img
@@ -183,13 +183,13 @@ const Awards = () => {
                             </div>
                           </div>
 
-                          {/* Clickable thumbnails - all same size */}
+                          {/* Clickable thumbnails - larger size */}
                           {award.images.length > 1 && (
-                            <div className="flex justify-center gap-2">
+                            <div className="flex justify-center gap-3">
                               {award.images.slice(1, 5).map((image, idx) => (
                                 <div
                                   key={idx}
-                                  className={`w-16 h-16 rounded-lg overflow-hidden shadow-md cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200 ${colors.awardsMoreImagesPill}`}
+                                  className={`w-20 h-20 rounded-xl overflow-hidden shadow-lg cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200 ${colors.awardsMoreImagesPill}`}
                                   onClick={() => openImageModal(award.images, idx + 1, award.title)}
                                 >
                                   <img
@@ -205,7 +205,7 @@ const Awards = () => {
                               ))}
                               {award.images.length > 5 && (
                                 <div
-                                  className={`w-16 h-16 rounded-lg shadow-md flex items-center justify-center cursor-pointer transition-colors ${colors.awardsMoreImagesPill}`}
+                                  className={`w-20 h-20 rounded-xl shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200 ${colors.awardsMoreImagesPill}`}
                                   onClick={() => openImageModal(award.images, 0, award.title)}
                                 >
                                   <span className="text-sm font-medium">+{award.images.length - 5}</span>
@@ -216,9 +216,12 @@ const Awards = () => {
                         </div>
                       ) : (
                         <div
-                          className={`w-48 h-32 mx-auto mb-6 rounded-xl flex items-center justify-center shadow-lg ${colors.awardsMainImageFallbackAward}`}
+                          className={`w-80 h-56 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-xl bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 ${colors.awardsMainImageFallbackAward}`}
                         >
-                          <Trophy className="w-16 h-16" />
+                          <div className="text-center">
+                            <Trophy className="w-20 h-20 mx-auto mb-2 text-primary/60" />
+                            <p className="text-sm font-medium text-primary/80">Award Image</p>
+                          </div>
                         </div>
                       )}
 
@@ -286,9 +289,9 @@ const Awards = () => {
                     <div className="flex gap-6">
                       {event.images && event.images.length > 0 ? (
                         <div className="flex-shrink-0">
-                          {/* Main image - larger and clickable */}
+                          {/* Main image - large and prominent */}
                           <div
-                            className="w-40 h-40 rounded-xl overflow-hidden shadow-lg mb-3 cursor-pointer hover:shadow-xl transition-all duration-300 group relative"
+                            className="w-72 h-72 rounded-2xl overflow-hidden shadow-xl mb-4 cursor-pointer hover:shadow-2xl transition-all duration-300 group relative"
                             onClick={() => openImageModal(event.images, 0, event.title)}
                           >
                             <img
@@ -316,13 +319,13 @@ const Awards = () => {
                             </div>
                           </div>
 
-                          {/* Clickable thumbnails - all same size */}
+                          {/* Clickable thumbnails - larger size */}
                           {event.images.length > 1 && (
-                            <div className="flex justify-center gap-2">
+                            <div className="flex justify-center gap-3">
                               {event.images.slice(1, 4).map((image, idx) => (
                                 <div
                                   key={idx}
-                                  className="w-16 h-16 rounded-lg overflow-hidden border-2 border-white shadow-md cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-200"
+                                  className="w-20 h-20 rounded-xl overflow-hidden border-2 border-white shadow-lg cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200"
                                   onClick={() => openImageModal(event.images, idx + 1, event.title)}
                                 >
                                   <img
@@ -338,7 +341,7 @@ const Awards = () => {
                               ))}
                               {event.images.length > 4 && (
                                 <div
-                                  className={`w-16 h-16 rounded-lg shadow-md flex items-center justify-center cursor-pointer transition-colors ${colors.awardsMoreImagesPill}`}
+                                  className={`w-20 h-20 rounded-xl shadow-lg flex items-center justify-center cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200 ${colors.awardsMoreImagesPill}`}
                                   onClick={() => openImageModal(event.images, 0, event.title)}
                                 >
                                   <span className="text-sm font-medium">+{event.images.length - 4}</span>
@@ -349,9 +352,12 @@ const Awards = () => {
                         </div>
                       ) : (
                         <div
-                          className={`w-40 h-40 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${colors.awardsMainImageFallbackEvent}`}
+                          className={`w-72 h-72 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-xl bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 ${colors.awardsMainImageFallbackEvent}`}
                         >
-                          <Calendar className="w-20 h-20" />
+                          <div className="text-center">
+                            <Calendar className="w-24 h-24 mx-auto mb-2 text-primary/60" />
+                            <p className="text-sm font-medium text-primary/80">Event Image</p>
+                          </div>
                         </div>
                       )}
 

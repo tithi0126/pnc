@@ -12,7 +12,7 @@ const AboutPreview = () => {
     about_description_2: 'Her holistic approach combines cutting-edge nutritional science with practical, real-world solutions that fit seamlessly into your daily life. Whether you\'re looking to manage weight, improve athletic performance, or address specific health concerns, Dr. Shah provides the guidance and support you need.',
     about_credentials: JSON.stringify(['Ph.D. in Nutrition Science', 'Certified Dietitian', 'Sports Nutrition Expert', 'Published Author']),
     about_image_url: '',
-    logo_url: '/pnc-logo.png',
+    logo_url: '/pnc-logo.svg',
   });
 
   useEffect(() => {

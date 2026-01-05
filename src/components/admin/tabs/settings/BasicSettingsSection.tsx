@@ -31,7 +31,7 @@ export const BasicSettingsSection = ({ settings, onChange }: BasicSettingsSectio
             type="text"
             value={settings.logo_url}
             onChange={(e) => onChange('logo_url', e.target.value)}
-            placeholder="/pnc-logo.png"
+            placeholder="/pnc-logo.svg"
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
           />
         </div>

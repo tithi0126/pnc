@@ -28,7 +28,7 @@ export const SettingsTab = () => {
   const [settings, setSettings] = useState({
     // Basic Settings
     site_name: 'Dr. Bidita Shah - Nutrition Consultant',
-    logo_url: '/pnc-logo.png',
+    logo_url: '/pnc-logo.svg',
     contact_email: 'contact@drbiditashah.com',
     whatsapp_number: '+91 98765 43210',
     phone_number: '+1 234 567 890',

@@ -385,7 +385,7 @@ const Services = () => {
                     )}
 
                     {/* Service Stats */}
-                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-6 border border-primary/10">
+                    {/* <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-6 border border-primary/10">
                       <div className="grid sm:grid-cols-3 gap-4">
                         <div className="text-center">
                           <div className="flex items-center justify-center gap-1 mb-2">
@@ -414,7 +414,7 @@ const Services = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               );

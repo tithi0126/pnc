@@ -16,9 +16,10 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 
 - **Complete CRUD Operations**: Create, read, update, delete for all content
 - **User Authentication**: JWT-based authentication with role management
-- **Content Management**: Services, testimonials, gallery, contact inquiries
+- **Content Management**: Services, testimonials, gallery, products, contact inquiries
 - **Settings Management**: Site-wide configuration
 - **User Management**: Admin role assignment and user oversight
+- **Product Management**: E-commerce functionality with Razorpay integration
 
 ## 🛠️ Technologies Used
 
@@ -43,6 +44,35 @@ A modern React application for Dr. Bidita Shah's nutrition consulting practice, 
 - **Node.js** 18+ and npm
 - **MongoDB** (running on localhost:27017)
 - **Modern web browser** with localStorage support
+
+## 💳 Razorpay Payment Integration
+
+The application includes Razorpay payment gateway integration for product purchases.
+
+### Razorpay Setup
+
+1. **Create Razorpay Account**: Sign up at [https://razorpay.com](https://razorpay.com)
+
+2. **Get API Keys**:
+   - Go to Dashboard → Settings → API Keys
+   - Copy your `Key ID` and `Key Secret`
+
+3. **Environment Variables** (Backend):
+   ```bash
+   RAZORPAY_KEY_ID=rzp_test_your_key_id_here
+   RAZORPAY_KEY_SECRET=your_secret_key_here
+   ```
+
+4. **Environment Variables** (Frontend):
+   ```bash
+   VITE_RAZORPAY_KEY_ID=rzp_test_your_key_id_here
+   ```
+
+5. **Install Razorpay (Backend)**:
+   ```bash
+   cd backend
+   npm install razorpay
+   ```
 
 ## 🔧 Installation & Setup
 

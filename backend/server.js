@@ -15,6 +15,8 @@ const contactRoutes = require('./routes/contact');
 const userRoutes = require('./routes/users');
 const settingRoutes = require('./routes/settings');
 const uploadRoutes = require('./routes/upload');
+const productRoutes = require('./routes/products');
+const paymentRoutes = require('./routes/payments');
 
 const app = express();
 
@@ -45,6 +47,8 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

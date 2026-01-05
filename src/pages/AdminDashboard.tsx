@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { servicesAPI, testimonialsAPI, awardsAPI, galleryAPI, contactAPI } from "@/lib/api";
 import { AuthService } from "@/services/authService";
+import { ProductService } from "@/services/productService";
 import { normalizeImageUrl } from "@/utils/imageUrl";
 import { AdminSidebar, TabType } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
@@ -11,6 +12,7 @@ import { ServicesTab } from "@/components/admin/tabs/ServicesTab";
 import { TestimonialsTab } from "@/components/admin/tabs/TestimonialsTab";
 import { AwardsTab } from "@/components/admin/tabs/AwardsTab";
 import { GalleryTab } from "@/components/admin/tabs/GalleryTab";
+import { ProductsTab } from "@/components/admin/tabs/ProductsTab";
 import { InquiriesTab } from "@/components/admin/tabs/InquiriesTab";
 import { SettingsTab } from "@/components/admin/tabs/SettingsTab";
 
@@ -49,6 +51,22 @@ interface GalleryImage {
   sort_order: number | null;
 }
 
+interface Product {
+  _id: string;
+  name: string;
+  description?: string;
+  price: number;
+  originalPrice?: number;
+  imageUrl: string;
+  additionalImages?: string[];
+  category: string;
+  stockQuantity: number;
+  isAvailable: boolean;
+  isActive: boolean;
+  sortOrder: number;
+  razorpayProductId?: string;
+}
+
 interface Award {
   id: string;
   title: string;
@@ -85,6 +103,7 @@ const AdminDashboard = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [awards, setAwards] = useState<Award[]>([]);
   const [gallery, setGallery] = useState<GalleryImage[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [dbStatus, setDbStatus] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(true);
@@ -138,11 +157,12 @@ const AdminDashboard = () => {
     setDataError(null);
 
     try {
-      const [servicesData, testimonialsData, awardsData, galleryData, inquiriesData] = await Promise.all([
+      const [servicesData, testimonialsData, awardsData, galleryData, productsData, inquiriesData] = await Promise.all([
         servicesAPI.getAllAdmin().catch(() => []),
         testimonialsAPI.getAllAdmin().catch(() => []),
         awardsAPI.getAllAdmin().catch(() => []),
         galleryAPI.getAllAdmin().catch(() => []),
+        ProductService.getAllProducts(localStorage.getItem('token') || '').catch(() => []),
         contactAPI.getAllAdmin().catch(() => []),
       ]);
 
@@ -199,6 +219,8 @@ const AdminDashboard = () => {
         is_active: g.isActive || g.is_active || true,
         sort_order: g.sortOrder || g.sort_order || 0,
       })) : []);
+
+      setProducts(productsData);
 
       setInquiries(Array.isArray(inquiriesData) ? inquiriesData.map(i => {
         // Handle createdAt - it might be a Date object or already a string
@@ -377,9 +399,16 @@ const AdminDashboard = () => {
           )}
 
           {activeTab === "gallery" && (
-            <GalleryTab 
-              images={gallery} 
-              onRefresh={fetchData} 
+            <GalleryTab
+              images={gallery}
+              onRefresh={fetchData}
+            />
+          )}
+
+          {activeTab === "products" && (
+            <ProductsTab
+              products={products}
+              onRefresh={fetchData}
             />
           )}
 

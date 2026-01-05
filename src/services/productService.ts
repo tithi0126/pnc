@@ -5,12 +5,8 @@ interface IProduct {
   price: number;
   imageUrl: string;
   additionalImages?: string[];
-  category: string;
-  stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
-  sortOrder: number;
-  razorpayProductId?: string;
   createdAt: string;
 }
 
@@ -37,7 +33,7 @@ export class ProductService {
       }
 
       const products = await response.json();
-      return products.sort((a: IProduct, b: IProduct) => (a.sortOrder || 0) - (b.sortOrder || 0));
+      return products;
     } catch (error) {
       console.error('Failed to fetch products:', error);
       throw new Error('Failed to fetch products');

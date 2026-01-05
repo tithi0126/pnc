@@ -83,12 +83,8 @@ router.post('/', auth, isAdmin, async (req, res) => {
       price,
       imageUrl,
       additionalImages,
-      category,
-      stockQuantity,
       isAvailable,
-      isActive,
-      sortOrder,
-      razorpayProductId
+      isActive
     } = req.body;
 
     const product = new Product({
@@ -97,12 +93,12 @@ router.post('/', auth, isAdmin, async (req, res) => {
       price,
       imageUrl,
       additionalImages: additionalImages || [],
-      category: category || 'General',
-      stockQuantity: stockQuantity || 0,
+      category: 'General', // Default category
+      stockQuantity: 0, // Default stock
       isAvailable: isAvailable !== undefined ? isAvailable : true,
       isActive: isActive !== undefined ? isActive : true,
-      sortOrder: sortOrder || 0,
-      razorpayProductId
+      sortOrder: 0, // Default sort order
+      razorpayProductId: '' // Default empty
     });
 
     await product.save();

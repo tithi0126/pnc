@@ -13,12 +13,8 @@ interface Product {
   price: number;
   imageUrl: string;
   additionalImages?: string[];
-  category: string;
-  stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
-  sortOrder: number;
-  razorpayProductId?: string;
 }
 
 interface ProductsTabProps {
@@ -26,11 +22,8 @@ interface ProductsTabProps {
   onRefresh: () => void;
 }
 
-const categories = ["Nutrition Supplements", "Health Foods", "Wellness Products", "Consultation Packages", "General"];
-
 export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [filter, setFilter] = useState<"all" | "active" | "inactive" | "unavailable">("all");
   const { toast } = useToast();
 
@@ -86,10 +79,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   const filteredProducts = products.filter(product => {
     let matches = true;
 
-    if (selectedCategory !== "all") {
-      matches = matches && product.category === selectedCategory;
-    }
-
     if (filter === "active") {
       matches = matches && product.isActive && product.isAvailable;
     } else if (filter === "inactive") {
@@ -116,12 +105,8 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
             price: 0,
             imageUrl: "",
             additionalImages: [],
-            category: "General",
-            stockQuantity: 0,
             isAvailable: true,
-            isActive: true,
-            sortOrder: 0,
-            razorpayProductId: ""
+            isActive: true
           })}
           className="btn-primary text-sm inline-flex items-center gap-2 self-start"
         >
@@ -131,17 +116,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-3 py-1.5 rounded-lg border border-border bg-background text-sm"
-        >
-          <option value="all">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
-          ))}
-        </select>
-
         <button
           onClick={() => setFilter("all")}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
@@ -206,12 +180,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
                 )}
               </div>
 
-              {/* Stock indicator */}
-              {product.stockQuantity <= 5 && (
-                <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                  {product.stockQuantity === 0 ? "Out of Stock" : `${product.stockQuantity} left`}
-                </div>
-              )}
             </div>
 
             <div className="p-4">
@@ -220,8 +188,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
                 <IndianRupee className="w-3 h-3 text-primary" />
                 <span className="font-bold text-primary">{product.price.toLocaleString('en-IN')}</span>
               </div>
-              <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
-              <p className="text-xs text-muted-foreground">Stock: {product.stockQuantity}</p>
             </div>
 
             {/* Overlay */}
@@ -284,12 +250,8 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
     price: product.price || 0,
     imageUrl: product.imageUrl || "",
     additionalImages: product.additionalImages || [],
-    category: product.category || "General",
-    stockQuantity: product.stockQuantity || 0,
     isAvailable: product.isAvailable ?? true,
-    isActive: product.isActive ?? true,
-    sortOrder: product.sortOrder || 0,
-    razorpayProductId: product.razorpayProductId || ""
+    isActive: product.isActive ?? true
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -348,54 +310,6 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
         </div>
 
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Category *</label>
-          <select
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Stock Quantity *</label>
-          <input
-            type="number"
-            required
-            min="0"
-            value={formData.stockQuantity}
-            onChange={(e) => setFormData({ ...formData, stockQuantity: parseInt(e.target.value) || 0 })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="0"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Sort Order</label>
-          <input
-            type="number"
-            min="0"
-            value={formData.sortOrder}
-            onChange={(e) => setFormData({ ...formData, sortOrder: parseInt(e.target.value) || 0 })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="0"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Razorpay Product ID</label>
-          <input
-            type="text"
-            value={formData.razorpayProductId}
-            onChange={(e) => setFormData({ ...formData, razorpayProductId: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="Optional Razorpay product ID"
-          />
-        </div>
 
         <div className="md:col-span-2">
           <label className="block text-sm font-medium mb-2">Main Product Image *</label>

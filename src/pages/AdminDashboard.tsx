@@ -58,12 +58,9 @@ interface Product {
   price: number;
   imageUrl: string;
   additionalImages?: string[];
-  category: string;
-  stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
-  sortOrder: number;
-  razorpayProductId?: string;
+  createdAt: string;
 }
 
 interface Award {

@@ -62,7 +62,7 @@ const TestimonialsPreview = () => {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
             {settings.testimonials_title}
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-foreground font-medium leading-relaxed">
             {settings.testimonials_subtitle}
           </p>
         </div>
@@ -101,7 +101,7 @@ const TestimonialsPreview = () => {
                 )}
                 <div>
                   <h4 className="font-heading font-semibold text-foreground">{testimonial.name}</h4>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  <p className="text-sm text-foreground font-medium">{testimonial.role}</p>
                 </div>
               </div>
             </div>

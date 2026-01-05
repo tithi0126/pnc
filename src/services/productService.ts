@@ -72,13 +72,20 @@ export class ProductService {
 
       if (!response.ok) {
         const error = await response.json();
+        // Handle authentication errors
+        if (response.status === 401) {
+          // Clear invalid token
+          localStorage.removeItem('token');
+          window.location.href = '/admin/auth';
+          throw new Error('Session expired. Please login again.');
+        }
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
       console.error('Failed to create product:', error);
-      throw new Error('Failed to create product');
+      throw new Error(error.message || 'Failed to create product');
     }
   }
 
@@ -95,13 +102,18 @@ export class ProductService {
 
       if (!response.ok) {
         const error = await response.json();
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/admin/auth';
+          throw new Error('Session expired. Please login again.');
+        }
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
       console.error('Failed to update product:', error);
-      throw new Error('Failed to update product');
+      throw new Error(error.message || 'Failed to update product');
     }
   }
 
@@ -116,11 +128,16 @@ export class ProductService {
 
       if (!response.ok) {
         const error = await response.json();
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/admin/auth';
+          throw new Error('Session expired. Please login again.');
+        }
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
     } catch (error) {
       console.error('Failed to delete product:', error);
-      throw new Error('Failed to delete product');
+      throw new Error(error.message || 'Failed to delete product');
     }
   }
 
@@ -135,13 +152,18 @@ export class ProductService {
 
       if (!response.ok) {
         const error = await response.json();
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/admin/auth';
+          throw new Error('Session expired. Please login again.');
+        }
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
       console.error('Failed to toggle product active status:', error);
-      throw new Error('Failed to toggle product active status');
+      throw new Error(error.message || 'Failed to toggle product active status');
     }
   }
 
@@ -156,13 +178,18 @@ export class ProductService {
 
       if (!response.ok) {
         const error = await response.json();
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '/admin/auth';
+          throw new Error(error.error || `HTTP error! status: ${response.status}`);
+        }
         throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
       console.error('Failed to toggle product availability:', error);
-      throw new Error('Failed to toggle product availability');
+      throw new Error(error.message || 'Failed to toggle product availability');
     }
   }
 }

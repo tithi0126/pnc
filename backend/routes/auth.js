@@ -5,6 +5,38 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Debug endpoint to check token validity
+router.post('/verify-token', async (req, res) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      return res.status(400).json({ error: 'No token provided' });
+    }
+
+    const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
+    const decoded = jwt.verify(token, jwtSecret);
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({ error: 'User not found' });
+    }
+
+    res.json({
+      valid: true,
+      user: {
+        id: user._id,
+        email: user.email,
+        roles: user.roles,
+        isActive: user.isActive
+      }
+    });
+  } catch (error) {
+    console.error('Token verification error:', error.message);
+    res.status(401).json({ error: 'Invalid token', details: error.message });
+  }
+});
+
 // Register new user
 router.post('/register', async (req, res) => {
   try {

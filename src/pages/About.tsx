@@ -76,7 +76,7 @@ const About = () => {
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
               {settings.about_page_title}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground font-medium leading-relaxed">
               {settings.about_page_subtitle}
             </p>
           </div>
@@ -141,7 +141,7 @@ const About = () => {
                     <Target className="w-5 h-5 text-primary" />
                     <h3 className="font-heading text-lg font-semibold text-foreground">Mission</h3>
                   </div>
-                  <p className="text-muted-foreground">{settings.about_mission}</p>
+                  <p className="text-foreground font-medium">{settings.about_mission}</p>
                 </div>
 
                 <div className="p-6 rounded-xl bg-muted/50 border-l-4 border-accent">
@@ -149,7 +149,7 @@ const About = () => {
                     <BookOpen className="w-5 h-5 text-accent" />
                     <h3 className="font-heading text-lg font-semibold text-foreground">Vision</h3>
                   </div>
-                  <p className="text-muted-foreground">{settings.about_vision}</p>
+                  <p className="text-foreground font-medium">{settings.about_vision}</p>
                 </div>
               </div>
 
@@ -224,7 +224,7 @@ const About = () => {
                 <h3 className="font-heading text-xl font-semibold text-foreground mb-3">
                   {value.title}
                 </h3>
-                <p className="text-muted-foreground">{value.description}</p>
+                <p className="text-foreground font-medium">{value.description}</p>
               </div>
             ))}
           </div>

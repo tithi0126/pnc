@@ -62,7 +62,7 @@ const AwardsPreview = () => {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Awards & Events
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-foreground font-medium">
             Celebrating achievements and milestones in nutrition excellence
           </p>
         </div>
@@ -101,14 +101,14 @@ const AwardsPreview = () => {
                         {award.organization && (
                           <p className="text-sm text-primary font-medium mb-1">{award.organization}</p>
                         )}
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <p className="text-sm text-foreground font-medium mb-2">
                           {new Date(award.date).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long'
                           })}
                         </p>
                         {award.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2">{award.description}</p>
+                          <p className="text-sm text-foreground font-medium line-clamp-2">{award.description}</p>
                         )}
                       </div>
                     </div>
@@ -151,7 +151,7 @@ const AwardsPreview = () => {
                         {event.organization && (
                           <p className="text-sm text-primary font-medium mb-1">{event.organization}</p>
                         )}
-                        <p className="text-sm text-muted-foreground mb-2">
+                        <p className="text-sm text-foreground font-medium mb-2">
                           {new Date(event.date).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
@@ -159,7 +159,7 @@ const AwardsPreview = () => {
                           })}
                         </p>
                         {event.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
+                          <p className="text-sm text-foreground font-medium line-clamp-2">{event.description}</p>
                         )}
                       </div>
                     </div>
@@ -174,21 +174,21 @@ const AwardsPreview = () => {
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
           <div className="text-center">
             <div className="text-3xl font-bold text-primary mb-1">{awardsList.length}</div>
-            <div className="text-sm text-muted-foreground">Awards Won</div>
+            <div className="text-sm text-foreground font-medium">Awards Won</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-primary mb-1">{eventsList.length}</div>
-            <div className="text-sm text-muted-foreground">Events Attended</div>
+            <div className="text-sm text-foreground font-medium">Events Attended</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-primary mb-1">
               {new Date().getFullYear() - 2015}+
             </div>
-            <div className="text-sm text-muted-foreground">Years Active</div>
+            <div className="text-sm text-foreground font-medium">Years Active</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-primary mb-1">5000+</div>
-            <div className="text-sm text-muted-foreground">Lives Impacted</div>
+            <div className="text-sm text-foreground font-medium">Lives Impacted</div>
           </div>
         </div>
       </div>

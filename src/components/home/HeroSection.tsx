@@ -90,7 +90,7 @@ const HeroSection = () => {
           </h1>
 
           {/* Subtext */}
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 animate-fade-up animation-delay-200">
+          <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed mb-8 animate-fade-up animation-delay-200">
             {settings.hero_subtitle}
           </p>
 

@@ -1,8 +1,9 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Package, Star, IndianRupee, CheckCircle, XCircle } from "lucide-react";
+import { ShoppingCart, Package, Star, IndianRupee } from "lucide-react";
+// import { CheckCircle, XCircle } from "lucide-react"; // Commented out for now
 import { ProductService } from "@/services/productService";
-import { RazorpayService } from "@/services/razorpayService";
+// import { RazorpayService } from "@/services/razorpayService"; // Commented out for now
 import { ImageModal } from "@/components/ImageModal";
 import { normalizeImageUrl } from "@/utils/imageUrl";
 import { colors } from "@/theme/colors";
@@ -40,11 +41,11 @@ const Products = () => {
     title: ''
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [isProcessing, setIsProcessing] = useState<string | null>(null);
-  const [paymentStatus, setPaymentStatus] = useState<{
-    type: 'success' | 'error' | null;
-    message: string;
-  }>({ type: null, message: '' });
+  // const [isProcessing, setIsProcessing] = useState<string | null>(null); // Commented out for now
+  // const [paymentStatus, setPaymentStatus] = useState<{ // Commented out for now
+  //   type: 'success' | 'error' | null;
+  //   message: string;
+  // }>({ type: null, message: '' });
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -77,7 +78,11 @@ const Products = () => {
     setImageModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  const handlePurchase = async (product: Product) => {
+  const handlePurchase = (product: Product) => {
+    // Razorpay integration commented out for now
+    alert(`Product: ${product.name}\nPrice: ₹${product.price}\n\nPayment integration will be enabled soon!`);
+    // TODO: Implement Razorpay payment integration
+    /*
     try {
       setIsProcessing(product._id);
 
@@ -102,7 +107,6 @@ const Products = () => {
 
           if (verification.success) {
             setPaymentStatus({ type: 'success', message: 'Payment successful! Order confirmed.' });
-            // You might want to redirect to a success page or show order details
           } else {
             setPaymentStatus({ type: 'error', message: 'Payment verification failed. Please contact support.' });
           }
@@ -119,6 +123,7 @@ const Products = () => {
     } finally {
       setIsProcessing(null);
     }
+    */
   };
 
   // Filter for available products, then by category
@@ -138,7 +143,7 @@ const Products = () => {
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
               Nutrition & Wellness Products
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground font-medium leading-relaxed">
               Discover our range of premium nutrition supplements, health foods, and wellness products designed to support your journey to optimal health.
             </p>
           </div>
@@ -171,16 +176,25 @@ const Products = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="bg-card rounded-2xl p-8 border border-border max-w-md mx-auto">
-                <Package className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground mb-2">No products found</p>
-                <p className="text-sm text-muted-foreground">
+            <div className="text-center py-16">
+              <div className="bg-card rounded-2xl p-8 border border-border max-w-lg mx-auto">
+                <Package className="w-16 h-16 mx-auto mb-6 text-muted-foreground/50" />
+                <h3 className="text-xl font-semibold mb-3">No Products Available</h3>
+                <p className="text-foreground font-medium mb-6">
                   {selectedCategory === "All"
-                    ? "No products are currently available"
-                    : `No products in the "${selectedCategory}" category`
+                    ? "We're currently updating our product catalog. Check back soon for our nutrition and wellness products!"
+                    : `No products are currently available in the "${selectedCategory}" category.`
                   }
                 </p>
+                <div className="text-sm text-foreground font-medium">
+                  <p className="mb-2">💡 <strong>Coming Soon:</strong></p>
+                  <ul className="text-left inline-block">
+                    <li>• Premium nutrition supplements</li>
+                    <li>• Health food products</li>
+                    <li>• Wellness consultation packages</li>
+                    <li>• Personalized nutrition plans</li>
+                  </ul>
+                </div>
               </div>
             </div>
           ) : (
@@ -228,18 +242,47 @@ const Products = () => {
 
                   {/* Product Info */}
                   <div className="p-6">
-                    <div className="mb-3">
-                      <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-2">
-                        {product.category}
-                      </span>
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                          {product.category}
+                        </span>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          product.isAvailable
+                            ? product.stockQuantity > 5
+                              ? 'bg-green-100 text-green-800'
+                              : product.stockQuantity > 0
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}>
+                          {product.isAvailable
+                            ? product.stockQuantity > 5
+                              ? 'In Stock'
+                              : product.stockQuantity > 0
+                              ? `Only ${product.stockQuantity} left`
+                              : 'Out of Stock'
+                            : 'Unavailable'
+                          }
+                        </span>
+                      </div>
+
                       <h3 className="font-heading font-bold text-lg text-foreground mb-2 line-clamp-2">
                         {product.name}
                       </h3>
+
                       {product.description && (
-                        <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
+                        <p className="text-foreground font-medium text-sm line-clamp-3 leading-relaxed mb-3">
                           {product.description}
                         </p>
                       )}
+
+                      {/* Additional details */}
+                      <div className="flex items-center gap-4 text-xs text-foreground font-medium mb-4">
+                        <span>⭐ 4.5 (120 reviews)</span>
+                        <span>•</span>
+                        <span>Free delivery</span>
+                      </div>
                     </div>
 
                     {/* Pricing */}
@@ -250,14 +293,19 @@ const Products = () => {
                           {product.price.toLocaleString('en-IN')}
                         </span>
                         {product.originalPrice && product.originalPrice > product.price && (
-                          <span className="text-sm text-muted-foreground line-through">
+                          <span className="text-sm text-muted-foreground font-medium line-through">
                             ₹{product.originalPrice.toLocaleString('en-IN')}
                           </span>
                         )}
                       </div>
                       {product.originalPrice && product.originalPrice > product.price && (
-                        <div className="text-sm text-green-600 font-medium">
-                          Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="text-sm text-green-600 font-medium">
+                            Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
+                          </div>
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off
+                          </span>
                         </div>
                       )}
                     </div>
@@ -265,26 +313,15 @@ const Products = () => {
                     {/* Purchase Button */}
                     <button
                       onClick={() => handlePurchase(product)}
-                      disabled={product.stockQuantity === 0 || isProcessing === product._id}
+                      disabled={product.stockQuantity === 0}
                       className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
                         product.stockQuantity === 0
                           ? "bg-muted text-muted-foreground cursor-not-allowed"
-                          : isProcessing === product._id
-                          ? "bg-muted text-muted-foreground cursor-wait"
                           : "bg-gradient-cta text-primary-foreground hover:shadow-lg hover:scale-105"
                       }`}
                     >
-                      {isProcessing === product._id ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <ShoppingCart className="w-4 h-4" />
-                          {product.stockQuantity === 0 ? "Out of Stock" : "Buy Now"}
-                        </>
-                      )}
+                      <ShoppingCart className="w-4 h-4" />
+                      {product.stockQuantity === 0 ? "Out of Stock" : "Contact for Purchase"}
                     </button>
                   </div>
                 </div>
@@ -312,8 +349,8 @@ const Products = () => {
         </div>
       )}
 
-      {/* Payment Status Notification */}
-      {paymentStatus.type && (
+      {/* Payment Status Notification - Commented out for now */}
+      {/* {paymentStatus.type && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md ${
           paymentStatus.type === 'success'
             ? 'bg-green-50 border border-green-200 text-green-800'
@@ -334,7 +371,7 @@ const Products = () => {
             ×
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Image Modal */}
       <ImageModal

@@ -68,7 +68,7 @@ const ServicesPreview = () => {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
             {settings.services_title}
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-foreground font-medium leading-relaxed">
             {settings.services_subtitle}
           </p>
         </div>
@@ -89,7 +89,7 @@ const ServicesPreview = () => {
                 <h3 className="font-heading text-xl font-semibold text-foreground mb-3">
                   {service.title}
                 </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                <p className="text-foreground font-medium text-sm leading-relaxed mb-4">
                   {service.short_description}
                 </p>
                 <Link

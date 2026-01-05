@@ -64,7 +64,7 @@ const ValueProposition = () => {
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
               {settings.value_prop_title}
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-8">
+            <p className="text-foreground font-medium leading-relaxed mb-8">
               {settings.value_prop_description}
             </p>
 
@@ -95,7 +95,7 @@ const ValueProposition = () => {
                   <h3 className="font-heading text-xl font-semibold text-foreground mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-foreground font-medium leading-relaxed">
                     {feature.description}
                   </p>
                 </div>

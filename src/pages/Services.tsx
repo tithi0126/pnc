@@ -170,7 +170,7 @@ const Services = () => {
               <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
                 Expert Nutrition Services
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              <p className="text-xl text-foreground font-medium leading-relaxed mb-8">
                 Professional nutrition guidance tailored to your unique health journey.
               </p>
             </div>
@@ -186,7 +186,7 @@ const Services = () => {
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
               {pageSettings.services_page_title}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground font-medium leading-relaxed">
               {pageSettings.services_page_subtitle}
             </p>
           </div>
@@ -250,7 +250,7 @@ const Services = () => {
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
               {pageSettings.services_page_title}
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground font-medium leading-relaxed">
               {pageSettings.services_page_subtitle}
             </p>
             
@@ -330,7 +330,7 @@ const Services = () => {
                       {/* Service Description */}
                       <div className="mb-6">
                         <Quote className="w-12 h-12 text-primary/30 mb-4" />
-                        <p className="text-lg text-muted-foreground leading-relaxed mb-4">
+                        <p className="text-lg text-foreground font-medium leading-relaxed mb-4">
                           {service.short_description || service.full_description || 'Detailed information about this service will be provided upon consultation.'}
                         </p>
 
@@ -362,7 +362,7 @@ const Services = () => {
                       {/* Benefits Section */}
                       {service.benefits && service.benefits.length > 0 && (
                         <div className="space-y-4">
-                          <h4 className="font-semibold text-foreground text-xl">Key Benefits:</h4>
+                          <h4 className="font-semibold text-foreground text-xl">Disease:</h4>
                           <div className="grid sm:grid-cols-2 gap-4">
                             {service.benefits.map((benefit, i) => (
                               <div key={i} className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">

@@ -116,7 +116,7 @@ const Awards = () => {
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mt-3 mb-6">
               Awards & Events
             </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-foreground font-medium leading-relaxed">
               Celebrating achievements, milestones, and contributions to the field of nutrition and wellness.
             </p>
           </div>
@@ -138,7 +138,7 @@ const Awards = () => {
                     Awards & Recognition
                   </h2>
                 </div>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                <p className="text-lg text-foreground font-medium max-w-2xl mx-auto">
                   Professional accolades and certifications that reflect commitment to excellence in nutrition consulting.
                 </p>
               </div>
@@ -242,7 +242,7 @@ const Awards = () => {
                         </p>
                       )}
 
-                      <p className="text-sm text-muted-foreground mb-4">
+                      <p className="text-sm text-foreground font-medium mb-4">
                         {new Date(award.date).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'long',
@@ -251,7 +251,7 @@ const Awards = () => {
                       </p>
 
                       {award.description && (
-                        <p className="text-muted-foreground leading-relaxed">
+                        <p className="text-foreground font-medium leading-relaxed">
                           {award.description}
                         </p>
                       )}
@@ -274,7 +274,7 @@ const Awards = () => {
                     Events & Participation
                   </h2>
                 </div>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                <p className="text-lg text-foreground font-medium max-w-2xl mx-auto">
                   Professional engagements, conferences, and workshops demonstrating leadership in nutrition education.
                 </p>
               </div>
@@ -380,7 +380,7 @@ const Awards = () => {
                           </p>
                         )}
 
-                        <p className="text-sm text-muted-foreground mb-4">
+                        <p className="text-sm text-foreground font-medium mb-4">
                           {new Date(event.date).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
@@ -389,7 +389,7 @@ const Awards = () => {
                         </p>
 
                         {event.description && (
-                          <p className="text-muted-foreground leading-relaxed">
+                          <p className="text-foreground font-medium leading-relaxed">
                             {event.description}
                           </p>
                         )}

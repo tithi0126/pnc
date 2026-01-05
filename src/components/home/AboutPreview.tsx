@@ -80,7 +80,7 @@ const AboutPreview = () => {
                   </div>
                   <div>
                     <h4 className="font-heading font-semibold text-foreground">Dr. Bidita Shah</h4>
-                    <p className="text-sm text-muted-foreground">Nutrition Consultant & Food Entrepreneur</p>
+                    <p className="text-sm text-foreground font-medium">Nutrition Consultant & Food Entrepreneur</p>
                   </div>
                 </div>
               </div>
@@ -95,10 +95,10 @@ const AboutPreview = () => {
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mt-3 mb-6">
               {settings.about_title}
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-6">
+            <p className="text-foreground font-medium leading-relaxed mb-6">
               {settings.about_description_1}
             </p>
-            <p className="text-muted-foreground leading-relaxed mb-8">
+            <p className="text-foreground font-medium leading-relaxed mb-8">
               {settings.about_description_2}
             </p>
 

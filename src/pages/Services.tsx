@@ -309,18 +309,18 @@ const Services = () => {
                         {service.title}
                       </h3>
                       <div className="flex flex-wrap items-center gap-3 mb-6">
-                        <div className={`flex items-center gap-2 px-4 py-2 text-primary rounded-full text-sm font-semibold border border-primary/20 bg-primary/5`}>
+                        {/* <div className={`flex items-center gap-2 px-4 py-2 text-primary rounded-full text-sm font-semibold border border-primary/20 bg-primary/5`}>
                           <Clock className="w-4 h-4" />
                           {service.duration}
-                        </div>
-                        {service.ideal_for && service.ideal_for !== 'Suitable for all individuals' && (
+                        </div> */}
+                        {/* {service.ideal_for && service.ideal_for !== 'Suitable for all individuals' && (
                           <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20">
                             <Users className="w-4 h-4" />
                             <span className="max-w-[250px] truncate" title={service.ideal_for}>
                               {service.ideal_for}
                             </span>
                           </div>
-                        )}
+                        )} */}
                         <button
                           onClick={() => handleBookService(service.id)}
                           className="px-6 py-2 bg-gradient-to-r from-primary via-primary to-accent text-white font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center gap-2"

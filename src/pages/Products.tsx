@@ -13,7 +13,6 @@ interface Product {
   name: string;
   description?: string;
   price: number;
-  originalPrice?: number;
   imageUrl: string;
   additionalImages?: string[];
   category: string;
@@ -292,22 +291,7 @@ const Products = () => {
                         <span className="text-2xl font-bold text-primary">
                           {product.price.toLocaleString('en-IN')}
                         </span>
-                        {product.originalPrice && product.originalPrice > product.price && (
-                          <span className="text-sm text-muted-foreground font-medium line-through">
-                            ₹{product.originalPrice.toLocaleString('en-IN')}
-                          </span>
-                        )}
                       </div>
-                      {product.originalPrice && product.originalPrice > product.price && (
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="text-sm text-green-600 font-medium">
-                            Save ₹{(product.originalPrice - product.price).toLocaleString('en-IN')}
-                          </div>
-                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off
-                          </span>
-                        </div>
-                      )}
                     </div>
 
                     {/* Purchase Button */}

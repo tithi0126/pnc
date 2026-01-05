@@ -3,7 +3,6 @@ interface IProduct {
   name: string;
   description?: string;
   price: number;
-  originalPrice?: number;
   imageUrl: string;
   additionalImages?: string[];
   category: string;
@@ -23,10 +22,11 @@ export class ProductService {
 
   static async getAllProducts(token?: string): Promise<IProduct[]> {
     try {
-      const url = token ? `${this.API_BASE_URL}/products/admin` : `${this.API_BASE_URL}/products`;
+      // Use admin endpoint only if we have a valid token
+      const url = (token && token.trim() !== '') ? `${this.API_BASE_URL}/products/admin` : `${this.API_BASE_URL}/products`;
       const headers: Record<string, string> = {};
 
-      if (token) {
+      if (token && token.trim() !== '') {
         headers['Authorization'] = `Bearer ${token}`;
       }
 

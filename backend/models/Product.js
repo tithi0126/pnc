@@ -15,10 +15,6 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  originalPrice: {
-    type: Number,
-    min: 0
-  },
   imageUrl: {
     type: String,
     required: true

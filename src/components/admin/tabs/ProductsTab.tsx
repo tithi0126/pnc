@@ -11,7 +11,6 @@ interface Product {
   name: string;
   description?: string;
   price: number;
-  originalPrice?: number;
   imageUrl: string;
   additionalImages?: string[];
   category: string;
@@ -115,7 +114,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
             name: "",
             description: "",
             price: 0,
-            originalPrice: undefined,
             imageUrl: "",
             additionalImages: [],
             category: "General",
@@ -221,11 +219,6 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
               <div className="flex items-center gap-1 mb-2">
                 <IndianRupee className="w-3 h-3 text-primary" />
                 <span className="font-bold text-primary">{product.price.toLocaleString('en-IN')}</span>
-                {product.originalPrice && (
-                  <span className="text-xs text-muted-foreground line-through">
-                    ₹{product.originalPrice.toLocaleString('en-IN')}
-                  </span>
-                )}
               </div>
               <p className="text-xs text-muted-foreground mb-2">{product.category}</p>
               <p className="text-xs text-muted-foreground">Stock: {product.stockQuantity}</p>
@@ -267,7 +260,11 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
       </div>
 
       {/* Product Modal */}
-      <Modal isOpen={!!editingProduct} onClose={() => setEditingProduct(null)}>
+      <Modal
+        isOpen={!!editingProduct}
+        onClose={() => setEditingProduct(null)}
+        title={editingProduct?._id ? "Edit Product" : "Add New Product"}
+      >
         {editingProduct && <ProductForm product={editingProduct} onSave={handleSave} onClose={() => setEditingProduct(null)} />}
       </Modal>
     </div>
@@ -285,7 +282,6 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
     name: product.name || "",
     description: product.description || "",
     price: product.price || 0,
-    originalPrice: product.originalPrice || "",
     imageUrl: product.imageUrl || "",
     additionalImages: product.additionalImages || [],
     category: product.category || "General",
@@ -351,18 +347,6 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Original Price (₹)</label>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={formData.originalPrice}
-            onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value ? parseFloat(e.target.value) : undefined })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="Leave empty if no discount"
-          />
-        </div>
 
         <div>
           <label className="block text-sm font-medium mb-2">Category *</label>

@@ -56,7 +56,6 @@ interface Product {
   name: string;
   description?: string;
   price: number;
-  originalPrice?: number;
   imageUrl: string;
   additionalImages?: string[];
   category: string;
@@ -74,7 +73,7 @@ interface Award {
   organization?: string;
   date: string;
   type: 'award' | 'event';
-  image_url?: string;
+  images: string[];
   is_active: boolean;
   sort_order: number;
 }
@@ -205,7 +204,7 @@ const AdminDashboard = () => {
         organization: a.organization || '',
         date: a.date || '',
         type: a.type || 'award',
-        image_url: normalizeImageUrl(a.imageUrl || a.image_url || ''),
+        images: a.images || [],
         is_active: a.isActive || a.is_active || false,
         sort_order: a.sortOrder || a.sort_order || 0,
       })) : []);
@@ -371,7 +370,7 @@ const AdminDashboard = () => {
               stats={stats}
               recentInquiries={inquiries}
               dbStatus={dbStatus}
-              onTabChange={setActiveTab}
+              onTabChange={(tab: string) => setActiveTab(tab as TabType)}
               onReviewPending={() => setTestimonialsFilter("pending")}
             />
           )}

@@ -376,7 +376,7 @@ const Services = () => {
                     </div>
                     
                     {/* Right Column - Service Card & CTA */}
-                    <div className="space-y-8">
+                    {/* <div className="space-y-8"> */}
                       {/* Service Details Card */}
                       {/* <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/20 shadow-lg">
                         <div className="space-y-4">
@@ -414,7 +414,7 @@ const Services = () => {
                       </div> */}
 
                       {/* CTA Section */}
-                      <div className="space-y-4">
+                      {/* <div className="space-y-4"> */}
                         {/* <button
                           onClick={() => handleBookService(service.id)}
                           className="w-full py-4 bg-gradient-to-r from-primary via-primary to-accent text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3 text-lg"
@@ -446,8 +446,8 @@ const Services = () => {
                             </button>
                           </div>
                         </div> */}
-                      </div>
-                    </div>
+                      {/* </div> */}
+                    {/* </div> */}
                   </div>
                 </div>
               );

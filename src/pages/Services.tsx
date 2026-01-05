@@ -415,14 +415,14 @@ const Services = () => {
 
                       {/* CTA Section */}
                       <div className="space-y-4">
-                        <button
+                        {/* <button
                           onClick={() => handleBookService(service.id)}
                           className="w-full py-4 bg-gradient-to-r from-primary via-primary to-accent text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3 text-lg"
                         >
                           <Calendar className="w-6 h-6" />
                           <span>Book This Service</span>
                           <ArrowRight className="w-6 h-6" />
-                        </button>
+                        </button> */}
                         
                         {/* <div className="text-center space-y-3">
                           <p className="text-sm text-muted-foreground">

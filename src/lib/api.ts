@@ -3,6 +3,7 @@ import { ServiceService } from '@/services/serviceService';
 import { TestimonialService } from '@/services/testimonialService';
 import { AwardsService } from '@/services/awardsService';
 import { GalleryService } from '@/services/galleryService';
+import { ProductService } from '@/services/productService';
 import { ContactInquiryService } from '@/services/contactInquiryService';
 import { UserService } from '@/services/userService';
 import { SettingsService } from '@/services/settingsService';
@@ -365,6 +366,52 @@ export const awardsAPI = {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');
     return await AwardsService.toggleAwardStatus(id, token);
+  },
+};
+
+export const productsAPI = {
+  async getAll() {
+    return await httpClient.get('/products');
+  },
+
+  async getAllAdmin() {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.getAllProducts(token);
+  },
+
+  async getById(id: string) {
+    return await httpClient.get(`/products/${id}`);
+  },
+
+  async create(data: any) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.createProduct(data, token);
+  },
+
+  async update(id: string, data: any) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.updateProduct(id, data, token);
+  },
+
+  async delete(id: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.deleteProduct(id, token);
+  },
+
+  async toggleActive(id: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.toggleActive(id, token);
+  },
+
+  async toggleAvailability(id: string) {
+    const token = localStorage.getItem('authToken');
+    if (!token) throw new Error('Authentication required');
+    return await ProductService.toggleAvailability(id, token);
   },
 };
 

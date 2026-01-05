@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, Eye, EyeOff, Package, IndianRupee, ShoppingCart } from "lucide-react";
-import { ProductService } from "@/services/productService";
+import { productsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Modal } from "../Modal";
 import { ImageUpload } from "../ImageUpload";
@@ -13,6 +13,7 @@ interface Product {
   price: number;
   imageUrl: string;
   additionalImages?: string[];
+  category?: string;
   isAvailable: boolean;
   isActive: boolean;
 }
@@ -22,16 +23,18 @@ interface ProductsTabProps {
   onRefresh: () => void;
 }
 
+const categories = ["Supplements", "Equipment", "Books", "Consultation Packages", "Health Foods", "Wellness Products"];
+
 export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [filter, setFilter] = useState<"all" | "active" | "inactive" | "unavailable">("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { toast } = useToast();
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      await ProductService.deleteProduct(id, localStorage.getItem('token') || '');
+      await productsAPI.delete(id);
       toast({ title: "Product deleted" });
       onRefresh();
     } catch (error: any) {
@@ -41,7 +44,7 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
 
   const handleToggleActive = async (id: string, isActive: boolean) => {
     try {
-      await ProductService.toggleActive(id, localStorage.getItem('token') || '');
+      await productsAPI.toggleActive(id);
       toast({ title: isActive ? "Product deactivated" : "Product activated" });
       onRefresh();
     } catch (error: any) {
@@ -51,7 +54,7 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
 
   const handleToggleAvailability = async (id: string, isAvailable: boolean) => {
     try {
-      await ProductService.toggleAvailability(id, localStorage.getItem('token') || '');
+      await productsAPI.toggleAvailability(id);
       toast({ title: isAvailable ? "Product marked unavailable" : "Product marked available" });
       onRefresh();
     } catch (error: any) {
@@ -60,20 +63,14 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   };
 
   const handleSave = async (formData: any) => {
-    console.log('handleSave called with formData:', formData);
     try {
-      const token = localStorage.getItem('token') || '';
-      console.log('Token retrieved:', token ? 'present' : 'missing');
       if (editingProduct?._id) {
-        console.log('Updating product:', editingProduct._id);
-        await ProductService.updateProduct(editingProduct._id, formData, token);
+        await productsAPI.update(editingProduct._id, formData);
         toast({ title: "Product updated" });
       } else {
-        console.log('Creating new product');
-        await ProductService.createProduct(formData, token);
+        await productsAPI.create(formData);
         toast({ title: "Product created" });
       }
-      console.log('Product operation successful, closing modal');
       setEditingProduct(null);
       onRefresh();
     } catch (error: any) {
@@ -82,19 +79,9 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
     }
   };
 
-  const filteredProducts = products.filter(product => {
-    let matches = true;
-
-    if (filter === "active") {
-      matches = matches && product.isActive && product.isAvailable;
-    } else if (filter === "inactive") {
-      matches = matches && !product.isActive;
-    } else if (filter === "unavailable") {
-      matches = matches && !product.isAvailable;
-    }
-
-    return matches;
-  });
+  const filteredProducts = selectedCategory === "all"
+    ? products
+    : products.filter(product => product.category === selectedCategory);
 
   return (
     <div className="space-y-6">
@@ -111,6 +98,7 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
             price: 0,
             imageUrl: "",
             additionalImages: [],
+            category: "Supplements",
             isAvailable: true,
             isActive: true
           })}
@@ -120,44 +108,35 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
         </button>
       </div>
 
-      {/* Filters */}
+      {/* Category Filter */}
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => setFilter("all")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            filter === "all" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
+          onClick={() => setSelectedCategory("all")}
+          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            selectedCategory === "all"
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
-          All ({products.length})
+          All
         </button>
-        <button
-          onClick={() => setFilter("active")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            filter === "active" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
-          }`}
-        >
-          Active ({products.filter(p => p.isActive && p.isAvailable).length})
-        </button>
-        <button
-          onClick={() => setFilter("inactive")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            filter === "inactive" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
-          }`}
-        >
-          Inactive ({products.filter(p => !p.isActive).length})
-        </button>
-        <button
-          onClick={() => setFilter("unavailable")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-            filter === "unavailable" ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
-          }`}
-        >
-          Unavailable ({products.filter(p => !p.isAvailable).length})
-        </button>
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedCategory === cat
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredProducts.map((product) => (
           <div
             key={product._id}
@@ -165,7 +144,7 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
               product.isActive && product.isAvailable ? "border-border" : "border-muted opacity-60"
             }`}
           >
-            <div className="aspect-square relative">
+            <div className="aspect-square">
               <img
                 src={normalizeImageUrl(product.imageUrl)}
                 alt={product.name}
@@ -188,20 +167,12 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
 
             </div>
 
-            <div className="p-4">
-              <h3 className="font-heading font-semibold text-sm mb-1 line-clamp-1">{product.name}</h3>
-              <div className="flex items-center gap-1 mb-2">
-                <IndianRupee className="w-3 h-3 text-primary" />
-                <span className="font-bold text-primary">{product.price.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-
             {/* Overlay */}
             <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <button
                 onClick={() => handleToggleActive(product._id, product.isActive)}
                 className="p-2 bg-background rounded-xl hover:bg-muted transition-colors"
-                title={product.isActive ? "Deactivate" : "Activate"}
+                title={product.isActive ? "Hide" : "Show"}
               >
                 {product.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
               </button>
@@ -221,179 +192,156 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
               </button>
               <button
                 onClick={() => handleDelete(product._id)}
-                className="p-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                className="p-2 bg-red-500 text-white rounded-xl hover:bg-destructive/10 text-destructive transition-colors"
                 title="Delete"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Info */}
+            <div className="p-3 bg-card">
+              <p className="font-medium text-sm text-foreground truncate">{product.name}</p>
+              <div className="flex items-center gap-1 mb-1">
+                <IndianRupee className="w-3 h-3 text-primary" />
+                <span className="font-bold text-primary text-sm">{product.price.toLocaleString('en-IN')}</span>
+              </div>
+              <p className="text-xs text-muted-foreground">{product.category}</p>
+            </div>
           </div>
         ))}
       </div>
 
+      {filteredProducts.length === 0 && (
+        <div className="bg-card rounded-2xl p-12 border border-border text-center">
+          <p className="text-muted-foreground">No products found</p>
+        </div>
+      )}
+
       {/* Product Modal */}
-      <Modal
-        isOpen={!!editingProduct}
-        onClose={() => setEditingProduct(null)}
-        title={editingProduct?._id ? "Edit Product" : "Add New Product"}
-      >
-        {editingProduct && <ProductForm product={editingProduct} onSave={handleSave} onClose={() => setEditingProduct(null)} />}
-      </Modal>
+      {editingProduct && (
+        <ProductFormModal
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 };
 
-interface ProductFormProps {
-  product: Product;
-  onSave: (data: any) => void;
-  onClose: () => void;
-}
 
-const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
-  const [formData, setFormData] = useState({
-    name: product.name || "",
-    description: product.description || "",
-    price: product.price || 0,
-    imageUrl: product.imageUrl || "",
-    additionalImages: product.additionalImages || [],
-    isAvailable: product.isAvailable ?? true,
-    isActive: product.isActive ?? true
-  });
+const ProductFormModal = ({
+  product,
+  onClose,
+  onSave
+}: {
+  product: Product;
+  onClose: () => void;
+  onSave: (data: Product) => void;
+}) => {
+  const [formData, setFormData] = useState(product);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('Form submit triggered');
     e.preventDefault();
-    console.log('preventDefault called, form should not refresh');
-
-    // Validate form data
-    if (!formData.name.trim()) {
-      alert('Product name is required');
-      return;
-    }
-    if (!formData.price || formData.price <= 0) {
-      alert('Valid price is required');
-      return;
-    }
-    if (!formData.imageUrl.trim()) {
-      alert('Product image is required');
-      return;
-    }
-
     setIsSubmitting(true);
-    console.log('setIsSubmitting called, formData validated:', formData);
-    try {
-      console.log('Calling onSave with formData:', formData);
-      await onSave(formData);
-      console.log('onSave completed successfully');
-    } catch (error) {
-      console.error('Error in handleSubmit:', error);
-    } finally {
-      setIsSubmitting(false);
-      console.log('setIsSubmitting reset to false');
-    }
+    await onSave(formData);
+    setIsSubmitting(false);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <h3 className="font-heading text-xl font-semibold">
-        {product._id ? "Edit Product" : "Add New Product"}
-      </h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="md:col-span-2">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={product._id ? "Edit Product" : "Add Product"}
+    >
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
           <label className="block text-sm font-medium mb-2">Product Name *</label>
           <input
             type="text"
-            required
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="Enter product name"
           />
         </div>
-
-        <div className="md:col-span-2">
+        <div>
           <label className="block text-sm font-medium mb-2">Description</label>
           <textarea
-            value={formData.description}
+            value={formData.description || ""}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             rows={3}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
             placeholder="Enter product description"
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium mb-2">Price (₹) *</label>
           <input
             type="number"
+            value={formData.price}
+            onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
             required
             min="0"
             step="0.01"
-            value={formData.price}
-            onChange={(e) => {
-              const value = e.target.value;
-              const numValue = value === '' ? 0 : parseFloat(value);
-              setFormData({ ...formData, price: isNaN(numValue) ? 0 : numValue });
-            }}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             placeholder="0.00"
           />
         </div>
-
-
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium mb-2">Main Product Image *</label>
-          <div className="space-y-4">
-            {formData.imageUrl && (
-              <img
-                src={normalizeImageUrl(formData.imageUrl)}
-                alt="Product"
-                className="w-24 h-24 object-cover rounded-lg border border-border"
-              />
-            )}
-            <ImageUpload
-              onImageUpload={(url) => setFormData({ ...formData, imageUrl: url })}
-              folder="products"
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Category</label>
+          <select
+            value={formData.category || "Supplements"}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
         </div>
-
-        <div className="md:col-span-2">
+        <div>
+          <label className="block text-sm font-medium mb-2">Product Image *</label>
+          <ImageUpload
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            folder="products"
+          />
+        </div>
+        <div>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={formData.isAvailable}
+              checked={formData.isAvailable ?? true}
               onChange={(e) => setFormData({ ...formData, isAvailable: e.target.checked })}
               className="w-5 h-5 rounded border-border text-primary focus:ring-primary/20"
             />
             <span className="text-sm font-medium">Available for purchase</span>
           </label>
         </div>
-
-        <div className="md:col-span-2">
+        <div>
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               type="checkbox"
-              checked={formData.isActive}
+              checked={formData.isActive ?? true}
               onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
               className="w-5 h-5 rounded border-border text-primary focus:ring-primary/20"
             />
             <span className="text-sm font-medium">Active (visible on website)</span>
           </label>
         </div>
-      </div>
 
-      <div className="flex gap-3 pt-4 border-t border-border">
-        <button type="button" onClick={onClose} className="btn-outline flex-1">
-          Cancel
-        </button>
-        <button type="submit" disabled={isSubmitting} className="btn-primary flex-1">
-          {isSubmitting ? "Saving..." : (product._id ? "Update Product" : "Create Product")}
-        </button>
-      </div>
-    </form>
+        <div className="flex gap-3 pt-4 border-t border-border">
+          <button type="button" onClick={onClose} className="btn-outline flex-1">
+            Cancel
+          </button>
+          <button type="submit" disabled={isSubmitting} className="btn-primary flex-1">
+            {isSubmitting ? "Saving..." : "Save Product"}
+          </button>
+        </div>
+      </form>
+    </Modal>
   );
 };

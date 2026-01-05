@@ -60,18 +60,24 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   };
 
   const handleSave = async (formData: any) => {
+    console.log('handleSave called with formData:', formData);
     try {
       const token = localStorage.getItem('token') || '';
+      console.log('Token retrieved:', token ? 'present' : 'missing');
       if (editingProduct?._id) {
+        console.log('Updating product:', editingProduct._id);
         await ProductService.updateProduct(editingProduct._id, formData, token);
         toast({ title: "Product updated" });
       } else {
+        console.log('Creating new product');
         await ProductService.createProduct(formData, token);
         toast({ title: "Product created" });
       }
+      console.log('Product operation successful, closing modal');
       setEditingProduct(null);
       onRefresh();
     } catch (error: any) {
+      console.error('Error in handleSave:', error);
       toast({ variant: "destructive", title: "Error", description: error.message });
     }
   };
@@ -256,12 +262,35 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('Form submit triggered');
     e.preventDefault();
+    console.log('preventDefault called, form should not refresh');
+
+    // Validate form data
+    if (!formData.name.trim()) {
+      alert('Product name is required');
+      return;
+    }
+    if (!formData.price || formData.price <= 0) {
+      alert('Valid price is required');
+      return;
+    }
+    if (!formData.imageUrl.trim()) {
+      alert('Product image is required');
+      return;
+    }
+
     setIsSubmitting(true);
+    console.log('setIsSubmitting called, formData validated:', formData);
     try {
+      console.log('Calling onSave with formData:', formData);
       await onSave(formData);
+      console.log('onSave completed successfully');
+    } catch (error) {
+      console.error('Error in handleSubmit:', error);
     } finally {
       setIsSubmitting(false);
+      console.log('setIsSubmitting reset to false');
     }
   };
 
@@ -303,7 +332,11 @@ const ProductForm = ({ product, onSave, onClose }: ProductFormProps) => {
             min="0"
             step="0.01"
             value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+            onChange={(e) => {
+              const value = e.target.value;
+              const numValue = value === '' ? 0 : parseFloat(value);
+              setFormData({ ...formData, price: isNaN(numValue) ? 0 : numValue });
+            }}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             placeholder="0.00"
           />

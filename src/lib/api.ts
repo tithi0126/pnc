@@ -11,9 +11,9 @@ import { AuthService } from '@/services/authService';
 
 // HTTP API client for backend requests
 class HttpApiClient {
-  private baseUrl = import.meta.env.VITE_API_BASE_URL 
+  private baseUrl = import.meta.env.VITE_API_BASE_URL
+  // || 'http://localhost:5003/api'
   || 'https://api.pncpriyamnutritioncare.com/api'
-  // ||  'http://localhost:5003/api'
   ;
 
   private getAuthToken(): string | null {
@@ -374,6 +374,30 @@ export const productsAPI = {
     return await httpClient.get('/products');
   },
 
+  async validateToken() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('No authentication token found');
+    }
+
+    try {
+      // Try to verify the token with the auth service
+      const isValid = await AuthService.verifyToken(token);
+      if (!isValid) {
+        localStorage.removeItem('authToken');
+        window.location.href = '/admin/auth';
+        throw new Error('Session expired. Please login again.');
+      }
+      return true;
+    } catch (error) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
+  },
+
   async getAllAdmin() {
     const token = localStorage.getItem('authToken');
     if (!token) throw new Error('Authentication required');
@@ -386,31 +410,51 @@ export const productsAPI = {
 
   async create(data: any) {
     const token = localStorage.getItem('authToken');
-    if (!token) throw new Error('Authentication required');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
     return await ProductService.createProduct(data, token);
   },
 
   async update(id: string, data: any) {
     const token = localStorage.getItem('authToken');
-    if (!token) throw new Error('Authentication required');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
     return await ProductService.updateProduct(id, data, token);
   },
 
   async delete(id: string) {
     const token = localStorage.getItem('authToken');
-    if (!token) throw new Error('Authentication required');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
     return await ProductService.deleteProduct(id, token);
   },
 
   async toggleActive(id: string) {
     const token = localStorage.getItem('authToken');
-    if (!token) throw new Error('Authentication required');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
     return await ProductService.toggleActive(id, token);
   },
 
   async toggleAvailability(id: string) {
     const token = localStorage.getItem('authToken');
-    if (!token) throw new Error('Authentication required');
+    if (!token) {
+      localStorage.removeItem('authToken');
+      window.location.href = '/admin/auth';
+      throw new Error('Session expired. Please login again.');
+    }
     return await ProductService.toggleAvailability(id, token);
   },
 };

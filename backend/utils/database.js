@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const connectDB = async (retries = 5) => {
   try {
-    const mongoURI = process.env.MONGODB_URI;
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vitality-hub';
 
     if (!mongoURI) {
-      throw new Error('MONGODB_URI environment variable is required');
+      throw new Error('MongoDB URI is required');
     }
 
     // Log URI without credentials for security

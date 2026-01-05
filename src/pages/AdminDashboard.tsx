@@ -158,7 +158,7 @@ const AdminDashboard = () => {
         testimonialsAPI.getAllAdmin().catch(() => []),
         awardsAPI.getAllAdmin().catch(() => []),
         galleryAPI.getAllAdmin().catch(() => []),
-        ProductService.getAllProducts(localStorage.getItem('token') || '').catch(() => []),
+        ProductService.getAllProducts(localStorage.getItem('authToken') || '').catch(() => []),
         contactAPI.getAllAdmin().catch(() => []),
       ]);
 

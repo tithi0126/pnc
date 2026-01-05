@@ -362,7 +362,7 @@ const Services = () => {
                       {/* Benefits Section */}
                       {service.benefits && service.benefits.length > 0 && (
                         <div className="space-y-4">
-                          <h4 className="font-semibold text-foreground text-xl">Disease:</h4>
+                          <h4 className="font-semibold text-foreground text-xl">We provide nutrition therapy for:</h4>
                           <div className="grid sm:grid-cols-2 gap-4">
                             {service.benefits.map((benefit, i) => (
                               <div key={i} className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
@@ -378,7 +378,7 @@ const Services = () => {
                     {/* Right Column - Service Card & CTA */}
                     <div className="space-y-8">
                       {/* Service Details Card */}
-                      <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/20 shadow-lg">
+                      {/* <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/20 shadow-lg">
                         <div className="space-y-4">
                           <div className="flex items-center justify-between p-4 bg-card rounded-xl border border-border">
                             <div className="flex items-center gap-2">
@@ -411,7 +411,7 @@ const Services = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
 
                       {/* CTA Section */}
                       <div className="space-y-4">
@@ -424,7 +424,7 @@ const Services = () => {
                           <ArrowRight className="w-6 h-6" />
                         </button>
                         
-                        <div className="text-center space-y-3">
+                        {/* <div className="text-center space-y-3">
                           <p className="text-sm text-muted-foreground">
                             <Check className={`w-4 h-4 inline mr-2 ${colors.servicesCtaGuaranteeIcon}`} />
                             Personalized consultation • Professional guidance • Proven results
@@ -445,7 +445,7 @@ const Services = () => {
                               Email Inquiry
                             </button>
                           </div>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>

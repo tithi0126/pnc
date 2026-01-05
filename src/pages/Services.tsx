@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Star, Quote, Clock, Users, Check, ArrowRight, Target, Award, Heart, Scale, Building, Brain, Utensils, Calendar, Phone, Mail, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Quote, Clock, Users, Check, Target, Award, Heart, Scale, Building, Brain, Utensils, Calendar, Phone, Mail, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { servicesAPI, settingsAPI } from "@/lib/api";
 import { colors } from "@/theme/colors";
 
@@ -308,7 +308,7 @@ const Services = () => {
                       <h3 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-3">
                         {service.title}
                       </h3>
-                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <div className="flex flex-wrap items-center gap-3 mb-6">
                         <div className={`flex items-center gap-2 px-4 py-2 text-primary rounded-full text-sm font-semibold border border-primary/20 bg-primary/5`}>
                           <Clock className="w-4 h-4" />
                           {service.duration}
@@ -321,132 +321,96 @@ const Services = () => {
                             </span>
                           </div>
                         )}
+                        <button
+                          onClick={() => handleBookService(service.id)}
+                          className="px-6 py-2 bg-gradient-to-r from-primary via-primary to-accent text-white font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center gap-2"
+                        >
+                          <Calendar className="w-4 h-4" />
+                          <span>Book Now</span>
+                        </button>
                       </div>
                     </div>
                   </div>
 
-                  {/* Service Content Grid */}
-                  <div className="grid lg:grid-cols-3 gap-8">
-                    {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-6">
-                      {/* Service Description */}
-                      <div>
-                        <div className="flex items-center gap-3 mb-4">
-                          <Quote className="w-8 h-8 text-primary/40" />
-                          <h4 className="font-semibold text-lg text-foreground">About This Service</h4>
-                        </div>
-                        <p className="text-base text-foreground leading-relaxed mb-4">
-                          {service.short_description || service.full_description || 'Detailed information about this service will be provided upon consultation.'}
-                        </p>
-
-                        {service.full_description && service.full_description !== service.short_description && (
-                          <div className="mt-4">
-                            <button
-                              onClick={() => toggleDescription(service.id)}
-                              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium text-sm"
-                            >
-                              <span>Read More</span>
-                              {expandedDescriptions[service.id] ? (
-                                <ChevronUp className="w-4 h-4" />
-                              ) : (
-                                <ChevronDown className="w-4 h-4" />
-                              )}
-                            </button>
-
-                            {expandedDescriptions[service.id] && (
-                              <div className="mt-3 p-4 bg-muted/30 rounded-lg border border-border">
-                                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm">
-                                  {service.full_description}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        )}
+                  {/* Service Content */}
+                  <div className="space-y-6">
+                    {/* Service Description */}
+                    <div>
+                      <div className="flex items-center gap-3 mb-4">
+                        <Quote className="w-8 h-8 text-primary/40" />
+                        <h4 className="font-semibold text-lg text-foreground">About This Service</h4>
                       </div>
+                      <p className="text-base text-foreground leading-relaxed mb-4">
+                        {service.short_description || service.full_description || 'Detailed information about this service will be provided upon consultation.'}
+                      </p>
 
-                      {/* Benefits Section */}
-                      {service.benefits && service.benefits.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold text-foreground text-xl mb-4">We provide nutrition therapy for:</h4>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {service.benefits.map((benefit, i) => (
-                              <div key={i} className="flex items-start gap-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
-                                <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                                <span className="text-foreground leading-relaxed font-medium text-sm">{benefit}</span>
-                              </div>
-                            ))}
-                          </div>
+                      {service.full_description && service.full_description !== service.short_description && (
+                        <div className="mt-4">
+                          <button
+                            onClick={() => toggleDescription(service.id)}
+                            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium text-sm"
+                          >
+                            <span>Read More</span>
+                            {expandedDescriptions[service.id] ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
+
+                          {expandedDescriptions[service.id] && (
+                            <div className="mt-3 p-4 bg-muted/30 rounded-lg border border-border">
+                              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm">
+                                {service.full_description}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
 
-                    {/* Sidebar - CTA & Contact */}
-                    <div className="space-y-6">
-                      {/* Service Stats Card */}
-                      <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-xl p-6 border border-primary/20 shadow-lg">
-                        <div className="space-y-4">
-                          <div className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-2">
-                              {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                              ))}
+                    {/* Benefits Section */}
+                    {service.benefits && service.benefits.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold text-foreground text-xl mb-4">We provide nutrition therapy for:</h4>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {service.benefits.map((benefit, i) => (
+                            <div key={i} className="flex items-start gap-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
+                              <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                              <span className="text-foreground leading-relaxed font-medium text-sm">{benefit}</span>
                             </div>
-                            <p className="text-sm font-medium text-foreground">5.0 Rating</p>
-                          </div>
-
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border/50">
-                              <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-primary" />
-                                <span className="font-medium text-sm text-foreground">Duration</span>
-                              </div>
-                              <span className="text-primary font-bold text-sm">{service.duration}</span>
-                            </div>
-
-                            <div className="p-3 bg-card/50 rounded-lg border border-border/50">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Users className="w-4 h-4 text-primary" />
-                                <span className="font-medium text-sm text-foreground">Ideal For</span>
-                              </div>
-                              <div className="text-primary font-medium leading-relaxed break-words text-sm">
-                                {service.ideal_for}
-                              </div>
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
+                    )}
 
-                      {/* CTA Section */}
-                      <div className="space-y-4">
-                        <button
-                          onClick={() => handleBookService(service.id)}
-                          className="w-full py-4 bg-gradient-to-r from-primary via-primary to-accent text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3"
-                        >
-                          <Calendar className="w-5 h-5" />
-                          <span>Book This Service</span>
-                          <ArrowRight className="w-5 h-5" />
-                        </button>
+                    {/* Service Stats */}
+                    <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl p-6 border border-primary/10">
+                      <div className="grid sm:grid-cols-3 gap-4">
+                        <div className="text-center">
+                          <div className="flex items-center justify-center gap-1 mb-2">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                            ))}
+                          </div>
+                          <p className="text-sm font-medium text-foreground">5.0 Rating</p>
+                        </div>
 
-                        <div className="text-center space-y-3">
-                          <p className="text-sm text-muted-foreground">
-                            <Check className="w-4 h-4 inline mr-2 text-primary" />
-                            Personalized consultation • Professional guidance • Proven results
-                          </p>
-                          <div className="flex items-center justify-center gap-4 text-sm">
-                            <button
-                              onClick={handleCallNow}
-                              className="flex items-center gap-2 text-primary hover:underline transition-colors"
-                            >
-                              <Phone className="w-4 h-4" />
-                              Call Now
-                            </button>
-                            <button
-                              onClick={handleEmailInquiry}
-                              className="flex items-center gap-2 text-primary hover:underline transition-colors"
-                            >
-                              <Mail className="w-4 h-4" />
-                              Email Inquiry
-                            </button>
+                        <div className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border/50">
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-primary" />
+                            <span className="font-medium text-sm text-foreground">Duration</span>
+                          </div>
+                          <span className="text-primary font-bold text-sm">{service.duration}</span>
+                        </div>
+
+                        <div className="p-3 bg-card/50 rounded-lg border border-border/50">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Users className="w-4 h-4 text-primary" />
+                            <span className="font-medium text-sm text-foreground">Ideal For</span>
+                          </div>
+                          <div className="text-primary font-medium leading-relaxed break-words text-sm">
+                            {service.ideal_for}
                           </div>
                         </div>
                       </div>

@@ -289,48 +289,53 @@ const Services = () => {
             </p>
           </div>
 
-          <div className="w-full">
+          <div className="w-full space-y-12">
             {featuredServices.map((service, index) => {
               const Icon = getIconComponent(service.icon);
 
               return (
                 <div
                   key={service.id}
-                  className="relative bg-card rounded-none px-4 py-8 md:px-8 mb-12 last:mb-0 shadow-xl overflow-hidden border-l-0 border-r-0 border-t border-b border-border"
+                  className="relative bg-card rounded-2xl p-6 md:p-8 shadow-xl overflow-hidden border border-border hover:shadow-2xl transition-all duration-300"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="grid md:grid-cols-3 gap-8">
-                    {/* Left Column - Service Details */}
-                    <div className="md:col-span-2">
-                      <div className="flex items-start gap-6 mb-6">
-                        <div className={`p-5 rounded-2xl bg-gradient-to-br ${getGradientClass(index)} shadow-lg`}>
-                          <Icon className="w-10 h-10 text-primary" />
+                  {/* Service Header */}
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-6 mb-8">
+                    <div className={`flex-shrink-0 p-4 rounded-2xl bg-gradient-to-br ${getGradientClass(index)} shadow-lg`}>
+                      <Icon className="w-12 h-12 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-3">
+                        {service.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-3 mb-4">
+                        <div className={`flex items-center gap-2 px-4 py-2 text-primary rounded-full text-sm font-semibold border border-primary/20 bg-primary/5`}>
+                          <Clock className="w-4 h-4" />
+                          {service.duration}
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-heading font-bold text-3xl text-foreground mb-3">
-                            {service.title}
-                          </h3>
-                          <div className="flex items-center gap-3 flex-wrap">
-                            <div className={`flex items-center gap-2 px-3 py-1.5 text-primary rounded-full text-sm font-semibold border border-primary/20`}>
-                              <Clock className="w-4 h-4" />
-                              {service.duration}
-                            </div>
-                            {service.ideal_for && service.ideal_for !== 'Suitable for all individuals' && (
-                              <div className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20">
-                                <Users className="w-4 h-4" />
-                                <span className="max-w-[200px] truncate" title={service.ideal_for}>
-                                  {service.ideal_for}
-                                </span>
-                              </div>
-                            )}
+                        {service.ideal_for && service.ideal_for !== 'Suitable for all individuals' && (
+                          <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20">
+                            <Users className="w-4 h-4" />
+                            <span className="max-w-[250px] truncate" title={service.ideal_for}>
+                              {service.ideal_for}
+                            </span>
                           </div>
-                        </div>
+                        )}
                       </div>
-                      
+                    </div>
+                  </div>
+
+                  {/* Service Content Grid */}
+                  <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Main Content */}
+                    <div className="lg:col-span-2 space-y-6">
                       {/* Service Description */}
-                      <div className="mb-6">
-                        <Quote className="w-12 h-12 text-primary/30 mb-4" />
-                        <p className="text-lg text-foreground font-medium leading-relaxed mb-4">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <Quote className="w-8 h-8 text-primary/40" />
+                          <h4 className="font-semibold text-lg text-foreground">About This Service</h4>
+                        </div>
+                        <p className="text-base text-foreground leading-relaxed mb-4">
                           {service.short_description || service.full_description || 'Detailed information about this service will be provided upon consultation.'}
                         </p>
 
@@ -338,7 +343,7 @@ const Services = () => {
                           <div className="mt-4">
                             <button
                               onClick={() => toggleDescription(service.id)}
-                              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium"
+                              className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-medium text-sm"
                             >
                               <span>Read More</span>
                               {expandedDescriptions[service.id] ? (
@@ -350,7 +355,7 @@ const Services = () => {
 
                             {expandedDescriptions[service.id] && (
                               <div className="mt-3 p-4 bg-muted/30 rounded-lg border border-border">
-                                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap text-sm">
                                   {service.full_description}
                                 </p>
                               </div>
@@ -361,93 +366,91 @@ const Services = () => {
 
                       {/* Benefits Section */}
                       {service.benefits && service.benefits.length > 0 && (
-                        <div className="space-y-4">
-                          <h4 className="font-semibold text-foreground text-xl">We provide nutrition therapy for:</h4>
-                          <div className="grid sm:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold text-foreground text-xl mb-4">We provide nutrition therapy for:</h4>
+                          <div className="grid sm:grid-cols-2 gap-3">
                             {service.benefits.map((benefit, i) => (
-                              <div key={i} className="flex items-start gap-3 p-4 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
-                                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                                <span className="text-foreground leading-relaxed font-medium">{benefit}</span>
+                              <div key={i} className="flex items-start gap-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-primary/10">
+                                <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                                <span className="text-foreground leading-relaxed font-medium text-sm">{benefit}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                       )}
                     </div>
-                    
-                    {/* Right Column - Service Card & CTA */}
-                    {/* <div className="space-y-8"> */}
-                      {/* Service Details Card */}
-                      {/* <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/20 shadow-lg">
+
+                    {/* Sidebar - CTA & Contact */}
+                    <div className="space-y-6">
+                      {/* Service Stats Card */}
+                      <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-xl p-6 border border-primary/20 shadow-lg">
                         <div className="space-y-4">
-                          <div className="flex items-center justify-between p-4 bg-card rounded-xl border border-border">
-                            <div className="flex items-center gap-2">
-                              <Clock className="w-5 h-5 text-primary" />
-                              <span className="font-semibold text-foreground">Duration</span>
-                            </div>
-                            <span className="text-primary font-bold text-sm">{service.duration}</span>
-                          </div>
-
-                          <div className="p-4 bg-card rounded-xl border border-border">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Users className="w-5 h-5 text-primary" />
-                              <span className="font-semibold text-foreground">Ideal For</span>
-                            </div>
-                            <div className="text-primary font-medium leading-relaxed break-words max-h-20 overflow-y-auto text-sm">
-                              {service.ideal_for}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between p-4 bg-card rounded-xl border border-border">
-                            <div className="flex items-center gap-2">
-                              <Star className={`w-5 h-5 ${colors.servicesRatingStar}`} />
-                              <span className="font-semibold text-foreground">Rating</span>
-                            </div>
-                            <div className="flex items-center gap-1">
+                          <div className="text-center">
+                            <div className="flex items-center justify-center gap-1 mb-2">
                               {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`w-4 h-4 ${colors.servicesRatingStarFilled}`} />
+                                <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                               ))}
-                              <span className={`ml-2 font-bold text-sm ${colors.servicesRatingValue}`}>5.0</span>
+                            </div>
+                            <p className="text-sm font-medium text-foreground">5.0 Rating</p>
+                          </div>
+
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 bg-card/50 rounded-lg border border-border/50">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-4 h-4 text-primary" />
+                                <span className="font-medium text-sm text-foreground">Duration</span>
+                              </div>
+                              <span className="text-primary font-bold text-sm">{service.duration}</span>
+                            </div>
+
+                            <div className="p-3 bg-card/50 rounded-lg border border-border/50">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Users className="w-4 h-4 text-primary" />
+                                <span className="font-medium text-sm text-foreground">Ideal For</span>
+                              </div>
+                              <div className="text-primary font-medium leading-relaxed break-words text-sm">
+                                {service.ideal_for}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div> */}
+                      </div>
 
                       {/* CTA Section */}
-                      {/* <div className="space-y-4"> */}
-                        {/* <button
+                      <div className="space-y-4">
+                        <button
                           onClick={() => handleBookService(service.id)}
-                          className="w-full py-4 bg-gradient-to-r from-primary via-primary to-accent text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3 text-lg"
+                          className="w-full py-4 bg-gradient-to-r from-primary via-primary to-accent text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-3"
                         >
-                          <Calendar className="w-6 h-6" />
+                          <Calendar className="w-5 h-5" />
                           <span>Book This Service</span>
-                          <ArrowRight className="w-6 h-6" />
-                        </button> */}
-                        
-                        {/* <div className="text-center space-y-3">
+                          <ArrowRight className="w-5 h-5" />
+                        </button>
+
+                        <div className="text-center space-y-3">
                           <p className="text-sm text-muted-foreground">
-                            <Check className={`w-4 h-4 inline mr-2 ${colors.servicesCtaGuaranteeIcon}`} />
+                            <Check className="w-4 h-4 inline mr-2 text-primary" />
                             Personalized consultation • Professional guidance • Proven results
                           </p>
                           <div className="flex items-center justify-center gap-4 text-sm">
                             <button
                               onClick={handleCallNow}
-                              className="flex items-center gap-2 text-primary hover:underline"
+                              className="flex items-center gap-2 text-primary hover:underline transition-colors"
                             >
                               <Phone className="w-4 h-4" />
                               Call Now
                             </button>
                             <button
                               onClick={handleEmailInquiry}
-                              className="flex items-center gap-2 text-primary hover:underline"
+                              className="flex items-center gap-2 text-primary hover:underline transition-colors"
                             >
                               <Mail className="w-4 h-4" />
                               Email Inquiry
                             </button>
                           </div>
-                        </div> */}
-                      {/* </div> */}
-                    {/* </div> */}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               );

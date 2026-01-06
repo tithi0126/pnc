@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { ShoppingCart, Package, Star, IndianRupee } from "lucide-react";
 // import { CheckCircle, XCircle } from "lucide-react"; // Commented out for now
-import { ProductService } from "@/services/productService";
+import { productsAPI } from "@/lib/api";
 // import { RazorpayService } from "@/services/razorpayService"; // Commented out for now
 import { ImageModal } from "@/components/ImageModal";
 import { normalizeImageUrl } from "@/utils/imageUrl";
@@ -49,7 +49,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await ProductService.getAllProducts();
+        const data = await productsAPI.getAll() as Product[];
         setProducts(data);
         // Extract unique categories
         const uniqueCategories = ["All", ...new Set(data.map(product => product.category).filter(Boolean))];
@@ -281,8 +281,8 @@ const Products = () => {
                         <span>⭐ 4.5 (120 reviews)</span>
                         <span>•</span>
                         <span>Free delivery</span>
-                      </div>
-                    </div> */}
+                      </div> */}
+                    </div>
 
                     {/* Pricing */}
                     <div className="mb-4">

@@ -91,10 +91,7 @@ const HeroSection = () => {
               {renderTitle()}
             </h1>
 
-            {/* Hero Subtitle */}
-            <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed mb-8 max-w-2xl">
-              {settings.hero_subtitle}
-            </p>
+            
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
@@ -110,6 +107,10 @@ const HeroSection = () => {
 
           {/* Right Section - Statistics at Bottom (50%) */}
           <div className="flex items-end justify-center lg:justify-end animate-fade-up animation-delay-200">
+            {/* Hero Subtitle */}
+            <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed mb-8 max-w-2xl">
+              {settings.hero_subtitle}
+            </p>
             <div className="grid grid-cols-3 gap-6 lg:gap-8 w-full max-w-md">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">

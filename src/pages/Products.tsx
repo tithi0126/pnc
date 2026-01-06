@@ -232,11 +232,11 @@ const Products = () => {
                         Only {product.stockQuantity} left
                       </div>
                     )}
-                    {product.stockQuantity === 0 && (
+                    {/* {product.stockQuantity === 0 && (
                       <div className="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                         Out of Stock
                       </div>
-                    )}
+                    )} */}
                   </div>
 
                   {/* Product Info */}

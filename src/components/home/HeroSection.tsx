@@ -77,56 +77,56 @@ const HeroSection = () => {
       </div>
 
       <div className="container-custom relative z-10 pt-24">
-        <div className="max-w-2xl">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 animate-fade-up">
-            <Leaf className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">{settings.hero_badge}</span>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-screen">
+          {/* Left Section - Heading and Buttons (50%) */}
+          <div className="animate-fade-up">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+              <Leaf className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium text-primary">{settings.hero_badge}</span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-8">
+              {renderTitle()}
+            </h1>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link to="/contact" className="btn-primary inline-flex items-center justify-center gap-2 text-base">
+                Book Consultation
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link to="/services" className="btn-outline inline-flex items-center justify-center gap-2 text-base">
+                Explore Services
+              </Link>
+            </div>
           </div>
 
-          {/* Main Heading */}
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6 animate-fade-up animation-delay-100">
-            {renderTitle()}
-          </h1>
-
-          {/* Subtext */}
-          <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed mb-8 animate-fade-up animation-delay-200">
-            {settings.hero_subtitle}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-up animation-delay-300">
-            <Link to="/contact" className="btn-primary inline-flex items-center justify-center gap-2 text-base">
-              Book Consultation
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link to="/services" className="btn-outline inline-flex items-center justify-center gap-2 text-base">
-              Explore Services
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 animate-fade-up animation-delay-400">
-            <div className="text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                <Users className="w-5 h-5 text-primary" />
-                <span className="font-heading text-2xl sm:text-3xl font-bold text-foreground">{settings.stat_clients}</span>
+          {/* Right Section - Statistics at Bottom (50%) */}
+          <div className="flex items-end justify-center lg:justify-end animate-fade-up animation-delay-200">
+            <div className="grid grid-cols-3 gap-6 lg:gap-8 w-full max-w-md">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Users className="w-6 h-6 text-primary" />
+                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_clients}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Happy Clients</p>
               </div>
-              <p className="text-sm text-muted-foreground">Happy Clients</p>
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                <Award className="w-5 h-5 text-primary" />
-                <span className="font-heading text-2xl sm:text-3xl font-bold text-foreground">{settings.stat_experience}</span>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Award className="w-6 h-6 text-primary" />
+                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_experience}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Years Experience</p>
               </div>
-              <p className="text-sm text-muted-foreground">Years Experience</p>
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                <Leaf className="w-5 h-5 text-primary" />
-                <span className="font-heading text-2xl sm:text-3xl font-bold text-foreground">{settings.stat_success}</span>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Leaf className="w-6 h-6 text-primary" />
+                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_success}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Success Rate</p>
               </div>
-              <p className="text-sm text-muted-foreground">Success Rate</p>
             </div>
           </div>
         </div>

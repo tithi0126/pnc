@@ -418,7 +418,7 @@ const Awards = () => {
       </section>
 
       {/* Stats Section */}
-      {(awardsList.length > 0 || eventsList.length > 0) && (
+      {/* {(awardsList.length > 0 || eventsList.length > 0) && (
         <section className="section-padding bg-muted/30">
           <div className="container-custom">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -443,7 +443,7 @@ const Awards = () => {
             </div>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* Image Modal */}
       <ImageModal

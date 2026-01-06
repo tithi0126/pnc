@@ -181,7 +181,7 @@ const AdminAuth = () => {
           </form>
 
           {/* Toggle */}
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <p className="text-muted-foreground">
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button
@@ -191,7 +191,7 @@ const AdminAuth = () => {
                 {isLogin ? "Register" : "Sign In"}
               </button>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

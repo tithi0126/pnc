@@ -1,8 +1,8 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Package, Star, IndianRupee } from "lucide-react";
+import { ShoppingCart, Package, Star, IndianRupee, MessageCircle } from "lucide-react";
 // import { CheckCircle, XCircle } from "lucide-react"; // Commented out for now
-import { productsAPI } from "@/lib/api";
+import { productsAPI, settingsAPI } from "@/lib/api";
 // import { RazorpayService } from "@/services/razorpayService"; // Commented out for now
 import { ImageModal } from "@/components/ImageModal";
 import { normalizeImageUrl } from "@/utils/imageUrl";
@@ -40,6 +40,10 @@ const Products = () => {
     title: ''
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [contactSettings, setContactSettings] = useState({
+    whatsapp_number: '+91 9876543210',
+    phone_number: '+91 9876543210',
+  });
   // const [isProcessing, setIsProcessing] = useState<string | null>(null); // Commented out for now
   // const [paymentStatus, setPaymentStatus] = useState<{ // Commented out for now
   //   type: 'success' | 'error' | null;
@@ -62,6 +66,24 @@ const Products = () => {
     };
 
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const loadContactSettings = async () => {
+      try {
+        const allSettings = await settingsAPI.getPublic();
+        const settingsMap: any = allSettings || {};
+
+        setContactSettings({
+          whatsapp_number: settingsMap.whatsapp_number || '+91 9876543210',
+          phone_number: settingsMap.phone_number || '+91 9876543210',
+        });
+      } catch (error) {
+        console.error('Error loading contact settings:', error);
+      }
+    };
+
+    loadContactSettings();
   }, []);
 
   const openImageModal = (images: string[], startIndex: number = 0, title: string = '') => {
@@ -312,6 +334,72 @@ const Products = () => {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* WhatsApp Contact Section */}
+      <section className="section-padding bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-card rounded-2xl p-8 md:p-12 border border-border shadow-lg">
+              <div className="mb-8">
+                <div className="w-20 h-20 bg-gradient-cta rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MessageCircle className="w-10 h-10 text-primary-foreground" />
+                </div>
+                <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  Need Help Choosing the Right Product?
+                </h2>
+                <p className="text-lg text-foreground font-medium leading-relaxed mb-6">
+                  Our nutrition experts are here to help you select the perfect supplements and products for your health goals. Get personalized recommendations and answers to all your questions.
+                </p>
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="text-center">
+                    <h3 className="font-semibold text-foreground mb-2"> Product Consultation</h3>
+                    <p className="text-sm text-muted-foreground">Get expert advice on which products suit your needs</p>
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-foreground mb-2"> Appointment Booking</h3>
+                    <p className="text-sm text-muted-foreground">Schedule a personalized consultation with Dr. Bidita Shah</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hi! I\'m interested in your nutrition products and would like to get more information about them.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 justify-center ${colors.whatsappButton}`}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Chat on WhatsApp for Products
+                </a>
+                <a
+                  href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hi! I\'d like to book an appointment for a nutrition consultation.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold transition-all hover:scale-105 justify-center"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Book Appointment
+                </a>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-border">
+                <p className="text-sm text-muted-foreground">
+                  💬 <strong>Quick Response:</strong> We typically respond within 2-4 hours during business hours.
+                  <br />
+                  📞 <strong>Emergency?</strong> For urgent health concerns, please call our clinic directly at{' '}
+                  <a
+                    href={`tel:${contactSettings.phone_number.replace(/\s/g, '')}`}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    {contactSettings.phone_number}
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

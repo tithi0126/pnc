@@ -365,7 +365,7 @@ const Products = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hi! I\'m interested in your nutrition products and would like to get more information about them.')}`}
+                  href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hi! I\'m interested in your nutrition products. Guide me further')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold transition-all hover:scale-105 justify-center"

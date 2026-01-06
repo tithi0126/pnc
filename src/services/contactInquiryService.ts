@@ -104,7 +104,7 @@ export class ContactInquiryService {
   static async updateStatus(id: string, status: string, token: string): Promise<IContactInquiry> {
     try {
       const response = await fetch(`${this.API_BASE_URL}/contact/${id}/status`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

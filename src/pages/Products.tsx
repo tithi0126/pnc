@@ -6,7 +6,6 @@ import { productsAPI, settingsAPI } from "@/lib/api";
 // import { RazorpayService } from "@/services/razorpayService"; // Commented out for now
 import { ImageModal } from "@/components/ImageModal";
 import { normalizeImageUrl } from "@/utils/imageUrl";
-import { colors } from "@/theme/colors";
 
 interface Product {
   _id: string;
@@ -369,7 +368,7 @@ const Products = () => {
                   href={`https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hi! I\'m interested in your nutrition products and would like to get more information about them.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold transition-all hover:scale-105 justify-center ${colors.whatsappButton}`}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl font-semibold transition-all hover:scale-105 justify-center"
                 >
                   <MessageCircle className="w-5 h-5" />
                   Chat on WhatsApp for Products

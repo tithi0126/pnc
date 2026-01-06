@@ -114,30 +114,6 @@ const HeroSection = () => {
               </p>
             </div>
 
-            {/* Statistics */}
-            <div className="grid grid-cols-3 gap-6 lg:gap-8 w-full max-w-md ml-auto">
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Users className="w-6 h-6 text-primary" />
-                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_clients}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Happy Clients</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Award className="w-6 h-6 text-primary" />
-                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_experience}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Years Experience</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Leaf className="w-6 h-6 text-primary" />
-                  <span className="font-heading text-3xl lg:text-4xl font-bold text-foreground">{settings.stat_success}</span>
-                </div>
-                <p className="text-sm text-muted-foreground">Success Rate</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

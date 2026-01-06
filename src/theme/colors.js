@@ -8,9 +8,9 @@ export const colors = {
   imageModalOverlay: "bg-black/90",
 
   // Image modal
-  imageModalButton: "bg-black/50 text-white hover:bg-black/70",
-  imageModalCounter: "bg-black/70 text-white",
-  imageModalTitle: "bg-black/70 text-white",
+  imageModalButton: "bg-white/90 text-gray-900 hover:bg-white",
+  imageModalCounter: "bg-white/90 text-gray-900",
+  imageModalTitle: "bg-white/90 text-gray-900",
   imageModalThumbnailActive: "border-white shadow-lg scale-110",
   imageModalThumbnailInactive:
     "border-gray-500 hover:border-gray-300 opacity-70 hover:opacity-100",
@@ -31,7 +31,7 @@ export const colors = {
   awardsPillAward: "bg-yellow-100 text-yellow-700",
   awardsPillEvent: "bg-blue-100 text-blue-700",
   awardsMoreImagesPill:
-    "bg-gray-200 text-gray-600 hover:bg-gray-300 border-2 border-white",
+    "bg-gray-200 text-gray-600 hover:bg-gray-300 border-2 border-gray-800",
   awardsMainImageFallbackAward:
     "bg-gradient-to-br from-yellow-100 to-yellow-200 text-yellow-600",
   awardsMainImageFallbackEvent:

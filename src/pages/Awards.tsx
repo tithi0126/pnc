@@ -325,7 +325,7 @@ const Awards = () => {
                               {event.images.slice(1, 4).map((image, idx) => (
                                 <div
                                   key={idx}
-                                  className="w-20 h-20 rounded-xl overflow-hidden border-2 border-white shadow-lg cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200"
+                                  className="w-20 h-20 rounded-xl overflow-hidden border-2 border-gray-800 shadow-lg cursor-pointer hover:shadow-xl hover:scale-110 transition-all duration-200"
                                   onClick={() => openImageModal(event.images, idx + 1, event.title)}
                                 >
                                   <img

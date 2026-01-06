@@ -170,10 +170,10 @@ const Gallery = () => {
         >
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute top-4 right-4 w-12 h-12 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
+            className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center hover:bg-white transition-colors"
             aria-label="Close"
           >
-            <X className="w-6 h-6 text-background" />
+            <X className="w-6 h-6 text-gray-900" />
           </button>
           <img
             src={selectedImage.replace("w=800&h=600", "w=1200&h=900")}

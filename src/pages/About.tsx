@@ -4,12 +4,12 @@ import { Award, BookOpen, Target, Users, CheckCircle, ArrowRight } from "lucide-
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
 import { normalizeImageUrl } from "@/utils/imageUrl";
-// Note: doctorPortrait is now loaded dynamically from settings
+import doctorPortrait from "@/assets/doctor-portrait.jpg";
 
 const About = () => {
   const [settings, setSettings] = useState({
     about_page_title: 'Dedicated to Transforming Lives Through Nutrition',
-    about_page_subtitle: 'Personalized nutrition plans tailored to your unique needs. Achieve your wellness goals with science-backed strategies and compassionate support from Dr. Bidita Shah.',
+    about_page_subtitle: 'A journey of passion, expertise, and commitment to helping individuals achieve optimal health.',
     about_story_title: 'My Story',
     about_story_paragraph_1: 'My journey into nutrition began with a personal health transformation that changed my life. After experiencing firsthand the power of proper nutrition, I dedicated my career to helping others discover the same transformative potential.',
     about_story_paragraph_2: 'With over 15 years of clinical experience, I\'ve had the privilege of working with thousands of individuals—from professional athletes seeking peak performance to families looking for healthier lifestyles. Each client\'s success story fuels my passion for this field.',
@@ -42,7 +42,7 @@ const About = () => {
         
         setSettings({
           about_page_title: settingsMap.about_page_title || settings.about_page_title,
-          about_page_subtitle: settingsMap.hero_subtitle || settings.about_page_subtitle, // Use hero_subtitle for about page
+          about_page_subtitle: settingsMap.about_page_subtitle || settings.about_page_subtitle,
           about_story_title: settingsMap.about_story_title || settings.about_story_title,
           about_story_paragraph_1: settingsMap.about_story_paragraph_1 || settings.about_story_paragraph_1,
           about_story_paragraph_2: settingsMap.about_story_paragraph_2 || settings.about_story_paragraph_2,

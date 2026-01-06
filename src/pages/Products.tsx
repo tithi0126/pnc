@@ -242,7 +242,7 @@ const Products = () => {
                   {/* Product Info */}
                   <div className="p-6">
                     <div className="mb-4">
-                      <div className="flex items-center justify-between mb-2">
+                      {/* <div className="flex items-center justify-between mb-2">
                         <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                           {product.category}
                         </span>
@@ -264,7 +264,7 @@ const Products = () => {
                             : 'Unavailable'
                           }
                         </span>
-                      </div>
+                      </div> */}
 
                       <h3 className="font-heading font-bold text-lg text-foreground mb-2 line-clamp-2">
                         {product.name}
@@ -277,12 +277,12 @@ const Products = () => {
                       )}
 
                       {/* Additional details */}
-                      <div className="flex items-center gap-4 text-xs text-foreground font-medium mb-4">
+                      {/* <div className="flex items-center gap-4 text-xs text-foreground font-medium mb-4">
                         <span>⭐ 4.5 (120 reviews)</span>
                         <span>•</span>
                         <span>Free delivery</span>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Pricing */}
                     <div className="mb-4">
@@ -295,7 +295,7 @@ const Products = () => {
                     </div>
 
                     {/* Purchase Button */}
-                    <button
+                    {/* <button
                       onClick={() => handlePurchase(product)}
                       disabled={product.stockQuantity === 0}
                       className={`w-full py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
@@ -306,7 +306,7 @@ const Products = () => {
                     >
                       <ShoppingCart className="w-4 h-4" />
                       {product.stockQuantity === 0 ? "Out of Stock" : "Contact for Purchase"}
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               ))}

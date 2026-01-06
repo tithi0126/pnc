@@ -105,6 +105,13 @@ const HeroSection = () => {
 
           {/* Right Section - Statistics at Bottom (50%) */}
           <div className="flex items-end justify-center lg:justify-end animate-fade-up animation-delay-200">
+            {/* Hero Subtitle */}
+            <div className="mb-8 text-center lg:text-right">
+              <p className="text-base lg:text-lg text-foreground font-medium leading-relaxed max-w-sm">
+                {settings.hero_subtitle}
+              </p>
+            </div>
+
             <div className="grid grid-cols-3 gap-6 lg:gap-8 w-full max-w-md">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-2">

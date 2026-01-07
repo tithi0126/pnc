@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 import { useState, useEffect } from "react";
-import { settingsAPI } from "@/lib/api";
+import { settingsAPI, servicesAPI } from "@/lib/api";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,17 +12,10 @@ const Footer = () => {
   });
 
   const [logoUrl, setLogoUrl] = useState('/pnc-logo.svg');
+  const [services, setServices] = useState<string[]>([]);
 
   const [footerSettings, setFooterSettings] = useState({
     footer_description: 'Transforming lives through personalized nutrition guidance and holistic wellness approaches. Expert clinical nutritionist with 15+ years of experience in Surat.',
-    footer_services: JSON.stringify([
-      'Nutrition Consultation',
-      'Diet Plans',
-      'Weight Management',
-      'Sports Nutrition',
-      'Diabetes Care',
-      'Thyroid Management'
-    ]),
     footer_copyright: '© {year} Dr. Bidita Shah. All rights reserved.',
     footer_links: JSON.stringify([
       { name: 'Privacy Policy', path: '/privacy' },
@@ -37,8 +30,14 @@ const Footer = () => {
   });
 
   useEffect(() => {
-    const loadSettings = async () => {
+    const loadData = async () => {
       try {
+        // Load services from API
+        const servicesData = await servicesAPI.getAll();
+        const serviceNames = servicesData.map((service: any) => service.title);
+        setServices(serviceNames);
+
+        // Load settings
         const allSettings = await settingsAPI.getPublic();
         const settingsMap: any = allSettings || {};
 
@@ -50,7 +49,6 @@ const Footer = () => {
 
         setFooterSettings({
           footer_description: settingsMap.footer_description || footerSettings.footer_description,
-          footer_services: settingsMap.footer_services || footerSettings.footer_services,
           footer_copyright: settingsMap.footer_copyright || footerSettings.footer_copyright,
           footer_links: settingsMap.footer_links || footerSettings.footer_links,
           social_links: settingsMap.social_links || footerSettings.social_links,
@@ -60,16 +58,24 @@ const Footer = () => {
           setLogoUrl(settingsMap.logo_url);
         }
       } catch (error) {
-        console.error('Error loading footer settings:', error);
+        console.error('Error loading footer data:', error);
+        // Fallback to default services if API fails
+        setServices([
+          'Nutrition Consultation',
+          'Diet Plans',
+          'Weight Management',
+          'Sports Nutrition',
+          'Diabetes Care',
+          'Thyroid Management'
+        ]);
       }
     };
-    loadSettings();
+    loadData();
   }, []);
 
   const phoneLink = `tel:${contactSettings.phone_number.replace(/\s/g, '')}`;
   const emailLink = `mailto:${contactSettings.contact_email}`;
 
-  const services = JSON.parse(footerSettings.footer_services || '[]');
   const footerLinks = JSON.parse(footerSettings.footer_links || '[]');
   const socialLinks = JSON.parse(footerSettings.social_links || '[]');
   const copyrightText = footerSettings.footer_copyright.replace('{year}', currentYear.toString());

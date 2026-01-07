@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { contactAPI, settingsAPI } from "@/lib/api";
+import { contactAPI, settingsAPI, servicesAPI, productsAPI } from "@/lib/api";
 import { colors } from "@/theme/colors";
 
 const Contact = () => {
@@ -15,6 +15,8 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [services, setServices] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'info@drbiditashah.com',
     phone_number: '+1 234 567 890',
@@ -27,11 +29,12 @@ const Contact = () => {
   });
 
   useEffect(() => {
-    const loadSettings = async () => {
+    const loadData = async () => {
       try {
+        // Load settings
         const allSettings = await settingsAPI.getPublic();
         const settingsMap: any = allSettings || {};
-        
+
         setContactSettings({
           contact_email: settingsMap.contact_email || 'info@drbiditashah.com',
           phone_number: settingsMap.phone_number || '+1 234 567 890',
@@ -42,11 +45,20 @@ const Contact = () => {
           contact_page_subtitle: settingsMap.contact_page_subtitle || 'Ready to start your nutrition journey?',
           contact_page_description: settingsMap.contact_page_description || 'Contact us today for personalized nutrition consultation.',
         });
+
+        // Load services
+        const servicesData = await servicesAPI.getAll();
+        setServices(servicesData);
+
+        // Load products
+        const productsData = await productsAPI.getAll();
+        setProducts(productsData);
+
       } catch (error) {
-        console.error('Error loading contact settings:', error);
+        console.error('Error loading contact data:', error);
       }
     };
-    loadSettings();
+    loadData();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -198,7 +210,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <label htmlFor="service" className="block text-sm font-medium text-foreground mb-2">
-                      Service Interested In
+                      Service/Product Interested In
                     </label>
                     <select
                       id="service"
@@ -207,13 +219,26 @@ const Contact = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
                     >
-                      <option value="">Select a service</option>
-                      <option value="nutrition-consultation">Nutrition Consultation</option>
-                      <option value="weight-management">Weight Management</option>
-                      <option value="sports-nutrition">Sports Nutrition</option>
-                      <option value="prenatal-nutrition">Prenatal Nutrition</option>
-                      <option value="corporate-wellness">Corporate Wellness</option>
-                      <option value="food-consulting">Food Entrepreneurship</option>
+                      <option value="">Select a service or product</option>
+
+                      {/* Services */}
+                      <optgroup label="Services">
+                        {services.map((service) => (
+                          <option key={service._id} value={`service-${service._id}`}>
+                            {service.title}
+                          </option>
+                        ))}
+                      </optgroup>
+
+                      {/* Products */}
+                      <optgroup label="Products">
+                        {products.map((product) => (
+                          <option key={product._id} value={`product-${product._id}`}>
+                            {product.name}
+                          </option>
+                        ))}
+                      </optgroup>
+
                       <option value="other">Other</option>
                     </select>
                   </div>

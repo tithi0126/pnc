@@ -574,7 +574,7 @@ const Products = () => {
                   <button
                     onClick={() => {
                       // WhatsApp integration
-                      const message = `Hi, I'm interested in ${productDetailsModal.product!.name}. Can you provide more information?`;
+                      const message = `Hi, I'm interested in ${productDetailsModal.product!.name}. Can you provide me more info on how to buy?`;
                       const whatsappUrl = `https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
                       window.open(whatsappUrl, '_blank');
                     }}

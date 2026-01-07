@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Edit2, Trash2, Eye, EyeOff, Package, IndianRupee, ShoppingCart } from "lucide-react";
+import { Plus, Edit2, Trash2, Eye, EyeOff, Package, IndianRupee, ShoppingCart, X } from "lucide-react";
 import { productsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Modal } from "../Modal";
@@ -9,13 +9,26 @@ import { normalizeImageUrl } from "@/utils/imageUrl";
 interface Product {
   _id: string;
   name: string;
+  subtitle?: string;
   description?: string;
+  detailedDescription?: string;
   price: number;
+  pricing?: Array<{
+    size: string;
+    price: number;
+    unit: string;
+  }>;
   imageUrl: string;
   additionalImages?: string[];
-  category?: string;
+  category: string;
+  idealFor?: string[];
+  benefits?: string[];
+  ingredients?: string;
+  stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
+  sortOrder: number;
+  razorpayProductId?: string;
 }
 
 interface ProductsTabProps {
@@ -23,7 +36,7 @@ interface ProductsTabProps {
   onRefresh: () => void;
 }
 
-const categories = ["Supplements", "Equipment", "Books", "Consultation Packages", "Health Foods", "Wellness Products"];
+const categories = ["Nutrition Supplements", "Health Foods", "Wellness Products", "Consultation Packages", "General"];
 
 export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -94,13 +107,22 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
           onClick={() => setEditingProduct({
             _id: "",
             name: "",
+            subtitle: "",
             description: "",
+            detailedDescription: "",
             price: 0,
+            pricing: [],
             imageUrl: "",
             additionalImages: [],
-            category: "Supplements",
+            category: "Nutrition Supplements",
+            idealFor: [],
+            benefits: [],
+            ingredients: "",
+            stockQuantity: 0,
             isAvailable: true,
-            isActive: true
+            isActive: true,
+            sortOrder: 0,
+            razorpayProductId: ""
           })}
           className="btn-primary text-sm inline-flex items-center gap-2 self-start"
         >
@@ -202,11 +224,34 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
             {/* Info */}
             <div className="p-3 bg-card">
               <p className="font-medium text-sm text-foreground truncate">{product.name}</p>
-              <div className="flex items-center gap-1 mb-1">
-                <IndianRupee className="w-3 h-3 text-primary" />
-                <span className="font-bold text-primary text-sm">{product.price.toLocaleString('en-IN')}</span>
+              {product.subtitle && (
+                <p className="text-xs text-muted-foreground truncate mb-1">{product.subtitle}</p>
+              )}
+              <div className="mb-1">
+                {product.pricing && product.pricing.length > 0 ? (
+                  <div className="space-y-1">
+                    {product.pricing.slice(0, 2).map((pricing, index) => (
+                      <div key={index} className="flex items-center gap-1 text-xs">
+                        <IndianRupee className="w-2.5 h-2.5 text-primary" />
+                        <span className="text-primary font-medium">{pricing.price}</span>
+                        <span className="text-muted-foreground">({pricing.size})</span>
+                      </div>
+                    ))}
+                    {product.pricing.length > 2 && (
+                      <p className="text-xs text-muted-foreground">+{product.pricing.length - 2} more</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <IndianRupee className="w-3 h-3 text-primary" />
+                    <span className="font-bold text-primary text-sm">{product.price.toLocaleString('en-IN')}</span>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-muted-foreground">{product.category}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-muted-foreground">{product.category}</p>
+                <p className="text-xs text-muted-foreground">Stock: {product.stockQuantity}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -240,7 +285,18 @@ const ProductFormModal = ({
   onClose: () => void;
   onSave: (data: Product) => void;
 }) => {
-  const [formData, setFormData] = useState(product);
+  const [formData, setFormData] = useState<Product>({
+    ...product,
+    subtitle: product.subtitle || "",
+    detailedDescription: product.detailedDescription || "",
+    pricing: product.pricing || [],
+    idealFor: product.idealFor || [],
+    benefits: product.benefits || [],
+    ingredients: product.ingredients || "",
+    stockQuantity: product.stockQuantity || 0,
+    sortOrder: product.sortOrder || 0,
+    razorpayProductId: product.razorpayProductId || ""
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -268,6 +324,16 @@ const ProductFormModal = ({
           />
         </div>
         <div>
+          <label className="block text-sm font-medium mb-2">Subtitle</label>
+          <input
+            type="text"
+            value={formData.subtitle || ""}
+            onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="e.g., Homemade Health in Every Scoop!"
+          />
+        </div>
+        <div>
           <label className="block text-sm font-medium mb-2">Description</label>
           <textarea
             value={formData.description || ""}
@@ -278,7 +344,17 @@ const ProductFormModal = ({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Price (₹) *</label>
+          <label className="block text-sm font-medium mb-2">Detailed Description</label>
+          <textarea
+            value={formData.detailedDescription || ""}
+            onChange={(e) => setFormData({ ...formData, detailedDescription: e.target.value })}
+            rows={4}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            placeholder="Detailed product information and benefits"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Base Price (₹) *</label>
           <input
             type="number"
             value={formData.price}
@@ -289,11 +365,72 @@ const ProductFormModal = ({
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             placeholder="0.00"
           />
+          <p className="text-xs text-muted-foreground mt-1">This will be used as fallback if no pricing variants are set</p>
+        </div>
+
+        {/* Pricing Variants */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Pricing Variants (Optional)</label>
+          <div className="space-y-3">
+            {(formData.pricing || []).map((pricing, index) => (
+              <div key={index} className="flex gap-3 items-end">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={pricing.size}
+                    onChange={(e) => {
+                      const newPricing = [...(formData.pricing || [])];
+                      newPricing[index].size = e.target.value;
+                      setFormData({ ...formData, pricing: newPricing });
+                    }}
+                    placeholder="e.g., 1 KG, 500 GM"
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  />
+                </div>
+                <div className="w-24">
+                  <input
+                    type="number"
+                    value={pricing.price}
+                    onChange={(e) => {
+                      const newPricing = [...(formData.pricing || [])];
+                      newPricing[index].price = parseFloat(e.target.value) || 0;
+                      setFormData({ ...formData, pricing: newPricing });
+                    }}
+                    placeholder="₹"
+                    min="0"
+                    step="0.01"
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newPricing = (formData.pricing || []).filter((_, i) => i !== index);
+                    setFormData({ ...formData, pricing: newPricing });
+                  }}
+                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                const newPricing = [...(formData.pricing || []), { size: "", price: 0, unit: "INR" }];
+                setFormData({ ...formData, pricing: newPricing });
+              }}
+              className="text-sm text-primary hover:text-primary/80 flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add Pricing Variant
+            </button>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Category</label>
           <select
-            value={formData.category || "Supplements"}
+            value={formData.category || "Nutrition Supplements"}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
           >
@@ -302,6 +439,31 @@ const ProductFormModal = ({
             ))}
           </select>
         </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Stock Quantity</label>
+            <input
+              type="number"
+              value={formData.stockQuantity || 0}
+              onChange={(e) => setFormData({ ...formData, stockQuantity: parseInt(e.target.value) || 0 })}
+              min="0"
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+              placeholder="0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Sort Order</label>
+            <input
+              type="number"
+              value={formData.sortOrder || 0}
+              onChange={(e) => setFormData({ ...formData, sortOrder: parseInt(e.target.value) || 0 })}
+              min="0"
+              className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+              placeholder="0"
+            />
+          </div>
+        </div>
         <div>
           <label className="block text-sm font-medium mb-2">Product Image *</label>
           <ImageUpload
@@ -309,6 +471,61 @@ const ProductFormModal = ({
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
             folder="products"
           />
+        </div>
+
+        {/* Ideal For */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Ideal For (one per line)</label>
+          <textarea
+            value={(formData.idealFor || []).join('\n')}
+            onChange={(e) => setFormData({
+              ...formData,
+              idealFor: e.target.value.split('\n').filter(item => item.trim())
+            })}
+            rows={3}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            placeholder="MUSCLE PRESERVATION DURING WEIGHT LOSS&#10;SARCOPENIA PREVENTION&#10;RECOVERY NUTRITION"
+          />
+        </div>
+
+        {/* Benefits */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Benefits (one per line)</label>
+          <textarea
+            value={(formData.benefits || []).join('\n')}
+            onChange={(e) => setFormData({
+              ...formData,
+              benefits: e.target.value.split('\n').filter(item => item.trim())
+            })}
+            rows={4}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            placeholder="Balanced mix of dairy protein, nuts, seeds & oats&#10;No artificial sweetener or additives&#10;Supports metabolic and functional health"
+          />
+        </div>
+
+        {/* Ingredients */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Ingredients</label>
+          <textarea
+            value={formData.ingredients || ""}
+            onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
+            rows={3}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+            placeholder="Skimmed Milk Powder, Mixed Nuts (Almonds, Cashews, Walnuts, Pistachio), Seeds (Pumpkin, Sunflower, Melon), Oats."
+          />
+        </div>
+
+        {/* Razorpay Product ID */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Razorpay Product ID (Optional)</label>
+          <input
+            type="text"
+            value={formData.razorpayProductId || ""}
+            onChange={(e) => setFormData({ ...formData, razorpayProductId: e.target.value })}
+            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            placeholder="prod_xxxxxxxxxxxxxxxx"
+          />
+          <p className="text-xs text-muted-foreground mt-1">For payment integration</p>
         </div>
         <div>
           <label className="flex items-center gap-3 cursor-pointer">

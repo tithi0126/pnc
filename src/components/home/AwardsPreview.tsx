@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Trophy, Calendar, Award } from "lucide-react";
 import { awardsAPI } from "@/lib/api";
 import { colors } from "@/theme/colors";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Award {
   id: string;
@@ -87,7 +88,7 @@ const AwardsPreview = () => {
                     <div className="flex items-start gap-4">
                       {award.images && award.images.length > 0 && (
                         <img
-                          src={award.images[0]}
+                          src={normalizeImageUrl(award.images[0])}
                           alt={award.title}
                           className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
                           onError={(e) => {
@@ -137,7 +138,7 @@ const AwardsPreview = () => {
                     <div className="flex items-start gap-4">
                       {event.images && event.images.length > 0 && (
                         <img
-                          src={event.images[0]}
+                          src={normalizeImageUrl(event.images[0])}
                           alt={event.title}
                           className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
                           onError={(e) => {

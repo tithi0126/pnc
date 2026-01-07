@@ -23,7 +23,7 @@ export const getApiBaseUrl = (): string => {
   return apiBase;
 };
 
-export const normalizeImageUrl = (imageUrl: string | null): string | null => {
+export const normalizeImageUrl = (imageUrl: string | null, options?: { directUploads?: boolean }): string | null => {
   if (!imageUrl) return null;
 
   // 1. Fix malformed protocol (missing //)
@@ -42,12 +42,20 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   
   // Case A: Path starts with /api/uploads/ (Correct relative path)
   if (imageUrl.startsWith('/api/uploads/')) {
+    if (options?.directUploads) {
+      // For direct uploads preview, convert to /uploads/ path
+      return imageUrl.replace('/api/uploads/', '/uploads/');
+    }
     return `${apiBase}${imageUrl}`;
   }
 
   // Case B: Path starts with /uploads/ or uploads/ (Legacy/Short path)
-  // We MUST prepend /api because server.js serves files at /api/uploads
   if (imageUrl.startsWith('/uploads/') || imageUrl.startsWith('uploads/')) {
+    if (options?.directUploads) {
+      // For direct uploads preview, return as-is without /api prefix
+      return imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+    }
+    // We MUST prepend /api because server.js serves files at /api/uploads
     const cleanPath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
     return `${apiBase}/api${cleanPath}`;
   }
@@ -66,10 +74,38 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
     const filename = parts[1];
     
     if (filename) {
+      if (options?.directUploads) {
+        // For direct uploads preview, return direct uploads path
+        return `/uploads/${filename}`;
+      }
       // Reconstruct using the correct base and /api/uploads path
       return `${apiBase}/api/uploads/${filename}`;
     }
   }
 
   return imageUrl;
+};
+
+// Enhanced image URL validation and fallback
+export const getImageUrl = (imageUrl: string | null, fallbackUrl?: string): string => {
+  const normalized = normalizeImageUrl(imageUrl);
+
+  if (!normalized) {
+    // Return fallback or placeholder if no image URL
+    return fallbackUrl || '/placeholder.svg';
+  }
+
+  return normalized;
+};
+
+// Get image URL for direct uploads preview (without /api prefix)
+export const getDirectUploadsUrl = (imageUrl: string | null, fallbackUrl?: string): string => {
+  const normalized = normalizeImageUrl(imageUrl, { directUploads: true });
+
+  if (!normalized) {
+    // Return fallback or placeholder if no image URL
+    return fallbackUrl || '/placeholder.svg';
+  }
+
+  return normalized;
 };

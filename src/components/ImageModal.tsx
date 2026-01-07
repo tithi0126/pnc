@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { colors } from "@/theme/colors";
+import { normalizeImageUrl, getDirectUploadsUrl } from "@/utils/imageUrl";
 
 interface ImageModalProps {
   images: string[];
@@ -8,10 +9,19 @@ interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  directUploads?: boolean; // Use direct uploads paths without /api prefix
 }
 
-export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: ImageModalProps) => {
+export const ImageModal = ({ images, currentIndex, isOpen, onClose, title, directUploads = false }: ImageModalProps) => {
   const [activeIndex, setActiveIndex] = useState(currentIndex);
+
+  // Normalize all image URLs for proper preview
+  const normalizedImages = useMemo(() => {
+    if (directUploads) {
+      return images.map(image => getDirectUploadsUrl(image) || image);
+    }
+    return images.map(image => normalizeImageUrl(image) || image);
+  }, [images, directUploads]);
 
   useEffect(() => {
     setActiveIndex(currentIndex);
@@ -39,11 +49,11 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
   }, [isOpen]);
 
   const goToPrevious = () => {
-    setActiveIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setActiveIndex((prev) => (prev === 0 ? normalizedImages.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    setActiveIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setActiveIndex((prev) => (prev === normalizedImages.length - 1 ? 0 : prev + 1));
   };
 
   const goToImage = (index: number) => {
@@ -65,7 +75,7 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
       </button>
 
       {/* Navigation buttons */}
-      {images.length > 1 && (
+      {normalizedImages.length > 1 && (
         <>
           <button
             onClick={goToPrevious}
@@ -85,7 +95,7 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
       {/* Main image */}
       <div className="relative max-w-4xl max-h-screen p-4">
         <img
-          src={images[activeIndex]}
+          src={normalizedImages[activeIndex]}
           alt={title || `Image ${activeIndex + 1}`}
           className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
           onError={(e) => {
@@ -95,19 +105,19 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
         />
 
         {/* Image counter */}
-        {images.length > 1 && (
+        {normalizedImages.length > 1 && (
           <div
             className={`absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-sm ${colors.imageModalCounter}`}
           >
-            {activeIndex + 1} / {images.length}
+            {activeIndex + 1} / {normalizedImages.length}
           </div>
         )}
       </div>
 
       {/* Thumbnail navigation */}
-      {images.length > 1 && (
+      {normalizedImages.length > 1 && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 max-w-md overflow-x-auto">
-          {images.map((image, index) => (
+          {normalizedImages.map((image, index) => (
             <button
               key={index}
               onClick={() => goToImage(index)}

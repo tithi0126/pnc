@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Modal } from "../Modal";
 import { ImageUpload } from "../ImageUpload";
 import { colors } from "@/theme/colors";
+import { normalizeImageUrl } from "@/utils/imageUrl";
 
 interface Award {
   id: string;
@@ -321,7 +322,7 @@ const AwardFormModal = ({
                   {formData.images.map((imageUrl, index) => (
                     <div key={index} className="relative group">
                       <img
-                        src={imageUrl}
+                        src={normalizeImageUrl(imageUrl)}
                         alt={`Award image ${index + 1}`}
                         className="w-full h-24 object-cover rounded-lg border border-border"
                       />

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { colors } from "@/theme/colors";
+import { SafeImage } from "./SafeImage";
 
 interface ImageModalProps {
   images: string[];
@@ -89,8 +90,11 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
           alt={title || `Image ${activeIndex + 1}`}
           className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
           onError={(e) => {
+            console.warn('Image failed to load in modal:', images[activeIndex]);
             const target = e.target as HTMLImageElement;
-            target.style.display = 'none';
+            target.src = '/placeholder.svg';
+            target.style.display = 'block';
+            target.style.opacity = '0.5';
           }}
         />
 
@@ -117,11 +121,13 @@ export const ImageModal = ({ images, currentIndex, isOpen, onClose, title }: Ima
                   : colors.imageModalThumbnailInactive
               }`}
             >
-              <img
+              <SafeImage
                 src={image}
                 alt={`Thumbnail ${index + 1}`}
                 className="w-full h-full object-cover"
+                showPlaceholder={false}
                 onError={(e) => {
+                  console.warn('Thumbnail failed to load:', image);
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                 }}

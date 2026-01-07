@@ -26,11 +26,6 @@ export const getApiBaseUrl = (): string => {
 export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   if (!imageUrl) return null;
 
-  // Log the original URL for debugging in production
-  if (process.env.NODE_ENV === 'production') {
-    console.debug('Normalizing image URL:', imageUrl);
-  }
-
   // 1. Fix malformed protocol (missing //)
   if (imageUrl.startsWith('https:/') && !imageUrl.startsWith('https://')) {
     imageUrl = imageUrl.replace('https:/', 'https://');
@@ -44,7 +39,7 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   const apiBase = getApiBaseUrl();
 
   // 3. Handle relative paths
-
+  
   // Case A: Path starts with /api/uploads/ (Correct relative path)
   if (imageUrl.startsWith('/api/uploads/')) {
     return `${apiBase}${imageUrl}`;
@@ -58,7 +53,7 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   }
 
   // 4. Handle Full URLs
-
+  
   // If it matches our current base, return as is
   if (imageUrl.startsWith(apiBase)) {
     return imageUrl;
@@ -69,7 +64,7 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
     // Extract the filename/path after 'uploads'
     const parts = imageUrl.split('/uploads/');
     const filename = parts[1];
-
+    
     if (filename) {
       // Reconstruct using the correct base and /api/uploads path
       return `${apiBase}/api/uploads/${filename}`;
@@ -77,32 +72,4 @@ export const normalizeImageUrl = (imageUrl: string | null): string | null => {
   }
 
   return imageUrl;
-};
-
-// Enhanced image URL validation and fallback
-export const getImageUrl = (imageUrl: string | null, fallbackUrl?: string): string => {
-  const normalized = normalizeImageUrl(imageUrl);
-
-  if (!normalized) {
-    // Return fallback or placeholder if no image URL
-    return fallbackUrl || '/placeholder.svg';
-  }
-
-  return normalized;
-};
-
-// Check if an image URL is accessible (for debugging)
-export const checkImageUrl = async (url: string): Promise<boolean> => {
-  if (!url) return false;
-
-  try {
-    const response = await fetch(url, {
-      method: 'HEAD',
-      mode: 'no-cors'
-    });
-    return true; // If we get here without error, assume it's accessible
-  } catch (error) {
-    console.warn('Image URL check failed:', url, error);
-    return false;
-  }
 };

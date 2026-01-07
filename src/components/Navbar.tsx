@@ -64,11 +64,17 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background/95 backdrop-blur-md shadow-lg border-b border-border",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10",
         isScrolled
-          ? "py-3"
-          : "py-5"
+          ? "bg-background/95 backdrop-blur-md shadow-soft py-3"
+          : "bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 py-5"
       )}
+      style={{
+        backgroundImage: isScrolled
+          ? undefined
+          : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3Ccircle cx='27' cy='7' r='1'/%3E%3Ccircle cx='47' cy='7' r='1'/%3E%3Ccircle cx='7' cy='27' r='1'/%3E%3Ccircle cx='27' cy='27' r='1'/%3E%3Ccircle cx='47' cy='27' r='1'/%3E%3Ccircle cx='7' cy='47' r='1'/%3E%3Ccircle cx='27' cy='47' r='1'/%3E%3Ccircle cx='47' cy='47' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundSize: '60px 60px'
+      }}
     >
       <div className="container-custom">
         <nav className="flex items-center justify-between">

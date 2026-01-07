@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Leaf, Award, Users } from "lucide-react";
+import { ArrowRight, Leaf, Award, Users, CheckCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { settingsAPI } from "@/lib/api";
 import { normalizeImageUrl } from "@/utils/imageUrl";
-// Note: heroImage is now loaded dynamically from settings
 
 const HeroSection = () => {
   const [settings, setSettings] = useState({
@@ -20,7 +19,6 @@ const HeroSection = () => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        // Use public settings API that doesn't require authentication
         const publicSettings = await settingsAPI.getPublic();
         const settingsMap: any = publicSettings || {};
 
@@ -36,13 +34,11 @@ const HeroSection = () => {
         });
       } catch (error) {
         console.error('Error loading hero settings:', error);
-        // Settings will fall back to default values defined above
       }
     };
     loadSettings();
   }, []);
 
-  // Render title with highlight - if highlight text is in title, split and highlight it
   const renderTitle = () => {
     if (settings.hero_title.includes(settings.hero_title_highlight)) {
       const parts = settings.hero_title.split(settings.hero_title_highlight);
@@ -57,69 +53,94 @@ const HeroSection = () => {
     return settings.hero_title;
   };
 
+  const stats = [
+    { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_clients, label: 'Happy Clients' },
+    { icon: <Award className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_experience, label: 'Years Experience' },
+    { icon: <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_success, label: 'Success Rate' },
+  ];
+
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image with Overlay */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background/90">
+      {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src={normalizeImageUrl(settings.hero_image_url) || 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop'}
+          src={normalizeImageUrl(settings.hero_image_url) || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1920&h=1080&fit=crop'}
           alt="Dr. Bidita Shah - Nutrition Consultant"
           className="w-full h-full object-cover"
           onError={(e) => {
-            // Fallback to static image if dynamic image fails
             const target = e.target as HTMLImageElement;
             if (!target.src.includes('unsplash.com')) {
-              target.src = 'https://images.unsplash.com/1600x1200/?nutrition,health,wellness&w=1600&h=1200&fit=crop';
+              target.src = 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1920&h=1080&fit=crop';
             }
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-transparent" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background/90" />
       </div>
 
-      <div className="container-custom relative z-10 pt-24">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-screen">
-          {/* Left Section - Heading and Buttons (50%) */}
-          <div className="animate-fade-up">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Leaf className="w-4 h-4 text-primary" />
-              <span className="text-sm font-medium text-primary">{settings.hero_badge}</span>
-            </div>
-
-            {/* Main Heading */}
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-tight mb-6">
-              {renderTitle()}
-            </h1>
-
-            
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/contact" className="btn-primary inline-flex items-center justify-center gap-2 text-base">
-                Book Consultation
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link to="/services" className="btn-outline inline-flex items-center justify-center gap-2 text-base">
-                Explore Services
-              </Link>
-            </div>
+      <div className="container-custom relative z-10 px-4 py-8 md:py-16 lg:py-24">
+        {/* Main Content - Centered */}
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-primary/10 border border-primary/20 mb-4 md:mb-6">
+            <Leaf className="w-3 h-3 md:w-4 md:h-4 text-primary" />
+            <span className="text-xs md:text-sm font-medium text-primary">{settings.hero_badge}</span>
           </div>
 
-          {/* Right Section - Statistics with Subtitle (50%) */}
-          <div className="flex flex-col justify-center lg:justify-end animate-fade-up animation-delay-200 space-y-8">
-            {/* Hero Subtitle */}
-            <div className="text-center lg:text-right">
-              <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed max-w-md">
-                {settings.hero_subtitle}
-              </p>
-            </div>
+          {/* Main Heading - Centered with reduced font size */}
+          <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight md:leading-tight lg:leading-tight mb-4 md:mb-6">
+            {renderTitle()}
+          </h1>
 
+          {/* Subtitle - Full width with proper spacing */}
+          <div className="mb-8 md:mb-12">
+            <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed md:leading-relaxed max-w-3xl mx-auto px-4">
+              {settings.hero_subtitle}
+            </p>
+          </div>
+
+          {/* Stats - Centered */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-2xl mx-auto">
+            {stats.map((stat, index) => (
+              <div key={index} className="p-4 md:p-6 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
+                <div className="flex flex-col items-center gap-2 md:gap-3">
+                  <div className="text-primary">{stat.icon}</div>
+                  <div>
+                    <div className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-1">
+                      {stat.value}
+                    </div>
+                    <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA Buttons - Centered */}
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
+            <Link 
+              to="/contact" 
+              className="btn-primary inline-flex items-center justify-center gap-2 text-sm md:text-base px-5 py-3 md:px-8 md:py-4 min-w-[200px]"
+            >
+              Book Consultation
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link 
+              to="/services" 
+              className="btn-outline inline-flex items-center justify-center gap-2 text-sm md:text-base px-5 py-3 md:px-8 md:py-4 min-w-[200px]"
+            >
+              Explore Services
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      {/* Scroll Indicator for Mobile */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <div className="animate-bounce">
+          <ArrowRight className="w-6 h-6 text-primary rotate-90" />
+        </div>
+      </div>
     </section>
   );
 };

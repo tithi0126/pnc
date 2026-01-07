@@ -53,12 +53,6 @@ const HeroSection = () => {
     return settings.hero_title;
   };
 
-  const stats = [
-    { icon: <Users className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_clients, label: 'Happy Clients' },
-    { icon: <Award className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_experience, label: 'Years Experience' },
-    { icon: <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />, value: settings.stat_success, label: 'Success Rate' },
-  ];
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background/95 to-background/90">
       {/* Background Image */}
@@ -99,23 +93,6 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Stats - Centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 max-w-2xl mx-auto">
-            {stats.map((stat, index) => (
-              <div key={index} className="p-4 md:p-6 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                <div className="flex flex-col items-center gap-2 md:gap-3">
-                  <div className="text-primary">{stat.icon}</div>
-                  <div>
-                    <div className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-1">
-                      {stat.value}
-                    </div>
-                    <p className="text-xs md:text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
           {/* CTA Buttons - Centered */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
             <Link 
@@ -135,12 +112,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Scroll Indicator for Mobile */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-        <div className="animate-bounce">
-          <ArrowRight className="w-6 h-6 text-primary rotate-90" />
-        </div>
-      </div>
+      
     </section>
   );
 };

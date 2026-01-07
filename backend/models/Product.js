@@ -6,7 +6,15 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  subtitle: {
+    type: String,
+    trim: true
+  },
   description: {
+    type: String,
+    trim: true
+  },
+  detailedDescription: {
     type: String,
     trim: true
   },
@@ -15,6 +23,21 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
+  pricing: [{
+    size: {
+      type: String,
+      trim: true
+    },
+    price: {
+      type: Number,
+      min: 0
+    },
+    unit: {
+      type: String,
+      default: 'INR',
+      trim: true
+    }
+  }],
   imageUrl: {
     type: String,
     required: true
@@ -26,6 +49,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: 'General',
     enum: ['Nutrition Supplements', 'Health Foods', 'Wellness Products', 'Consultation Packages', 'General']
+  },
+  idealFor: [{
+    type: String,
+    trim: true
+  }],
+  benefits: [{
+    type: String,
+    trim: true
+  }],
+  ingredients: {
+    type: String,
+    trim: true
   },
   stockQuantity: {
     type: Number,

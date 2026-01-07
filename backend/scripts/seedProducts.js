@@ -4,6 +4,35 @@ require('dotenv').config();
 
 const sampleProducts = [
   {
+    name: "HOMEMADE PROTEIN POWDER",
+    subtitle: "Homemade Health in Every Scoop!",
+    description: "Because Good Nutrition Should Not Come With Guilt.",
+    detailedDescription: "Our homemade protein powder is crafted with care using natural ingredients to provide you with the best nutrition for your body. Made with love and expertise from Dr. Bidita Shah.",
+    price: 225,
+    pricing: [
+      { size: "1 KG", price: 450, unit: "INR" },
+      { size: "500 GM", price: 225, unit: "INR" }
+    ],
+    imageUrl: "/api/uploads/protein-powder.jpg",
+    category: "Nutrition Supplements",
+    idealFor: [
+      "MUSCLE PRESERVATION DURING WEIGHT LOSS",
+      "SARCOPENIA PREVENTION",
+      "RECOVERY NUTRITION",
+      "ELDERLY AND PROTEIN DEFICIENT INDIVIDUALS"
+    ],
+    benefits: [
+      "Balanced mix of dairy protein, nuts, seeds & oats",
+      "No artificial sweetener or additives",
+      "Supports metabolic and functional health"
+    ],
+    ingredients: "Skimmed Milk Powder, Mixed Nuts (Almonds, Cashews, Walnuts, Pistachio), Seeds (Pumpkin, Sunflower, Melon), Oats.",
+    stockQuantity: 100,
+    isAvailable: true,
+    isActive: true,
+    sortOrder: 1
+  },
+  {
     name: "Advanced Nutrition Consultation Package",
     description: "Comprehensive 3-month nutrition consultation package with personalized meal plans, weekly check-ins, and progress tracking. Includes dietary analysis, lifestyle assessment, and ongoing support.",
     price: 4999,
@@ -13,7 +42,7 @@ const sampleProducts = [
     stockQuantity: 50,
     isAvailable: true,
     isActive: true,
-    sortOrder: 1
+    sortOrder: 2
   },
   {
     name: "Premium Whey Protein Isolate",
@@ -25,7 +54,7 @@ const sampleProducts = [
     stockQuantity: 100,
     isAvailable: true,
     isActive: true,
-    sortOrder: 2
+    sortOrder: 3
   },
   {
     name: "Organic Superfood Blend",
@@ -37,7 +66,7 @@ const sampleProducts = [
     stockQuantity: 75,
     isAvailable: true,
     isActive: true,
-    sortOrder: 3
+    sortOrder: 4
   },
   {
     name: "Sports Nutrition Bundle",
@@ -49,7 +78,7 @@ const sampleProducts = [
     stockQuantity: 30,
     isAvailable: true,
     isActive: true,
-    sortOrder: 4
+    sortOrder: 5
   },
   {
     name: "Weight Management Program",
@@ -61,7 +90,7 @@ const sampleProducts = [
     stockQuantity: 20,
     isAvailable: true,
     isActive: true,
-    sortOrder: 5
+    sortOrder: 6
   },
   {
     name: "Immunity Boost Kit",
@@ -73,7 +102,7 @@ const sampleProducts = [
     stockQuantity: 60,
     isAvailable: true,
     isActive: true,
-    sortOrder: 6
+    sortOrder: 7
   }
 ];
 

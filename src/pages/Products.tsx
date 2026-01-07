@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from "react";
-import { ShoppingCart, Package, Star, IndianRupee, MessageCircle } from "lucide-react";
+import { ShoppingCart, Package, Star, IndianRupee, MessageCircle, X } from "lucide-react";
 // import { CheckCircle, XCircle } from "lucide-react"; // Commented out for now
 import { productsAPI, settingsAPI } from "@/lib/api";
 // import { RazorpayService } from "@/services/razorpayService"; // Commented out for now
@@ -10,11 +10,21 @@ import { normalizeImageUrl } from "@/utils/imageUrl";
 interface Product {
   _id: string;
   name: string;
+  subtitle?: string;
   description?: string;
+  detailedDescription?: string;
   price: number;
+  pricing?: Array<{
+    size: string;
+    price: number;
+    unit: string;
+  }>;
   imageUrl: string;
   additionalImages?: string[];
   category: string;
+  idealFor?: string[];
+  benefits?: string[];
+  ingredients?: string;
   stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
@@ -26,7 +36,13 @@ const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productDetailsModal, setProductDetailsModal] = useState<{
+    isOpen: boolean;
+    product: Product | null;
+  }>({
+    isOpen: false,
+    product: null
+  });
   const [imageModal, setImageModal] = useState<{
     isOpen: boolean;
     images: string[];
@@ -96,6 +112,20 @@ const Products = () => {
 
   const closeImageModal = () => {
     setImageModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  const openProductDetails = (product: Product) => {
+    setProductDetailsModal({
+      isOpen: true,
+      product
+    });
+  };
+
+  const closeProductDetails = () => {
+    setProductDetailsModal({
+      isOpen: false,
+      product: null
+    });
   };
 
   const handlePurchase = (product: Product) => {
@@ -223,8 +253,9 @@ const Products = () => {
               {filteredProducts.map((product, index) => (
                 <div
                   key={product._id}
-                  className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all group animate-fade-up"
+                  className="bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all group animate-fade-up cursor-pointer"
                   style={{ animationDelay: `${index * 50}ms` }}
+                  onClick={() => openProductDetails(product)}
                 >
                   {/* Product Image */}
                   <div className="relative aspect-square overflow-hidden">
@@ -402,19 +433,164 @@ const Products = () => {
         </div>
       </section>
 
-      {/* Product Detail Modal */}
-      {selectedProduct && (
+      {/* Product Details Modal */}
+      {productDetailsModal.isOpen && productDetailsModal.product && (
         <div className="fixed inset-0 z-50 bg-foreground/90 flex items-center justify-center p-4">
-          <div className="bg-background rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <h2 className="font-heading text-2xl font-bold mb-4">{selectedProduct.name}</h2>
-              {/* Product detail modal content will be expanded */}
+          <div className="bg-background rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="relative">
+              {/* Close Button */}
               <button
-                onClick={() => setSelectedProduct(null)}
-                className="mt-4 w-full btn-primary"
+                onClick={closeProductDetails}
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-muted hover:bg-muted/80 transition-colors"
               >
-                Close
+                <X className="w-5 h-5" />
               </button>
+
+              <div className="p-6">
+                {/* Product Image */}
+                <div className="aspect-square md:aspect-video w-full max-w-md mx-auto mb-6 rounded-xl overflow-hidden">
+                  <img
+                    src={normalizeImageUrl(productDetailsModal.product.imageUrl)}
+                    alt={productDetailsModal.product.name}
+                    className="w-full h-full object-cover cursor-pointer"
+                    onClick={() => openImageModal(
+                      [productDetailsModal.product!.imageUrl, ...(productDetailsModal.product!.additionalImages || [])],
+                      0,
+                      productDetailsModal.product!.name
+                    )}
+                  />
+                </div>
+
+                {/* Product Title and Subtitle */}
+                <div className="text-center mb-6">
+                  <h2 className="font-heading text-3xl font-bold text-foreground mb-2">
+                    {productDetailsModal.product.name}
+                  </h2>
+                  {productDetailsModal.product.subtitle && (
+                    <p className="text-xl text-primary font-medium mb-4">
+                      {productDetailsModal.product.subtitle}
+                    </p>
+                  )}
+                  {productDetailsModal.product.description && (
+                    <p className="text-muted-foreground text-lg">
+                      {productDetailsModal.product.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Pricing */}
+                <div className="bg-muted/50 rounded-xl p-6 mb-6">
+                  <h3 className="font-heading text-xl font-semibold mb-4 text-center">Pricing</h3>
+                  {productDetailsModal.product.pricing && productDetailsModal.product.pricing.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {productDetailsModal.product.pricing.map((pricing, index) => (
+                        <div key={index} className="bg-background rounded-lg p-4 border border-border">
+                          <div className="text-center">
+                            <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                              {pricing.size}
+                            </p>
+                            <p className="text-2xl font-bold text-primary mt-1">
+                              ₹{pricing.price}/-
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <p className="text-2xl font-bold text-primary">₹{productDetailsModal.product.price}/-</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Ideal For */}
+                {productDetailsModal.product.idealFor && productDetailsModal.product.idealFor.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-heading text-xl font-semibold mb-4 flex items-center gap-2">
+                      <Star className="w-5 h-5 text-primary" />
+                      Ideal For
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {productDetailsModal.product.idealFor.map((item, index) => (
+                        <div key={index} className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                          <p className="text-sm font-medium text-foreground">{item}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Benefits */}
+                {productDetailsModal.product.benefits && productDetailsModal.product.benefits.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-heading text-xl font-semibold mb-4 flex items-center gap-2">
+                      <Package className="w-5 h-5 text-primary" />
+                      Why Choose Our {productDetailsModal.product.name}?
+                    </h3>
+                    <div className="space-y-3">
+                      {productDetailsModal.product.benefits.map((benefit, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <span className="text-green-600 mt-1">✔</span>
+                          <p className="text-foreground">{benefit}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Ingredients */}
+                {productDetailsModal.product.ingredients && (
+                  <div className="mb-6">
+                    <h3 className="font-heading text-xl font-semibold mb-4">Ingredients</h3>
+                    <div className="bg-muted/30 rounded-lg p-4">
+                      <p className="text-foreground leading-relaxed">
+                        {productDetailsModal.product.ingredients}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Detailed Description */}
+                {productDetailsModal.product.detailedDescription && (
+                  <div className="mb-6">
+                    <h3 className="font-heading text-xl font-semibold mb-4">Product Details</h3>
+                    <div className="bg-muted/30 rounded-lg p-4">
+                      <p className="text-foreground leading-relaxed whitespace-pre-line">
+                        {productDetailsModal.product.detailedDescription}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Category */}
+                <div className="mb-6">
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                    {productDetailsModal.product.category}
+                  </span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={() => {
+                      // WhatsApp integration
+                      const message = `Hi, I'm interested in ${productDetailsModal.product!.name}. Can you provide more information?`;
+                      const whatsappUrl = `https://wa.me/${contactSettings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                    className="flex-1 btn-primary flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Enquire on WhatsApp
+                  </button>
+                  <button
+                    onClick={closeProductDetails}
+                    className="flex-1 bg-muted hover:bg-muted/80 text-foreground px-6 py-3 rounded-xl font-medium transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

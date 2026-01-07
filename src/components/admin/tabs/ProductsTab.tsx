@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, Eye, EyeOff, Package, IndianRupee, ShoppingCart, X } from "lucide-react";
 import { productsAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -28,7 +28,6 @@ interface Product {
   isAvailable: boolean;
   isActive: boolean;
   sortOrder: number;
-  razorpayProductId?: string;
 }
 
 interface ProductsTabProps {
@@ -121,8 +120,7 @@ export const ProductsTab = ({ products, onRefresh }: ProductsTabProps) => {
             stockQuantity: 0,
             isAvailable: true,
             isActive: true,
-            sortOrder: 0,
-            razorpayProductId: ""
+            sortOrder: 0
           })}
           className="btn-primary text-sm inline-flex items-center gap-2 self-start"
         >
@@ -285,7 +283,7 @@ const ProductFormModal = ({
   onClose: () => void;
   onSave: (data: Product) => void;
 }) => {
-  const [formData, setFormData] = useState<Product>({
+  const [formData, setFormData] = useState<Product>(() => ({
     ...product,
     subtitle: product.subtitle || "",
     detailedDescription: product.detailedDescription || "",
@@ -294,9 +292,23 @@ const ProductFormModal = ({
     benefits: product.benefits || [],
     ingredients: product.ingredients || "",
     stockQuantity: product.stockQuantity || 0,
-    sortOrder: product.sortOrder || 0,
-    razorpayProductId: product.razorpayProductId || ""
-  });
+    sortOrder: product.sortOrder || 0
+  }));
+
+  // Update form data when product prop changes (for editing)
+  useEffect(() => {
+    setFormData({
+      ...product,
+      subtitle: product.subtitle || "",
+      detailedDescription: product.detailedDescription || "",
+      pricing: product.pricing || [],
+      idealFor: product.idealFor || [],
+      benefits: product.benefits || [],
+      ingredients: product.ingredients || "",
+      stockQuantity: product.stockQuantity || 0,
+      sortOrder: product.sortOrder || 0
+    });
+  }, [product]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -515,18 +527,6 @@ const ProductFormModal = ({
           />
         </div>
 
-        {/* Razorpay Product ID */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Razorpay Product ID (Optional)</label>
-          <input
-            type="text"
-            value={formData.razorpayProductId || ""}
-            onChange={(e) => setFormData({ ...formData, razorpayProductId: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-xl border border-border bg-background focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            placeholder="prod_xxxxxxxxxxxxxxxx"
-          />
-          <p className="text-xs text-muted-foreground mt-1">For payment integration</p>
-        </div>
         <div>
           <label className="flex items-center gap-3 cursor-pointer">
             <input

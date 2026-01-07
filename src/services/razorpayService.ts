@@ -35,10 +35,17 @@ interface RazorpayOptions {
   
   export class RazorpayService {
     private static readonly RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_your_key_here';
-    private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
-    || 'https://api.pncpriyamnutritioncare.com/api'
-    // || 'http://localhost:5003/api'
-    ;
+    private static readonly API_BASE_URL = (() => {
+      let baseUrl = import.meta.env.VITE_API_URL;
+      if (!baseUrl) {
+        baseUrl = 'https://api.pncpriyamnutritioncare.com/api';
+      }
+      // Ensure the URL ends with /api
+      if (!baseUrl.endsWith('/api')) {
+        baseUrl += '/api';
+      }
+      return baseUrl;
+    })();
   
     static async createOrder(amount: number, currency: string = 'INR'): Promise<{ orderId: string }> {
       try {

@@ -66,8 +66,17 @@ export const ImageUpload = ({
       formData.append('image', file);
       formData.append('bucket', actualBucket);
 
-      const API_BASE_URL = import.meta.env.VITE_API_URL
-      || 'https://api.pncpriyamnutritioncare.com/api'
+      const API_BASE_URL = (() => {
+        let baseUrl = import.meta.env.VITE_API_URL;
+        if (!baseUrl) {
+          baseUrl = 'https://api.pncpriyamnutritioncare.com/api';
+        }
+        // Ensure the URL ends with /api
+        if (!baseUrl.endsWith('/api')) {
+          baseUrl += '/api';
+        }
+        return baseUrl;
+      })()
       // || 'http://localhost:5003/api'
       ;
 

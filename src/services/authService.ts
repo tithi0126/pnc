@@ -19,10 +19,17 @@ export interface User {
 }
 
 export class AuthService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
-  || 'https://api.pncpriyamnutritioncare.com/api'
-  // || 'http://localhost:5003/api'
-  ;
+  private static readonly API_BASE_URL = (() => {
+    let baseUrl = import.meta.env.VITE_API_URL;
+    if (!baseUrl) {
+      baseUrl = 'https://api.pncpriyamnutritioncare.com/api';
+    }
+    // Ensure the URL ends with /api
+    if (!baseUrl.endsWith('/api')) {
+      baseUrl += '/api';
+    }
+    return baseUrl;
+  })();
 
   static async register(email: string, password: string, fullName: string): Promise<AuthResponse> {
     const response = await fetch(`${this.API_BASE_URL}/auth/register`, {

@@ -13,10 +13,17 @@ interface IAward {
 }
 
 export class AwardsService {
-  private static readonly API_BASE_URL = import.meta.env.VITE_API_URL
-  || 'https://api.pncpriyamnutritioncare.com/api'
-  // || 'http://localhost:5003/api'
-  ;
+  private static readonly API_BASE_URL = (() => {
+    let baseUrl = import.meta.env.VITE_API_URL;
+    if (!baseUrl) {
+      baseUrl = 'https://api.pncpriyamnutritioncare.com/api';
+    }
+    // Ensure the URL ends with /api
+    if (!baseUrl.endsWith('/api')) {
+      baseUrl += '/api';
+    }
+    return baseUrl;
+  })();
 
   static async getAllAwards(token: string): Promise<IAward[]> {
     try {

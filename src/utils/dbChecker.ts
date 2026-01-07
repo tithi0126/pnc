@@ -27,8 +27,17 @@ export const checkDatabaseStatus = async () => {
 
 // Test actual MongoDB connection via API (backend server)
 export const testMongoDBConnection = async () => {
-  const apiUrl = import.meta.env.VITE_API_URL 
-  || 'https://api.pncpriyamnutritioncare.com/api'
+  const apiUrl = (() => {
+    let baseUrl = import.meta.env.VITE_API_URL;
+    if (!baseUrl) {
+      baseUrl = 'https://api.pncpriyamnutritioncare.com/api';
+    }
+    // Ensure the URL ends with /api
+    if (!baseUrl.endsWith('/api')) {
+      baseUrl += '/api';
+    }
+    return baseUrl;
+  })()
   // || 'http://localhost:5003/api'
   ;
 

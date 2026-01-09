@@ -29,7 +29,7 @@ const Services = () => {
   });
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'drbiditashah@gmail.com',
-    phone_number: '+91 9876543210',
+    phone_number: '+91 9537441006',
   });
   const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
 

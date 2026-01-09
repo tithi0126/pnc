@@ -56,8 +56,8 @@ const Products = () => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [contactSettings, setContactSettings] = useState({
-    whatsapp_number: '+91 9876543210',
-    phone_number: '+91 9876543210',
+    whatsapp_number: '+91 9537441006',
+    phone_number: '+91 9537441006',
   });
   // const [isProcessing, setIsProcessing] = useState<string | null>(null); // Commented out for now
   // const [paymentStatus, setPaymentStatus] = useState<{ // Commented out for now

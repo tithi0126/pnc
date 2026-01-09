@@ -7,7 +7,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'drbiditashah@gmail.com',
-    phone_number: '+91 9876543210',
+    phone_number: '+91 9537441006',
     address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
   });
 

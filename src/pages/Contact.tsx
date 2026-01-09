@@ -19,10 +19,10 @@ const Contact = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [contactSettings, setContactSettings] = useState({
     contact_email: 'info@drbiditashah.com',
-    phone_number: '+1 234 567 890',
+    phone_number: '+91 9537441006',
     address: 'C/o Priyam Clinic, Shop No 18, Mahalaxmi Arcade, Near Mahalaxmi Temple, Opposite Sagar Complex, Adajan Dn, Surat-395009, Gujarat',
     working_hours: 'Mon - Sat: 9:00 AM - 6:00 PM',
-    whatsapp_number: '+91 98765 43210',
+    whatsapp_number: '+91 9537441006',
     contact_page_title: 'Get In Touch',
     contact_page_subtitle: 'Ready to start your nutrition journey?',
     contact_page_description: 'Contact us today for personalized nutrition consultation.',

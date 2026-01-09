@@ -94,46 +94,27 @@ router.post('/', auth, isAdmin, async (req, res) => {
 // Update gallery image (admin only)
 router.put('/:id', auth, isAdmin, async (req, res) => {
   try {
-    console.log('Gallery update request for ID:', req.params.id);
-    console.log('Request body:', JSON.stringify(req.body, null, 2));
-
     // Handle both camelCase and snake_case field names
     const updateData = { ...req.body };
-
-    // Remove the id field if it exists (should not be part of update data)
-    if (updateData.id) {
-      console.log('Removing id field from update data');
-      delete updateData.id;
-    }
-
+    
     if (req.body.image_url !== undefined && !req.body.imageUrl) {
       updateData.imageUrl = req.body.image_url;
       delete updateData.image_url;
     }
-
+    
     if (req.body.alt_text !== undefined && !req.body.altText) {
       updateData.altText = req.body.alt_text;
       delete updateData.alt_text;
     }
-
+    
     if (req.body.is_active !== undefined && req.body.isActive === undefined) {
       updateData.isActive = req.body.is_active;
       delete updateData.is_active;
     }
-
+    
     if (req.body.sort_order !== undefined && req.body.sortOrder === undefined) {
       updateData.sortOrder = req.body.sort_order;
       delete updateData.sort_order;
-    }
-
-    console.log('Final update data:', JSON.stringify(updateData, null, 2));
-
-    // Validate required fields
-    if (!updateData.title || !updateData.imageUrl) {
-      console.log('Missing required fields - title or imageUrl');
-      return res.status(400).json({
-        error: 'Title and image URL are required fields.'
-      });
     }
 
     const image = await Gallery.findByIdAndUpdate(
@@ -143,19 +124,12 @@ router.put('/:id', auth, isAdmin, async (req, res) => {
     );
 
     if (!image) {
-      console.log('Gallery image not found for ID:', req.params.id);
       return res.status(404).json({ error: 'Gallery image not found.' });
     }
 
-    console.log('Gallery image updated successfully:', image._id);
     res.json(image);
   } catch (error) {
     console.error('Error updating gallery image:', error);
-    console.error('Error details:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
     res.status(500).json({ error: 'Server error updating gallery image.' });
   }
 });

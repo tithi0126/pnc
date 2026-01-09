@@ -93,6 +93,8 @@ interface Inquiry {
   email: string;
   phone: string | null;
   service: string | null;
+  serviceName?: string;
+  serviceType?: string;
   message: string;
   status: string | null;
   notes: string | null;
@@ -263,31 +265,17 @@ const AdminDashboard = () => {
           createdAt = typeof i.created_at === 'string' ? i.created_at : i.created_at.toISOString();
         }
 
-        // Resolve service name from ID
-        let serviceName = i.service || null;
-        if (serviceName && typeof serviceName === 'string') {
-          if (serviceName.startsWith('service-')) {
-            const serviceId = serviceName.replace('service-', '');
-            const service = services.find(s => s.id === serviceId);
-            serviceName = service ? service.title : serviceName;
-          } else if (serviceName.startsWith('product-')) {
-            const productId = serviceName.replace('product-', '');
-            const product = products.find(p => p._id === productId);
-            serviceName = product ? product.name : serviceName;
-          } else if (serviceName === 'other') {
-            serviceName = 'Other';
-          }
-        }
-
         return {
-        _id: i._id?.toString() || i.id || '',
-        name: i.name || '',
-        email: i.email || '',
-        phone: i.phone || null,
-        service: serviceName,
-        message: i.message || '',
-        status: i.status || null,
-        notes: i.notes || null,
+          _id: i._id?.toString() || i.id || '',
+          name: i.name || '',
+          email: i.email || '',
+          phone: i.phone || null,
+          service: i.service || null,
+          serviceName: i.serviceName || null,
+          serviceType: i.serviceType || null,
+          message: i.message || '',
+          status: i.status || null,
+          notes: i.notes || null,
           created_at: createdAt,
         };
       }) : []);

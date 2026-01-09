@@ -21,7 +21,7 @@ interface GalleryTabProps {
   onRefresh: () => void;
 }
 
-const categories = ["Academic Excellence", "Professional Awards", "Clinical Training", "Nutrition Activities", "General","Healthy Food", "Consultation", "Events", "Nutrition", "Recipes"];
+const categories = ["Academic Excellence", "Professional Awards", "Clinical Training", "Nutrition Activities", "General", "Healthy Food", "Consultation", "Events", "Sports Nutrition", "Recipes"];
 
 export const GalleryTab = ({ images, onRefresh }: GalleryTabProps) => {
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);

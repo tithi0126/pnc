@@ -54,13 +54,25 @@ interface GalleryImage {
 interface Product {
   _id: string;
   name: string;
+  subtitle?: string;
   description?: string;
+  detailedDescription?: string;
   price: number;
+  pricing?: Array<{
+    size: string;
+    price: number;
+    unit: string;
+  }>;
   imageUrl: string;
   additionalImages?: string[];
+  category: string;
+  idealFor?: string[];
+  benefits?: string[];
+  ingredients?: string;
+  stockQuantity: number;
   isAvailable: boolean;
   isActive: boolean;
-  createdAt: string;
+  sortOrder: number;
 }
 
 interface Award {
@@ -216,7 +228,25 @@ const AdminDashboard = () => {
         sort_order: g.sortOrder || g.sort_order || 0,
       })) : []);
 
-      setProducts(productsData);
+      setProducts(Array.isArray(productsData) ? productsData.map(p => ({
+        _id: p._id || '',
+        name: p.name || '',
+        subtitle: p.subtitle || '',
+        description: p.description || '',
+        detailedDescription: p.detailedDescription || '',
+        price: p.price || 0,
+        pricing: p.pricing || [],
+        imageUrl: p.imageUrl || '',
+        additionalImages: p.additionalImages || [],
+        category: p.category || 'General',
+        idealFor: p.idealFor || [],
+        benefits: p.benefits || [],
+        ingredients: p.ingredients || '',
+        stockQuantity: p.stockQuantity || 0,
+        isAvailable: p.isAvailable !== undefined ? p.isAvailable : true,
+        isActive: p.isActive !== undefined ? p.isActive : true,
+        sortOrder: p.sortOrder || 0,
+      })) : []);
 
       setInquiries(Array.isArray(inquiriesData) ? inquiriesData.map(i => {
         // Handle createdAt - it might be a Date object or already a string
@@ -232,16 +262,32 @@ const AdminDashboard = () => {
         } else if (i.created_at) {
           createdAt = typeof i.created_at === 'string' ? i.created_at : i.created_at.toISOString();
         }
-        
+
+        // Resolve service name from ID
+        let serviceName = i.service || null;
+        if (serviceName && typeof serviceName === 'string') {
+          if (serviceName.startsWith('service-')) {
+            const serviceId = serviceName.replace('service-', '');
+            const service = services.find(s => s.id === serviceId);
+            serviceName = service ? service.title : serviceName;
+          } else if (serviceName.startsWith('product-')) {
+            const productId = serviceName.replace('product-', '');
+            const product = products.find(p => p._id === productId);
+            serviceName = product ? product.name : serviceName;
+          } else if (serviceName === 'other') {
+            serviceName = 'Other';
+          }
+        }
+
         return {
         id: i._id?.toString() || i.id || '',
         name: i.name || '',
         email: i.email || '',
-        phone: i.phone || '',
-        service: i.service || '',
+        phone: i.phone || null,
+        service: serviceName,
         message: i.message || '',
-        status: i.status || 'new',
-        notes: i.notes || '',
+        status: i.status || null,
+        notes: i.notes || null,
           created_at: createdAt,
         };
       }) : []);

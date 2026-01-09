@@ -468,15 +468,15 @@ const Services = () => {
               <p className="text-sm text-muted-foreground">Success Rate</p>
             </div>
 
-              <div className="bg-card p-8 rounded-2xl border border-border text-center hover:shadow-lg transition-shadow">
+              {/* <div className="bg-card p-8 rounded-2xl border border-border text-center hover:shadow-lg transition-shadow">
                 <div className={`inline-flex p-4 rounded-2xl mb-4 ${colors.servicesStatsGradientSupport}`}>
                 <Target className="w-8 h-8 text-primary" />
               </div>
               <div className="font-heading text-3xl font-bold text-foreground mb-2">
-                24/7
+                24
               </div>
               <p className="text-sm text-muted-foreground">Support Available</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

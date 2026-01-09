@@ -17,7 +17,14 @@ interface GalleryImage {
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
-  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [categories] = useState<string[]>([
+    "All",
+    "Academic Excellence",
+    "Professional Awards",
+    "Clinical Training",
+    "Nutrition Activities",
+    "General"
+  ]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,9 +50,6 @@ const Gallery = () => {
         }));
 
         setGalleryImages(transformed);
-        // Extract unique categories
-        const uniqueCategories = ["All", ...new Set(transformed.map(img => img.category).filter(Boolean) as string[])];
-        setCategories(uniqueCategories);
 
         // Fetch settings
         const allSettings = await settingsAPI.getPublic();

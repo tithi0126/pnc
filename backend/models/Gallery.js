@@ -17,7 +17,7 @@ const gallerySchema = new mongoose.Schema({
   category: {
     type: String,
     default: 'General',
-    enum: ['General', 'Healthy Food', 'Consultation', 'Events', 'Sports Nutrition', 'Recipes']
+    enum: ['Academic Excellence', 'Professional Awards', 'Clinical Training', 'Nutrition Activities', 'General','Healthy Food', 'Consultation', 'Events', 'Sports Nutrition', 'Recipes']
   },
   isActive: {
     type: Boolean,

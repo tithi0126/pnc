@@ -84,7 +84,9 @@ app.use('/api/awards', awardRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/settings', settingRoutes);
-app.use('/api/upload', uploadRoutes);
+
+// Apply CORS to upload route specifically
+app.use('/api/upload', cors(corsOptions), uploadRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/payments', paymentRoutes);
 

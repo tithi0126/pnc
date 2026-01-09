@@ -39,7 +39,61 @@ router.get('/admin', auth, isAdmin, async (req, res) => {
       .sort({ createdAt: -1 })
       .select('-__v');
 
-    res.json(inquiries);
+    // Populate service/product names
+    const Service = require('../models/Service');
+    const Product = require('../models/Product');
+
+    const populatedInquiries = await Promise.all(
+      inquiries.map(async (inquiry) => {
+        const inquiryObj = inquiry.toObject();
+
+        if (inquiry.service) {
+          if (inquiry.service.startsWith('service-')) {
+            const serviceId = inquiry.service.replace('service-', '');
+            try {
+              const service = await Service.findById(serviceId).select('title');
+              if (service) {
+                inquiryObj.serviceName = service.title;
+                inquiryObj.serviceType = 'service';
+              } else {
+                inquiryObj.serviceName = 'Service not found';
+                inquiryObj.serviceType = 'service';
+              }
+            } catch (error) {
+              console.error('Error fetching service:', error);
+              inquiryObj.serviceName = 'Service not found';
+              inquiryObj.serviceType = 'service';
+            }
+          } else if (inquiry.service.startsWith('product-')) {
+            const productId = inquiry.service.replace('product-', '');
+            try {
+              const product = await Product.findById(productId).select('name');
+              if (product) {
+                inquiryObj.serviceName = product.name;
+                inquiryObj.serviceType = 'product';
+              } else {
+                inquiryObj.serviceName = 'Product not found';
+                inquiryObj.serviceType = 'product';
+              }
+            } catch (error) {
+              console.error('Error fetching product:', error);
+              inquiryObj.serviceName = 'Product not found';
+              inquiryObj.serviceType = 'product';
+            }
+          } else if (inquiry.service === 'other') {
+            inquiryObj.serviceName = 'Other';
+            inquiryObj.serviceType = 'other';
+          } else {
+            inquiryObj.serviceName = inquiry.service;
+            inquiryObj.serviceType = 'custom';
+          }
+        }
+
+        return inquiryObj;
+      })
+    );
+
+    res.json(populatedInquiries);
   } catch (error) {
     console.error('Error fetching contact inquiries:', error);
     res.status(500).json({ error: 'Server error fetching inquiries.' });

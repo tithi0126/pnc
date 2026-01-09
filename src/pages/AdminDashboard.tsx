@@ -88,7 +88,7 @@ interface Award {
 }
 
 interface Inquiry {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string | null;
@@ -280,7 +280,7 @@ const AdminDashboard = () => {
         }
 
         return {
-        id: i._id?.toString() || i.id || '',
+        _id: i._id?.toString() || i.id || '',
         name: i.name || '',
         email: i.email || '',
         phone: i.phone || null,

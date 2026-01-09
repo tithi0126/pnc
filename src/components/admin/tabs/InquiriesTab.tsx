@@ -4,11 +4,13 @@ import { contactAPI } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
 interface Inquiry {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string | null;
   service: string | null;
+  serviceName?: string;
+  serviceType?: string;
   message: string;
   status: string | null;
   notes: string | null;
@@ -103,16 +105,16 @@ export const InquiriesTab = ({ inquiries, onRefresh }: InquiriesTabProps) => {
           </div>
         ) : (
           filteredInquiries.map((inquiry) => (
-            <div 
-              key={inquiry.id} 
+            <div
+              key={inquiry._id}
               className={`bg-card rounded-2xl border transition-all ${
                 inquiry.status === "new" ? "border-primary/50" : "border-border"
               }`}
             >
               {/* Header */}
-              <div 
+              <div
                 className="p-5 cursor-pointer"
-                onClick={() => setExpandedId(expandedId === inquiry.id ? null : inquiry.id)}
+                onClick={() => setExpandedId(expandedId === inquiry._id ? null : inquiry._id)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -140,15 +142,17 @@ export const InquiriesTab = ({ inquiries, onRefresh }: InquiriesTabProps) => {
                         {new Date(inquiry.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    {inquiry.service && (
-                      <p className="text-xs text-primary mt-2">Service: {inquiry.service}</p>
+                    {inquiry.serviceName && (
+                      <p className="text-xs text-primary mt-2">
+                        {inquiry.serviceType === 'service' ? 'Service' : inquiry.serviceType === 'product' ? 'Product' : 'Inquiry'}: {inquiry.serviceName}
+                      </p>
                     )}
                   </div>
                   <select
                     value={inquiry.status || "new"}
                     onChange={(e) => {
                       e.stopPropagation();
-                      handleStatusChange(inquiry.id, e.target.value);
+                      handleStatusChange(inquiry._id, e.target.value);
                     }}
                     onClick={(e) => e.stopPropagation()}
                     className="px-3 py-1.5 rounded-xl border border-border bg-background text-sm focus:ring-2 focus:ring-primary/20"
@@ -161,7 +165,7 @@ export const InquiriesTab = ({ inquiries, onRefresh }: InquiriesTabProps) => {
               </div>
 
               {/* Expanded Content */}
-              {expandedId === inquiry.id && (
+              {expandedId === inquiry._id && (
                 <div className="px-5 pb-5 pt-0 border-t border-border mt-0">
                   <div className="pt-4 space-y-4">
                     <div>
@@ -175,7 +179,7 @@ export const InquiriesTab = ({ inquiries, onRefresh }: InquiriesTabProps) => {
                       <h5 className="text-sm font-medium mb-2">Internal Notes</h5>
                       <textarea
                         defaultValue={inquiry.notes || ""}
-                        onBlur={(e) => handleNotesUpdate(inquiry.id, e.target.value)}
+                        onBlur={(e) => handleNotesUpdate(inquiry._id, e.target.value)}
                         placeholder="Add notes about this inquiry..."
                         rows={2}
                         className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:ring-2 focus:ring-primary/20 resize-none"

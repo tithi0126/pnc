@@ -19,7 +19,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const [phoneNumber, setPhoneNumber] = useState('+91 9876543210');
+  const [phoneNumber, setPhoneNumber] = useState('+91 9537441006');
   const [navbarBrandName, setNavbarBrandName] = useState('Dr. Bidita Shah');
   const [navbarBrandTagline, setNavbarBrandTagline] = useState('Nutrition Consultant');
   const [logoUrl, setLogoUrl] = useState('/pnc-logo.svg');

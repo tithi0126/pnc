@@ -90,8 +90,8 @@ const Products = () => {
         const settingsMap: any = allSettings || {};
 
         setContactSettings({
-          whatsapp_number: settingsMap.whatsapp_number || '+91 9876543210',
-          phone_number: settingsMap.phone_number || '+91 9876543210',
+          whatsapp_number: settingsMap.whatsapp_number || '+91 9537441006',
+          phone_number: settingsMap.phone_number || '+91 9537441006',
         });
       } catch (error) {
         console.error('Error loading contact settings:', error);
